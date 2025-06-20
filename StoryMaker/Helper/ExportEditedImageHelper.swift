@@ -12,7 +12,8 @@ import Photos
 struct ExportEditedImageHelper {
     @MainActor
     static func exportEditedImage(from view: some View, onComplete: @escaping (Bool, String) -> Void) {
-        let renderer = ImageRenderer(content: view)
+        let staticView = view.environment(\._isExporting, true)
+        let renderer = ImageRenderer(content: staticView)
         let baseSize = CGSize(width: 1080, height: 1920)
 
         renderer.proposedSize = .init(baseSize)
@@ -54,6 +55,20 @@ struct ExportEditedImageHelper {
             }
         default:
             onComplete(false, "No permission to save image. Please check Settings.")
+        }
+    }
+}
+
+private struct IsExportingKey: EnvironmentKey {
+    static let defaultValue: Bool = false
+}
+
+extension EnvironmentValues {
+    var _isExporting: Bool {
+        get {
+            self[IsExportingKey.self]
+        } set {
+            self[IsExportingKey.self] = newValue
         }
     }
 }

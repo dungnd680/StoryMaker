@@ -10,38 +10,6 @@ import PhotosUI
 import Photos
 import Mantis
 
-struct EditorImageView: View {
-    let image: UIImage
-//    @Binding var texts: [EditableText]
-//    @Binding var selectedTextID: UUID?
-
-    var body: some View {
-        GeometryReader { geometry in
-            let designSize = CGSize(width: 1080, height: 1920)
-            let scale = min(geometry.size.width / designSize.width,
-                            geometry.size.height / designSize.height)
-
-            ZStack {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: designSize.width, height: designSize.height)
-                    .clipped()
-                
-//                ForEach($texts) { $text in
-//                    EditTextView(text: $text, isSelected: selectedTextID == text.id)
-//                        .onTapGesture {
-//                            selectedTextID = text.id
-//                        }
-//                }
-            }
-            .frame(width: designSize.width, height: designSize.height)
-            .scaleEffect(scale)
-            .frame(width: geometry.size.width, height: geometry.size.height)
-        }
-    }
-}
-
 struct TemplateView: View {
     @AppStorage("hideSubscription") private var hideSubscription = false
     
@@ -54,16 +22,13 @@ struct TemplateView: View {
     @State private var alertMessage = ""
     @State private var showCropper = false
     @State private var originalImage: UIImage? = nil
-//    @State private var texts: [EditableText] = []
-//    @State private var selectedTextID: UUID?
+    @StateObject private var viewModel = TextBoxViewModel()
     
     var body: some View {
         NavigationStack {
             ZStack {
                 if let image = selectedImage {
-                    EditorImageView(image: image
-//                                    , texts: $texts, selectedTextID: $selectedTextID
-                    )
+                    EditorImageView(image: image, viewModel: viewModel)
                 } else {
                     Color.colorLightGray
                     
@@ -110,9 +75,7 @@ struct TemplateView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         guard let selectedImage = selectedImage else { return }
-                        let editorImageView = EditorImageView(image: selectedImage
-//                                                              , texts: $texts, selectedTextID: $selectedTextID
-                        )
+                        let editorImageView = EditorImageView(image: selectedImage, viewModel: viewModel)
                         
                         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
                             alertMessage = message
@@ -136,7 +99,7 @@ struct TemplateView: View {
                     Spacer()
                     
                     Button {
-//                        addNewText()
+                        viewModel.addTextBox()
                     } label: {
                         VStack {
                             Image("Format Shape")
@@ -186,14 +149,8 @@ struct TemplateView: View {
             SubscriptionView()
         }
     }
-    
-//    func addNewText() {
-//        let newText = EditableText(text: "Text", position: CGPoint(x: 150, y: 150), fontSize: 24, color: .black)
-//        texts.append(newText)
-//        selectedTextID = newText.id
-//    }
 }
 
-#Preview {
-    TemplateView()
-}
+//#Preview {
+//    TemplateView()
+//}

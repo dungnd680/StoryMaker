@@ -22,13 +22,17 @@ struct TemplateView: View {
     @State private var alertMessage = ""
     @State private var showCropper = false
     @State private var originalImage: UIImage? = nil
-    @StateObject private var viewModel = TextBoxViewModel()
+    @State private var showBackgroundPicker = false
+
+//    @StateObject private var viewModel = TextBoxViewModel()
     
     var body: some View {
         NavigationStack {
             ZStack {
                 if let image = selectedImage {
-                    EditorImageView(image: image, viewModel: viewModel)
+                    EditorImageView(image: image
+//                                    , viewModel: viewModel
+                    )
                 } else {
                     Color.colorLightGray
                     
@@ -44,7 +48,7 @@ struct TemplateView: View {
                         }
                         
                         Button("Other") {
-                            
+                            showBackgroundPicker = true
                         }
                     }
                     .photosPicker(isPresented: $showPhotoPicker, selection: $selectedItem)
@@ -75,7 +79,9 @@ struct TemplateView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         guard let selectedImage = selectedImage else { return }
-                        let editorImageView = EditorImageView(image: selectedImage, viewModel: viewModel)
+                        let editorImageView = EditorImageView(image: selectedImage
+//                                                              , viewModel: viewModel
+                        )
                         
                         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
                             alertMessage = message
@@ -99,7 +105,7 @@ struct TemplateView: View {
                     Spacer()
                     
                     Button {
-                        viewModel.addTextBox()
+//                        viewModel.addTextBox()
                     } label: {
                         VStack {
                             Image("Format Shape")
@@ -143,6 +149,11 @@ struct TemplateView: View {
                 ImageCropperView(image: image) { croppedImage in
                     selectedImage = croppedImage
                 }
+            }
+        }
+        .fullScreenCover(isPresented: $showBackgroundPicker) {
+            BackgroundPickerView { selectedUIImage in
+                selectedImage = selectedUIImage
             }
         }
         .fullScreenCover(isPresented: $showSubscription) {

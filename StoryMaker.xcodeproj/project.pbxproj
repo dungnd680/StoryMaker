@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A88F6942E0A47FA00086F9A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9A88F6932E0A47FA00086F9A /* Alamofire */; };
 		9A8E81922E03A8B0009DF2E3 /* Mantis in Frameworks */ = {isa = PBXBuildFile; productRef = 9A8E81912E03A8B0009DF2E3 /* Mantis */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A8E81922E03A8B0009DF2E3 /* Mantis in Frameworks */,
+				9A88F6942E0A47FA00086F9A /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,7 @@
 			name = StoryMaker;
 			packageProductDependencies = (
 				9A8E81912E03A8B0009DF2E3 /* Mantis */,
+				9A88F6932E0A47FA00086F9A /* Alamofire */,
 			);
 			productName = StoryMaker;
 			productReference = 9AFE8B7F2DF19B7F00CA57CB /* StoryMaker.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9A8E81902E03A8AF009DF2E3 /* XCRemoteSwiftPackageReference "Mantis" */,
+				9A88F6922E0A47FA00086F9A /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9AFE8B802DF19B7F00CA57CB /* Products */;
@@ -339,17 +343,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9A88F6922E0A47FA00086F9A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
 		9A8E81902E03A8AF009DF2E3 /* XCRemoteSwiftPackageReference "Mantis" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/guoyingtao/Mantis.git";
 			requirement = {
-				kind = exactVersion;
-				version = 2.25.3;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.25.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9A88F6932E0A47FA00086F9A /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A88F6922E0A47FA00086F9A /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
 		9A8E81912E03A8B0009DF2E3 /* Mantis */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9A8E81902E03A8AF009DF2E3 /* XCRemoteSwiftPackageReference "Mantis" */;

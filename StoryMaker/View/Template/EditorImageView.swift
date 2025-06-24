@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EditorImageView: View {
     let image: UIImage
-    @ObservedObject var viewModel: TextBoxViewModel
+//    @ObservedObject var viewModel: TextBoxViewModel
     
     
     var body: some View {
@@ -25,9 +25,9 @@ struct EditorImageView: View {
                     .frame(width: designSize.width, height: designSize.height)
                     .clipped()
                 
-                ForEach($viewModel.textBoxes) { $box in
-                    TextBoxView(box: $box, text: $box.text)
-                }
+//                ForEach($viewModel.textBoxes) { $box in
+//                    TextBoxView(box: $box, text: $box.text)
+//                }
             }
             .frame(width: designSize.width, height: designSize.height)
             .scaleEffect(scale)
@@ -36,6 +36,6 @@ struct EditorImageView: View {
     }
 }
 
-#Preview {
-    EditorImageView(image: UIImage(), viewModel: TextBoxViewModel())
-}
+//#Preview {
+//    EditorImageView(image: UIImage(), viewModel: TextBoxViewModel())
+//}

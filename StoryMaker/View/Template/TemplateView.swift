@@ -21,7 +21,7 @@ struct TemplateView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var showCropper = false
-    @State private var originalImage: UIImage? = nil
+    @State private var apiImage: UIImage? = nil
     @State private var showBackgroundPicker = false
 
 //    @StateObject private var viewModel = TextBoxViewModel()
@@ -56,7 +56,7 @@ struct TemplateView: View {
                         Task {
                             if let data = try? await selectedItem?.loadTransferable(type: Data.self),
                                let uiImage = UIImage(data: data) {
-                                originalImage = uiImage
+                                apiImage = uiImage
                                 showCropper = true
                                 selectedItem = nil
                             }
@@ -144,8 +144,13 @@ struct TemplateView: View {
                 }
             }
         }
+        .onChange(of: apiImage) {
+            if apiImage != nil {
+                showCropper = true
+            }
+        }
         .fullScreenCover(isPresented: $showCropper) {
-            if let image = originalImage {
+            if let image = apiImage {
                 ImageCropperView(image: image) { croppedImage in
                     selectedImage = croppedImage
                 }
@@ -153,7 +158,7 @@ struct TemplateView: View {
         }
         .fullScreenCover(isPresented: $showBackgroundPicker) {
             BackgroundPickerView { selectedUIImage in
-                selectedImage = selectedUIImage
+                apiImage = selectedUIImage
             }
         }
         .fullScreenCover(isPresented: $showSubscription) {

@@ -16,7 +16,7 @@ struct Config: Codable {
     let category: [CategoryElement]
 }
 
-struct CategoryElement: Codable {
+struct CategoryElement: Codable, Equatable {
     let id: CategoryEnum
     let name: String
 }

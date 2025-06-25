@@ -13,26 +13,32 @@ class BackgroundPickerViewModel: ObservableObject {
     @Published var backgroundModel: BackgroundModel?
     @Published var isLoading = false
     @Published var errorMessage: String?
+    
+    private var currentRequest: DataRequest?
 
-    func fetchBackgrounds() {
+    func fetchBackgrounds() async {
         isLoading = true
         errorMessage = nil
 
-        AF.request("https://api.fleet-tech.net/story/get_background")
-            .validate()
-            .responseDecodable(of: BackgroundModel.self) { [weak self] response in
-                guard let self = self else { return }
+        do {
+            let response = try await AF.request("https://api.fleet-tech.net/story/get_background")
+                .validate()
+                .serializingDecodable(BackgroundModel.self)
+                .value
 
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    switch response.result {
-                    case .success(let model):
-                        self.backgroundModel = model
-                    case .failure(let error):
-                        self.errorMessage = "Failed to load: \(error.localizedDescription)"
-                        print("API Error:", error)
-                    }
-                }
+            self.backgroundModel = response
+        } catch {
+            if (error as? AFError)?.isExplicitlyCancelledError == true {
+                print("Request cancelled")
+            } else {
+                self.errorMessage = "Failed to load: \(error.localizedDescription)"
             }
+        }
+
+        isLoading = false
+    }
+    
+    func cancelRequest() {
+        currentRequest?.cancel()
     }
 }

@@ -13,7 +13,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9AFE8B7F2DF19B7F00CA57CB /* StoryMaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StoryMaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AFE8B7F2DF19B7F00CA57CB /* StoryMaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = StoryMaker.app; path = "/Users/devmacmini/Documents/devmacmini’s Mac mini/Xcode/StoryMaker/build/Debug-iphoneos/StoryMaker.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -42,16 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				9AFE8C212DF695B300CA57CB /* StoryMaker */,
-				9AFE8B802DF19B7F00CA57CB /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		9AFE8B802DF19B7F00CA57CB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9AFE8B7F2DF19B7F00CA57CB /* StoryMaker.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,7 +103,7 @@
 				9A88F69D2E0B9D7500086F9A /* XCRemoteSwiftPackageReference "SwiftUIPager" */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 9AFE8B802DF19B7F00CA57CB /* Products */;
+			productRefGroup = 9AFE8B762DF19B7F00CA57CB;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

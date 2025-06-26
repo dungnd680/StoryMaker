@@ -151,9 +151,17 @@ struct TemplateView: View {
         }
         .fullScreenCover(isPresented: $showCropper) {
             if let image = apiImage {
-                ImageCropperView(image: image) { croppedImage in
-                    selectedImage = croppedImage
-                }
+                ImageCropperView(
+                    image: image,
+                    onCrop: { croppedImage in
+                        selectedImage = croppedImage
+                        showCropper = false
+                        showBackgroundPicker = false
+                    },
+                    onCancel: {
+                        showCropper = false
+                    }
+                )
             }
         }
         .fullScreenCover(isPresented: $showBackgroundPicker) {

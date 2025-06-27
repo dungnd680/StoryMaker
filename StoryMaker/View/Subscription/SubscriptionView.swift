@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SubscriptionView: View {
     @Environment(\.dismiss) var dismiss
-    @AppStorage("hideSubscription") private var hideSubscription = false
     
     var body: some View {
         ZStack {
@@ -29,16 +28,17 @@ struct SubscriptionView: View {
                 
                 CountdownView()
                 
-                Text("Get unlimited access to all premium features.")
-                    .foregroundStyle(.colorDarkGray)
-
-                Button {
-                    hideSubscription = true
-                    dismiss()
-                } label: {
+                (
+                    Text("Get unlimited access to all premium features. ")
+                        .foregroundStyle(.colorDarkGray)
+                    +
                     Text("Cancel anytime")
                         .foregroundStyle(.colorOrange)
-                }
+                )
+                .frame(width: 260)
+                .multilineTextAlignment(.center)
+                .font(.system(size: 16))
+                .padding(.bottom)
                 
                 Text("15.8$ per week")
                     .font(.system(size: 18))

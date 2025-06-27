@@ -8,6 +8,7 @@
 import SwiftUI
 import Alamofire
 import SwiftUIPager
+import Kingfisher
 
 struct BackgroundPickerView: View {
     @Environment(\.dismiss) var dismiss
@@ -19,8 +20,6 @@ struct BackgroundPickerView: View {
     @State private var selectedURLBackground: String?
     @State private var selectedCategory: CategoryEnum? = nil
     @StateObject var page: Page = .first()
-    @State private var selectedUIImage: UIImage? = nil
-    @State private var showCropper = false
 
     var body: some View {
         NavigationStack {
@@ -29,48 +28,90 @@ struct BackgroundPickerView: View {
                     ProgressView()
                 } else if let model = viewModel.backgroundModel {
                     VStack {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack {
-                                ForEach(Array(model.config.category.enumerated()), id: \.element.id) { index, category in
-                                    Text(category.name)
-                                        .id(category.id)
-                                        .font(.system(size: 14))
-                                        .padding(.horizontal, 4)
-                                        .foregroundColor(
-                                            selectedCategory == category.id ? .red : .black
-                                        )
-                                        .onTapGesture {
-                                            selectedCategory = category.id
-                                            page.update(.new(index: index))
-                                            let isLoaded = viewModel.dicBackground[category.id]?.isLoaded ?? false
-                                            if isLoaded == false {
-                                                Task {
-                                                    await viewModel.fetchBackgrounds(for: category.id)
+                        ScrollViewReader { scrollProxy in
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack {
+                                    ForEach(Array(model.config.category.enumerated()), id: \.element.id) { index, category in
+                                        Text(category.name)
+                                            .id(category.id)
+                                            .font(.system(size: 14))
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 4)
+                                            .foregroundColor(selectedCategory == category.id ? .white : .black)
+                                            .background(selectedCategory == category.id ? Color.red.opacity(0.8) : Color.clear)
+                                            .clipShape(Capsule())
+                                            .onTapGesture {
+                                                selectedCategory = category.id
+                                                page.update(.new(index: index))
+                                                let isLoaded = viewModel.dicBackground[category.id]?.isLoaded ?? false
+                                                if isLoaded == false {
+                                                    Task {
+                                                        await viewModel.fetchBackgrounds(for: category.id)
+                                                    }
                                                 }
                                             }
+                                    }
+                                }
+                                .padding(.top)
+                                .onChange(of: selectedCategory) {
+                                    if let id = selectedCategory {
+                                        withAnimation(.spring) {
+                                            scrollProxy.scrollTo(id, anchor: .center)
                                         }
+                                    }
                                 }
                             }
-                            .padding()
                         }
 
-                        if let model = viewModel.backgroundModel {
-                            CategoryPagerView(
-                                model: model,
-                                dicBG: viewModel.dicBackground,
-                                baseURL: baseURL,
-                                page: page,
-                                onSelectImage: loadSelectedImage,
-                                selectedCategory: $selectedCategory,
-                                viewModel: viewModel
-                            )
+                        Pager(page: page,
+                              data: model.config.category,
+                              id: \.id) { category in
+                            let items = viewModel.dicBackground[category.id]?.CategoryData ?? []
+                            ScrollView(showsIndicators: false) {
+                                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
+                                    ForEach(items, id: \.background) { item in
+                                        if let url = URL(string: baseURL + item.thumb),
+                                           let bgURL = URL(string: baseURL + item.background) {
+                                            KFImage(url)
+                                                .placeholder {
+                                                    Color.gray.opacity(0.2)
+                                                }
+                                                .resizable()
+                                                .aspectRatio(1, contentMode: .fill)
+                                                .onTapGesture {
+                                                    loadSelectedImage(with: item.background)
+                                                }
+                                                .task {
+                                                    KingfisherManager.shared.retrieveImage(with: bgURL, options: [.backgroundDecode]) { _ in }
+                                                }
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal, 4)
+                                .padding(.top, 12)
+                                .padding(.bottom, 160)
+                            }
                         }
+                        .onPageChanged { index in
+                            let newCategoryID = model.config.category[index].id
+                            selectedCategory = newCategoryID
+                            let isLoaded = viewModel.dicBackground[newCategoryID]?.isLoaded ?? false
+                            if isLoaded == false {
+                                Task {
+                                    await viewModel.fetchBackgrounds(for: newCategoryID)
+                                }
+                            }
+                        }
+                        .ignoresSafeArea()
                     }
                 } else if viewModel.errorMessage != nil {
                     VStack {
+                        Image(systemName: "network.slash")
+                            .font(.largeTitle)
                         Text("Network Error!")
-                            .opacity(0.2)
-                        Button("Try again") {
+                            .padding(.bottom)
+                        
+                        Button("Retry") {
                             Task {
                                 await viewModel.fetchCategories()
                                 if selectedCategory == nil,
@@ -83,6 +124,11 @@ struct BackgroundPickerView: View {
                                 }
                             }
                         }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .tint(.white)
+                        .background(.backgroundColor1)
+                        .clipShape(Capsule())
                     }
                 }
             }
@@ -116,106 +162,33 @@ struct BackgroundPickerView: View {
         .onDisappear {
             viewModel.cancelRequest()
         }
-        .fullScreenCover(isPresented: $showCropper) {
-            if let image = selectedUIImage {
-                ImageCropperView(
-                    image: image,
-                    onCrop: { croppedImage in
-                        onSelect(croppedImage)
-                        dismiss()
-                    },
-                    onCancel: {
-                        showCropper = false
-                    }
-                )
-            }
-        }
     }
 
     private func loadSelectedImage(with path: String) {
         guard let url = URL(string: baseURL + path) else { return }
 
-        AF.request(url).responseData { response in
-            switch response.result {
-            case .success(let data):
-                if let image = UIImage(data: data) {
-                    selectedUIImage = image
-                    showCropper = true
-                }
-            case .failure(let error):
+        KingfisherManager.shared.retrieveImage(with: url) { result in
+            switch result {
+            case .success(let value):
                 DispatchQueue.main.async {
-                    print("Failed to load image from url:", error.localizedDescription)
+                    onSelect(value.image)
+                    dismiss()
                 }
-            }
-        }
-    }
-}
-
-struct CategoryPagerView: View {
-    let model: BackgroundModel
-    let dicBG: [CategoryEnum: (CategoryData: [DataBackground], isLoaded: Bool, isLoading: Bool)]
-    let baseURL: String
-    @ObservedObject var page: Page
-    let onSelectImage: (String) -> Void
-    @Binding var selectedCategory: CategoryEnum?
-    let viewModel: BackgroundPickerViewModel
-
-    var body: some View {
-        Pager(page: page,
-              data: model.config.category,
-              id: \.id) { category in
-            let items = dicBG[category.id]?.CategoryData ?? []
-            ScrollView(showsIndicators: false) {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
-                    ForEach(items, id: \.background) { item in
-                        if let url = URL(string: baseURL + item.thumb) {
-                            BackgroundItemView(
-                                url: url,
-                                onTap: {
-                                    onSelectImage(item.background)
-                                }
-                            )
+            case .failure:
+                AF.request(url).responseData { response in
+                    switch response.result {
+                    case .success(let data):
+                        if let image = UIImage(data: data) {
+                            onSelect(image)
+                            dismiss()
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            print("Failed to load image from url:", error.localizedDescription)
                         }
                     }
                 }
-                .padding(.horizontal)
             }
-            .tag(category.id)
-        }
-        .padding(.top)
-        .onPageChanged { index in
-            let newCategoryID = model.config.category[index].id
-            selectedCategory = newCategoryID
-            let isLoaded = viewModel.dicBackground[newCategoryID]?.isLoaded ?? false
-            if isLoaded == false {
-                Task {
-                    await viewModel.fetchBackgrounds(for: newCategoryID)
-                }
-            }
-        }
-    }
-}
-
-private struct BackgroundItemView: View {
-    let url: URL
-    let onTap: () -> Void
-
-    var body: some View {
-        AsyncImage(url: url) { phase in
-            switch phase {
-            case .empty, .failure:
-                Color.gray.opacity(0.2)
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-            @unknown default:
-                EmptyView()
-            }
-        }
-        .frame(width: 110, height: 110)
-        .onTapGesture {
-            onTap()
         }
     }
 }

@@ -11,8 +11,6 @@ import Photos
 import Mantis
 
 struct TemplateView: View {
-    @AppStorage("hideSubscription") private var hideSubscription = false
-    
     @State private var showSubscription = false
     @State private var showConfirmationDialog = false
     @State private var showPhotoPicker = false
@@ -21,7 +19,7 @@ struct TemplateView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var showCropper = false
-    @State private var apiImage: UIImage? = nil
+    @State private var originalImage: UIImage? = nil
     @State private var showBackgroundPicker = false
 
 //    @StateObject private var viewModel = TextBoxViewModel()
@@ -37,7 +35,12 @@ struct TemplateView: View {
                     Color.colorLightGray
                     
                     VStack {
-                        Image("Add Background")
+                        Button {
+                            showConfirmationDialog = true
+                        } label: {
+                            Image("Add Background")
+                        }
+                        
                         Text("Tap To Add Background")
                             .font(.system(size: 16))
                             .foregroundStyle(.black)
@@ -56,16 +59,13 @@ struct TemplateView: View {
                         Task {
                             if let data = try? await selectedItem?.loadTransferable(type: Data.self),
                                let uiImage = UIImage(data: data) {
-                                apiImage = uiImage
+                                originalImage = uiImage
                                 showCropper = true
                                 selectedItem = nil
                             }
                         }
                     }
                 }
-            }
-            .onTapGesture {
-                showConfirmationDialog = true
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -78,15 +78,7 @@ struct TemplateView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        guard let selectedImage = selectedImage else { return }
-                        let editorImageView = EditorImageView(image: selectedImage
-//                                                              , viewModel: viewModel
-                        )
-                        
-                        ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
-                            alertMessage = message
-                            showAlert = true
-                        }
+                        exportImage()
                     } label: {
                         Image("Export")
                             .opacity(selectedImage == nil ? 0.5 : 1.0)
@@ -137,44 +129,45 @@ struct TemplateView: View {
                 }
             }
         }
-        .onAppear {
-            if !hideSubscription {
-                DispatchQueue.main.async {
-                    showSubscription = true
-                }
-            }
-        }
-        .onChange(of: apiImage) {
-            if apiImage != nil {
+//        .onAppear {
+//            showSubscription = true
+//        }
+        .onChange(of: originalImage) {
+            if originalImage != nil {
                 showCropper = true
             }
         }
         .fullScreenCover(isPresented: $showCropper) {
-            if let image = apiImage {
-                ImageCropperView(
-                    image: image,
-                    onCrop: { croppedImage in
-                        selectedImage = croppedImage
-                        showCropper = false
-                        showBackgroundPicker = false
-                    },
-                    onCancel: {
-                        showCropper = false
-                    }
-                )
+            if let image = originalImage {
+                ImageCropperView(image: image) { croppedImage in
+                    selectedImage = croppedImage
+                }
             }
         }
         .fullScreenCover(isPresented: $showBackgroundPicker) {
-            BackgroundPickerView { selectedUIImage in
-                apiImage = selectedUIImage
+            BackgroundPickerView { background in
+                originalImage = background
+                showCropper = true
             }
         }
         .fullScreenCover(isPresented: $showSubscription) {
             SubscriptionView()
         }
     }
+    
+    private func exportImage() {
+        guard let selectedImage = selectedImage else { return }
+        let editorImageView = EditorImageView(image: selectedImage
+//                                              , viewModel: viewModel
+        )
+        
+        ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
+            alertMessage = message
+            showAlert = true
+        }
+    }
 }
 
-//#Preview {
-//    TemplateView()
-//}
+#Preview {
+    TemplateView()
+}

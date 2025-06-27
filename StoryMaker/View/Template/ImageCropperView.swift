@@ -11,7 +11,6 @@ import Mantis
 struct ImageCropperView: UIViewControllerRepresentable {
     var image: UIImage
     var onCrop: (UIImage) -> Void
-    var onCancel: () -> Void
     @Environment(\.dismiss) var dismiss
 
     func makeUIViewController(context: Context) -> CropViewController {
@@ -38,17 +37,15 @@ struct ImageCropperView: UIViewControllerRepresentable {
         
         func cropViewControllerDidCrop(_ cropViewController: Mantis.CropViewController, cropped: UIImage, transformation: Mantis.Transformation, cropInfo: Mantis.CropInfo) {
             parent.onCrop(cropped)
-//            parent.dismiss()
-            parent.onCancel()
+            parent.dismiss()
         }
         
         func cropViewControllerDidCancel(_ cropViewController: Mantis.CropViewController, original: UIImage) {
-//            parent.dismiss()
-            parent.onCancel()
+            parent.dismiss()
         }
     }
 }
 
 #Preview {
-    ImageCropperView(image: .intro1, onCrop: {_ in }, onCancel: {})
+    ImageCropperView(image: .intro1, onCrop: {_ in })
 }

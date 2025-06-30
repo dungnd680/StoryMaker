@@ -7,7 +7,6 @@
 
 import SwiftUI
 import PhotosUI
-import Photos
 import Mantis
 
 struct TemplateView: View {
@@ -16,8 +15,6 @@ struct TemplateView: View {
     @State private var showPhotoPicker = false
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImage: UIImage? = nil
-    @State private var showAlert = false
-    @State private var alertMessage = ""
     @State private var showCropper = false
     @State private var originalImage: UIImage? = nil
     @State private var showBackgroundPicker = false
@@ -25,7 +22,27 @@ struct TemplateView: View {
 //    @StateObject private var viewModel = TextBoxViewModel()
     
     var body: some View {
-        NavigationStack {
+        VStack {
+            HStack {
+                Button {
+                    selectedImage = nil
+                } label: {
+                    Image("Back")
+                }
+
+                Spacer()
+
+                Button {
+                    exportImage()
+                } label: {
+                    Image("Export")
+                        .opacity(selectedImage == nil ? 0.5 : 1.0)
+                }
+                .disabled(selectedImage == nil)
+            }
+            .padding(.horizontal)
+            .padding(.top)
+            
             ZStack {
                 if let image = selectedImage {
                     EditorImageView(image: image
@@ -67,87 +84,54 @@ struct TemplateView: View {
                     }
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        selectedImage = nil
-                    } label: {
-                        Image("Back")
+            
+            HStack {
+                Spacer()
+                Button {
+                    
+                } label: {
+                    VStack {
+                        Image("Format Shape")
+                        Text("Add Text")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.colorDarkGray)
                     }
+                    .opacity(selectedImage == nil ? 0.5 : 1.0)
                 }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        exportImage()
-                    } label: {
-                        Image("Export")
-                            .opacity(selectedImage == nil ? 0.5 : 1.0)
+                .disabled(selectedImage == nil)
+
+                Spacer()
+                Spacer()
+
+                Button {
+                    
+                } label: {
+                    VStack {
+                        Image("Background Filter")
+                        Text("Background")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.colorDarkGray)
                     }
-                    .disabled(selectedImage == nil)
-                    .alert("Notification", isPresented: $showAlert, actions: {
-                        Button("OK", role: .cancel) {
-                            selectedImage = nil
-                        }
-                    }, message: {
-                        Text(alertMessage)
-                    })
+                    .opacity(selectedImage == nil ? 0.5 : 1.0)
                 }
-                
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Spacer()
-                    
-                    Button {
-//                        viewModel.addTextBox()
-                    } label: {
-                        VStack {
-                            Image("Format Shape")
-                            Text("Add Text")
-                                .font(.system(size: 12))
-                                .foregroundStyle(.colorDarkGray)
-                        }
-                        .opacity(selectedImage == nil ? 0.5 : 1.0)
-                    }
-                    .disabled(selectedImage == nil)
-                    
-                    Spacer()
-                    Spacer()
-                    
-                    Button {
-                        
-                    } label: {
-                        VStack {
-                            Image("Background Filter")
-                            Text("Background")
-                                .font(.system(size: 12))
-                                .foregroundStyle(.colorDarkGray)
-                        }
-                        .opacity(selectedImage == nil ? 0.5 : 1.0)
-                    }
-                    .disabled(selectedImage == nil)
-                    
-                    Spacer()
-                }
+                .disabled(selectedImage == nil)
+
+                Spacer()
             }
         }
 //        .onAppear {
 //            showSubscription = true
 //        }
-        .onChange(of: originalImage) {
-            if originalImage != nil {
-                showCropper = true
-            }
-        }
-        .fullScreenCover(isPresented: $showCropper) {
+        .sheet(isPresented: $showCropper) {
             if let image = originalImage {
                 ImageCropperView(image: image) { croppedImage in
                     selectedImage = croppedImage
                 }
             }
         }
-        .fullScreenCover(isPresented: $showBackgroundPicker) {
-            BackgroundPickerView { background in
-                originalImage = background
-                showCropper = true
+        .sheet(isPresented: $showBackgroundPicker) {
+            BackgroundPickerView() { background in
+                selectedImage = background
             }
         }
         .fullScreenCover(isPresented: $showSubscription) {
@@ -162,8 +146,10 @@ struct TemplateView: View {
         )
         
         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
-            alertMessage = message
-            showAlert = true
+            print("Export result: \(message)")
+            if success {
+                self.selectedImage = nil
+            }
         }
     }
 }

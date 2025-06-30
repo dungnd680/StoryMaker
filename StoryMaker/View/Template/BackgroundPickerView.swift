@@ -20,115 +20,106 @@ struct BackgroundPickerView: View {
     @State private var selectedURLBackground: String?
     @State private var selectedCategory: CategoryEnum? = nil
     @StateObject var page: Page = .first()
+    @State private var isRetryLoading = false
+    @State private var showCropper = false
+    @State private var background: UIImage? = nil
 
     var body: some View {
         NavigationStack {
-            Group {
+            VStack {
                 if viewModel.isLoadingBackground {
                     ProgressView()
                 } else if let model = viewModel.backgroundModel {
-                    VStack {
-                        ScrollViewReader { scrollProxy in
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack {
-                                    ForEach(Array(model.config.category.enumerated()), id: \.element.id) { index, category in
-                                        Text(category.name)
-                                            .id(category.id)
-                                            .font(.system(size: 14))
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
-                                            .foregroundColor(selectedCategory == category.id ? .white : .black)
-                                            .background(selectedCategory == category.id ? Color.red.opacity(0.8) : Color.clear)
-                                            .clipShape(Capsule())
+                    ScrollViewReader { scrollProxy in
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(Array(model.config.category.enumerated()), id: \.element.id) { index, category in
+                                    Text(category.name)
+                                        .id(category.id)
+                                        .font(.system(size: 14))
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 6)
+                                        .foregroundColor(selectedCategory == category.id ? .white : .black)
+                                        .background(selectedCategory == category.id ? Color.red.opacity(0.8) : Color.clear)
+                                        .clipShape(Capsule())
+                                        .onTapGesture {
+                                            selectedCategory = category.id
+                                            page.update(.new(index: index))
+                                        }
+                                }
+                                .padding(.horizontal, 6)
+                            }
+                            .padding(.vertical)
+                            .onChange(of: selectedCategory) {
+                                if let id = selectedCategory {
+                                    withAnimation(.spring) {
+                                        scrollProxy.scrollTo(id, anchor: .center)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Pager(page: page, data: model.config.category, id: \.id) { category in
+                        let items = viewModel.backgroundItems.filter { $0.category == category.id }
+                        ScrollView(showsIndicators: false) {
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
+                                ForEach(items, id: \.background) { item in
+                                    if let url = URL(string: baseURL + item.thumb),
+                                       let bgURL = URL(string: baseURL + item.background) {
+                                        KFImage(url)
+                                            .placeholder {
+                                                Color.gray.opacity(0.2)
+                                            }
+                                            .resizable()
+                                            .aspectRatio(1, contentMode: .fill)
                                             .onTapGesture {
-                                                selectedCategory = category.id
-                                                page.update(.new(index: index))
-                                                let isLoaded = viewModel.dicBackground[category.id]?.isLoaded ?? false
-                                                if isLoaded == false {
-                                                    Task {
-                                                        await viewModel.fetchBackgrounds(for: category.id)
-                                                    }
-                                                }
+                                                loadSelectedImage(with: item.background)
+                                            }
+                                            .task {
+                                                KingfisherManager.shared.retrieveImage(with: bgURL, options: [.backgroundDecode]) { _ in }
                                             }
                                     }
                                 }
-                                .padding(.top)
-                                .onChange(of: selectedCategory) {
-                                    if let id = selectedCategory {
-                                        withAnimation(.spring) {
-                                            scrollProxy.scrollTo(id, anchor: .center)
-                                        }
-                                    }
-                                }
                             }
+                            .padding(.bottom, 160)
                         }
-
-                        Pager(page: page,
-                              data: model.config.category,
-                              id: \.id) { category in
-                            let items = viewModel.dicBackground[category.id]?.CategoryData ?? []
-                            ScrollView(showsIndicators: false) {
-                                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
-                                    ForEach(items, id: \.background) { item in
-                                        if let url = URL(string: baseURL + item.thumb),
-                                           let bgURL = URL(string: baseURL + item.background) {
-                                            KFImage(url)
-                                                .placeholder {
-                                                    Color.gray.opacity(0.2)
-                                                }
-                                                .resizable()
-                                                .aspectRatio(1, contentMode: .fill)
-                                                .onTapGesture {
-                                                    loadSelectedImage(with: item.background)
-                                                }
-                                                .task {
-                                                    KingfisherManager.shared.retrieveImage(with: bgURL, options: [.backgroundDecode]) { _ in }
-                                                }
-                                        }
-                                    }
-                                }
-                                .padding(.horizontal, 4)
-                                .padding(.top, 12)
-                                .padding(.bottom, 160)
-                            }
-                        }
-                        .onPageChanged { index in
-                            let newCategoryID = model.config.category[index].id
-                            selectedCategory = newCategoryID
-                            let isLoaded = viewModel.dicBackground[newCategoryID]?.isLoaded ?? false
-                            if isLoaded == false {
-                                Task {
-                                    await viewModel.fetchBackgrounds(for: newCategoryID)
-                                }
-                            }
-                        }
-                        .ignoresSafeArea()
                     }
+                    .pagingPriority(.simultaneous)
+                    .onPageChanged { index in
+                        let newCategoryID = model.config.category[index].id
+                        selectedCategory = newCategoryID
+                    }
+                    .ignoresSafeArea()
                 } else if viewModel.errorMessage != nil {
-                    VStack {
-                        Image(systemName: "network.slash")
-                            .font(.largeTitle)
-                        Text("Network Error!")
-                            .padding(.bottom)
-                        
-                        Button("Retry") {
-                            Task {
-                                await viewModel.fetchCategories()
-                                if selectedCategory == nil,
-                                   let firstCategory = viewModel.backgroundModel?.config.category.first?.id {
-                                    selectedCategory = firstCategory
-                                    if let index = viewModel.backgroundModel?.config.category.firstIndex(where: { $0.id == firstCategory }) {
-                                        page.update(.new(index: index))
+                    if isRetryLoading {
+                        ProgressView()
+                    } else {
+                        VStack {
+                            Text("Data download failed.")
+                                .padding(.bottom)
+                            
+                            Button("Retry") {
+                                Task {
+                                    isRetryLoading = true
+                                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                                    await viewModel.fetchAllBackgrounds()
+                                    if selectedCategory == nil,
+                                       let firstCategory = viewModel.backgroundModel?.config.category.first?.id {
+                                        selectedCategory = firstCategory
+                                        if let index = viewModel.backgroundModel?.config.category.firstIndex(where: { $0.id == firstCategory }) {
+                                            page.update(.new(index: index))
+                                        }
                                     }
-                                    await viewModel.fetchBackgrounds(for: firstCategory)
+                                    isRetryLoading = false
                                 }
                             }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .tint(.white)
+                            .background(.backgroundColor1)
+                            .clipShape(Capsule())
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .tint(.white)
-                        .background(.backgroundColor1)
-                        .clipShape(Capsule())
                     }
                 }
             }
@@ -147,20 +138,33 @@ struct BackgroundPickerView: View {
         .onAppear {
             if viewModel.backgroundModel == nil {
                 Task {
-                    await viewModel.fetchCategories()
+                    await viewModel.fetchAllBackgrounds()
                     if selectedCategory == nil,
                        let firstCategory = viewModel.backgroundModel?.config.category.first?.id {
                         selectedCategory = firstCategory
                         if let index = viewModel.backgroundModel?.config.category.firstIndex(where: { $0.id == firstCategory }) {
                             page.update(.new(index: index))
                         }
-                        await viewModel.fetchBackgrounds(for: firstCategory)
                     }
                 }
             }
         }
         .onDisappear {
             viewModel.cancelRequest()
+        }
+        .onChange(of: background) {
+            if background != nil {
+                showCropper = true
+            }
+        }
+        .sheet(isPresented: $showCropper) {
+            if let image = background {
+                ImageCropperView(image: image) { croppedImage in
+                    onSelect(croppedImage)
+                    showCropper = false
+                    dismiss()
+                }
+            }
         }
     }
 
@@ -171,16 +175,22 @@ struct BackgroundPickerView: View {
             switch result {
             case .success(let value):
                 DispatchQueue.main.async {
-                    onSelect(value.image)
-                    dismiss()
+                    background = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        background = value.image
+                    }
                 }
             case .failure:
                 AF.request(url).responseData { response in
                     switch response.result {
                     case .success(let data):
                         if let image = UIImage(data: data) {
-                            onSelect(image)
-                            dismiss()
+                            DispatchQueue.main.async {
+                                background = nil
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                                    background = image
+                                }
+                            }
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {

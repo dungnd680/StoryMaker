@@ -14,8 +14,6 @@ class BackgroundPickerViewModel: ObservableObject {
     @Published var isLoadingBackground = false
     @Published var errorMessage: String?
     
-    @Published var backgroundItems: [DataBackground] = []
-    
     private var currentRequest: DataRequest?
 
     func fetchAllBackgrounds() async {
@@ -29,7 +27,6 @@ class BackgroundPickerViewModel: ObservableObject {
                 .value
 
             self.backgroundModel = response
-            self.backgroundItems = response.data
         } catch {
             if (error as? AFError)?.isExplicitlyCancelledError == true {
                 print("Request cancelled")
@@ -43,5 +40,6 @@ class BackgroundPickerViewModel: ObservableObject {
     
     func cancelRequest() {
         currentRequest?.cancel()
+        print("Cancel Request")
     }
 }

@@ -43,8 +43,10 @@ struct BackgroundPickerView: View {
                                         .background(selectedCategory == category.id ? Color.red.opacity(0.8) : Color.clear)
                                         .clipShape(Capsule())
                                         .onTapGesture {
-                                            selectedCategory = category.id
-                                            page.update(.new(index: index))
+                                            withAnimation {
+                                                selectedCategory = category.id
+                                                page.update(.new(index: index))
+                                            }
                                         }
                                 }
                                 .padding(.horizontal, 6)
@@ -52,7 +54,7 @@ struct BackgroundPickerView: View {
                             .padding(.vertical)
                             .onChange(of: selectedCategory) {
                                 if let id = selectedCategory {
-                                    withAnimation(.spring) {
+                                    withAnimation {
                                         scrollProxy.scrollTo(id, anchor: .center)
                                     }
                                 }
@@ -61,12 +63,11 @@ struct BackgroundPickerView: View {
                     }
 
                     Pager(page: page, data: model.config.category, id: \.id) { category in
-                        let items = viewModel.backgroundItems.filter { $0.category == category.id }
+                        let items = viewModel.backgroundModel?.data.filter { $0.category == category.id } ?? []
                         ScrollView(showsIndicators: false) {
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
                                 ForEach(items, id: \.background) { item in
-                                    if let url = URL(string: baseURL + item.thumb),
-                                       let bgURL = URL(string: baseURL + item.background) {
+                                    if let url = URL(string: baseURL + item.thumb) {
                                         KFImage(url)
                                             .placeholder {
                                                 Color.gray.opacity(0.2)
@@ -76,20 +77,18 @@ struct BackgroundPickerView: View {
                                             .onTapGesture {
                                                 loadSelectedImage(with: item.background)
                                             }
-                                            .task {
-                                                KingfisherManager.shared.retrieveImage(with: bgURL, options: [.backgroundDecode]) { _ in }
-                                            }
                                     }
                                 }
                             }
                             .padding(.bottom, 160)
                         }
                     }
-                    .pagingPriority(.simultaneous)
+                    .itemSpacing(8)
                     .onPageChanged { index in
                         let newCategoryID = model.config.category[index].id
                         selectedCategory = newCategoryID
                     }
+                    .animation(.easeInOut, value: page.index)
                     .ignoresSafeArea()
                 } else if viewModel.errorMessage != nil {
                     if isRetryLoading {

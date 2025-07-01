@@ -9,6 +9,11 @@ import SwiftUI
 
 struct EditorImageView: View {
     let image: UIImage
+    
+    @Binding var lightness: Double
+    @Binding var saturation: Double
+    @Binding var blur: Double
+    
 //    @ObservedObject var viewModel: TextBoxViewModel
     
     
@@ -24,6 +29,9 @@ struct EditorImageView: View {
                     .scaledToFill()
                     .frame(width: designSize.width, height: designSize.height)
                     .clipped()
+                    .brightness(lightness / 100)
+                    .saturation(saturation / 100 + 1)
+                    .blur(radius: abs(blur) / 4.0)
                 
 //                ForEach($viewModel.textBoxes) { $box in
 //                    TextBoxView(box: $box, text: $box.text)

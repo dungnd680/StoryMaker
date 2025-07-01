@@ -23,6 +23,7 @@ struct BackgroundPickerView: View {
     @State private var isRetryLoading = false
     @State private var showCropper = false
     @State private var background: UIImage? = nil
+    @State private var showLoadBackgroundErrorAlert = false
 
     var body: some View {
         NavigationStack {
@@ -84,6 +85,7 @@ struct BackgroundPickerView: View {
                         }
                     }
                     .itemSpacing(8)
+                    .pagingPriority(.simultaneous)
                     .onPageChanged { index in
                         let newCategoryID = model.config.category[index].id
                         selectedCategory = newCategoryID
@@ -165,37 +167,30 @@ struct BackgroundPickerView: View {
                 }
             }
         }
+        .alert("Download failed", isPresented: $showLoadBackgroundErrorAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Please try again.")
+        }
     }
 
     private func loadSelectedImage(with path: String) {
         guard let url = URL(string: baseURL + path) else { return }
 
-        KingfisherManager.shared.retrieveImage(with: url) { result in
-            switch result {
-            case .success(let value):
-                DispatchQueue.main.async {
-                    background = nil
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        background = value.image
+        AF.request(url).responseData { response in
+            switch response.result {
+            case .success(let data):
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        background = nil
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            background = image
+                        }
                     }
                 }
             case .failure:
-                AF.request(url).responseData { response in
-                    switch response.result {
-                    case .success(let data):
-                        if let image = UIImage(data: data) {
-                            DispatchQueue.main.async {
-                                background = nil
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                                    background = image
-                                }
-                            }
-                        }
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            print("Failed to load image from url:", error.localizedDescription)
-                        }
-                    }
+                DispatchQueue.main.async {
+                    showLoadBackgroundErrorAlert = true
                 }
             }
         }

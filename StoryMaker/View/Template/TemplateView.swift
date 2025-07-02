@@ -22,16 +22,19 @@ struct TemplateView: View {
     @State private var lightness: Double = 0
     @State private var saturation: Double = 0
     @State private var blur: Double = 0
+    @State private var selectedFilter: FiltersModel = filters[0]
 
-//    @StateObject private var viewModel = TextBoxViewModel()
+    @StateObject private var viewModel = TextBoxViewModel()
     
     var body: some View {
         ZStack {
+            Spacer()
             VStack {
                 HStack {
                     Button {
                         withAnimation {
                             selectedImage = nil
+                            showBrightnessView = false
                         }
                     } label: {
                         Image("Back")
@@ -56,8 +59,9 @@ struct TemplateView: View {
                             image: image,
                             lightness: $lightness,
                             saturation: $saturation,
-                            blur: $blur
-                            //                                    , viewModel: viewModel
+                            blur: $blur,
+                            selectedFilter: $selectedFilter,
+                            viewModel: viewModel
                         )
                     } else {
                         Color.colorLightGray
@@ -88,9 +92,6 @@ struct TemplateView: View {
                                 if let data = try? await selectedItem?.loadTransferable(type: Data.self),
                                    let uiImage = UIImage(data: data) {
                                     originalImage = uiImage
-                                    lightness = 0
-                                    saturation = 0
-                                    blur = 0
                                     showCropper = true
                                     selectedItem = nil
                                 }
@@ -102,7 +103,7 @@ struct TemplateView: View {
                 HStack {
                     Spacer()
                     Button {
-                        
+                        viewModel.addTextBox()
                     } label: {
                         VStack {
                             Image("Format Shape")
@@ -136,24 +137,30 @@ struct TemplateView: View {
                 }
             }
             if showBrightnessView {
-                VStack {
-                    Spacer()
-                    BrightnessView(
-                        lightness: $lightness,
-                        saturation: $saturation,
-                        blur: $blur,
-                        selectedImage: $selectedImage,
-                        onClose: {
-                            showBrightnessView = false
-                        }
-                    )
-                }
+                AdjustView(
+                    lightness: $lightness,
+                    saturation: $saturation,
+                    blur: $blur,
+                    selectedImage: $selectedImage,
+                    selectedFilter: $selectedFilter,
+                    onClose: { showBrightnessView = false }
+                )
                 .transition(.move(edge: .bottom))
             }
         }
+        .ignoresSafeArea(.keyboard)
 //        .onAppear {
 //            showSubscription = true
 //        }
+        .onChange(of: selectedImage) {
+            if selectedImage != nil {
+                showBrightnessView = false
+                lightness = 0
+                saturation = 0
+                blur = 0
+                selectedFilter = filters[0]
+            }
+        }
         .sheet(isPresented: $showCropper) {
             if let image = originalImage {
                 ImageCropperView(image: image) { croppedImage in
@@ -164,9 +171,6 @@ struct TemplateView: View {
         .sheet(isPresented: $showBackgroundPicker) {
             BackgroundPickerView() { background in
                 selectedImage = background
-                lightness = 0
-                saturation = 0
-                blur = 0
             }
         }
         .fullScreenCover(isPresented: $showSubscription) {
@@ -180,8 +184,9 @@ struct TemplateView: View {
             image: selectedImage,
             lightness: $lightness,
             saturation: $saturation,
-            blur: $blur
-//                                              , viewModel: viewModel
+            blur: $blur,
+            selectedFilter: $selectedFilter,
+            viewModel: viewModel
         )
         
         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in

@@ -44,7 +44,7 @@ struct BackgroundPickerView: View {
                                         .background(selectedCategory == category.id ? Color.red.opacity(0.8) : Color.clear)
                                         .clipShape(Capsule())
                                         .onTapGesture {
-                                            withAnimation {
+                                            withAnimation(.easeInOut(duration: 0.2)) {
                                                 selectedCategory = category.id
                                                 page.update(.new(index: index))
                                             }
@@ -55,7 +55,7 @@ struct BackgroundPickerView: View {
                             .padding(.vertical)
                             .onChange(of: selectedCategory) {
                                 if let id = selectedCategory {
-                                    withAnimation {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
                                         scrollProxy.scrollTo(id, anchor: .center)
                                     }
                                 }
@@ -162,7 +162,6 @@ struct BackgroundPickerView: View {
             if let image = background {
                 ImageCropperView(image: image) { croppedImage in
                     onSelect(croppedImage)
-                    showCropper = false
                     dismiss()
                 }
             }

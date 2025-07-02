@@ -5,6 +5,7 @@
 //  Created by devmacmini on 20/6/25.
 //
 
+import Foundation
 import SwiftUI
 
 struct EditorImageView: View {
@@ -13,10 +14,10 @@ struct EditorImageView: View {
     @Binding var lightness: Double
     @Binding var saturation: Double
     @Binding var blur: Double
+    @Binding var selectedFilter: FiltersModel
     
-//    @ObservedObject var viewModel: TextBoxViewModel
-    
-    
+    @ObservedObject var viewModel: TextBoxViewModel
+
     var body: some View {
         GeometryReader { geometry in
             let designSize = CGSize(width: 1080, height: 1920)
@@ -24,18 +25,18 @@ struct EditorImageView: View {
                             geometry.size.height / designSize.height)
 
             ZStack {
-                Image(uiImage: image)
+                Image(uiImage: applyFilter(selectedFilter, to: image))
                     .resizable()
                     .scaledToFill()
                     .frame(width: designSize.width, height: designSize.height)
                     .clipped()
                     .brightness(lightness / 100)
                     .saturation(saturation / 100 + 1)
-                    .blur(radius: abs(blur) / 4.0)
+                    .blur(radius: blur / 4.0)
                 
-//                ForEach($viewModel.textBoxes) { $box in
-//                    TextBoxView(box: $box, text: $box.text)
-//                }
+                ForEach($viewModel.textBoxes) { $box in
+                    TextBoxView(box: $box, text: $box.text)
+                }
             }
             .frame(width: designSize.width, height: designSize.height)
             .scaleEffect(scale)

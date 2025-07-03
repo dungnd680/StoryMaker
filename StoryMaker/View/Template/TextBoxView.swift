@@ -10,34 +10,58 @@ import SwiftUI
 struct TextBoxView: View {
     @Binding var box: TextBoxModel
     @Binding var text: String
-    @Environment(\._isExporting) private var isExporting
+    @Binding var showToolTextView: Bool
+    @Environment(\.isExporting) private var isExporting
     @GestureState private var dragOffset: CGSize = .zero
+    @State private var isEditing: Bool = false
+    @FocusState private var isTextFieldFocused: Bool
+    @State private var showToolView: Bool = false
     
     var body: some View {
         Group {
-            if isExporting {
+            if isExporting || (!isEditing && !box.text.isEmpty) {
                 Text(text)
+                    .padding()
             } else {
-                ZStack(alignment: .center) {
+                ZStack {
                     if box.text.isEmpty {
-                        Text("Tap to edit...")
-                            .foregroundColor(.white)
+                        Text("Double Tap To Edit")
                             .padding()
                     }
                     
-                    TextField("", text: $box.text)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                        .background(Color.clear)
+                    if isEditing {
+                        if box.text.isEmpty {
+                            Text("Double Tap To Edit")
+                                .padding()
+                        }
+                        
+                        TextField("", text: $box.text)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .background(Color.clear)
+                            .focused($isTextFieldFocused)
+                            .onSubmit {
+                                isEditing = false
+                                isTextFieldFocused = false
+                                text = box.text
+                            }
+                    }
                 }
             }
         }
+        .onTapGesture(count: 2) {
+            isEditing = true
+            isTextFieldFocused = true
+        }
+        .onTapGesture {
+            showToolView = true
+        }
         .foregroundColor(.white)
         .multilineTextAlignment(.center)
-        .font(.largeTitle)
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white, lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white, lineWidth: 6))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 3))
         .fixedSize()
+        .font(.system(size: 100))
         .position(x: box.position.x + dragOffset.width,
                   y: box.position.y + dragOffset.height)
         .gesture(

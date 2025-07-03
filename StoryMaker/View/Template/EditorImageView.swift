@@ -29,10 +29,10 @@ struct EditorImageView: View {
                     .resizable()
                     .scaledToFill()
                     .frame(width: designSize.width, height: designSize.height)
-                    .clipped()
                     .brightness(lightness / 100)
                     .saturation(saturation / 100 + 1)
-                    .blur(radius: blur / 4.0)
+                    .blur(radius: blur / 5.0)
+                    .clipped()
                 
                 ForEach($viewModel.textBoxes) { $box in
                     TextBoxView(box: $box, text: $box.text)

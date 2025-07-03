@@ -90,7 +90,7 @@ struct BackgroundPickerView: View {
                         let newCategoryID = model.config.category[index].id
                         selectedCategory = newCategoryID
                     }
-                    .animation(.easeInOut, value: page.index)
+                    .animation(.easeInOut(duration: 0.2), value: page.index)
                     .ignoresSafeArea()
                 } else if viewModel.errorMessage != nil {
                     if isRetryLoading {

@@ -19,23 +19,22 @@ struct TemplateView: View {
     @State private var originalImage: UIImage? = nil
     @State private var showBackgroundPicker = false
     @State private var showBrightnessView = false
+    @State private var showToolTextView = false
     @State private var lightness: Double = 0
     @State private var saturation: Double = 0
     @State private var blur: Double = 0
     @State private var selectedFilter: FiltersModel = filters[0]
+    @State private var filteredThumbnails: [UUID: UIImage] = [:]
 
     @StateObject private var viewModel = TextBoxViewModel()
     
     var body: some View {
         ZStack {
-            Spacer()
             VStack {
                 HStack {
                     Button {
-                        withAnimation {
-                            selectedImage = nil
-                            showBrightnessView = false
-                        }
+                        selectedImage = nil
+                        showBrightnessView = false
                     } label: {
                         Image("Back")
                     }
@@ -119,9 +118,7 @@ struct TemplateView: View {
                     Spacer()
                     
                     Button {
-                        withAnimation {
-                            showBrightnessView = true
-                        }
+                        showBrightnessView = true
                     } label: {
                         VStack {
                             Image("Background Filter")
@@ -136,29 +133,43 @@ struct TemplateView: View {
                     Spacer()
                 }
             }
-            if showBrightnessView {
-                AdjustView(
-                    lightness: $lightness,
-                    saturation: $saturation,
-                    blur: $blur,
-                    selectedImage: $selectedImage,
-                    selectedFilter: $selectedFilter,
-                    onClose: { showBrightnessView = false }
-                )
-                .transition(.move(edge: .bottom))
-            }
+            
+            AdjustBackgroundView(
+                lightness: $lightness,
+                saturation: $saturation,
+                blur: $blur,
+                selectedImage: $selectedImage,
+                selectedFilter: $selectedFilter,
+                filteredThumbnails: $filteredThumbnails,
+                isVisible: $showBrightnessView,
+                onClose: { showBrightnessView = false }
+            )
+            
+            ToolTextView(isVisible: $showToolTextView)
         }
         .ignoresSafeArea(.keyboard)
 //        .onAppear {
 //            showSubscription = true
 //        }
         .onChange(of: selectedImage) {
-            if selectedImage != nil {
+            if let image = selectedImage {
+                viewModel.textBoxes = []
                 showBrightnessView = false
                 lightness = 0
                 saturation = 0
                 blur = 0
                 selectedFilter = filters[0]
+                
+                filteredThumbnails = [:]
+                let thumbnail = image.resizedMaintainingAspectRatio(toMaxSize: CGSize(width: 60, height: 60))
+                for filter in filters {
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        let result = applyFilter(filter, to: thumbnail)
+                        DispatchQueue.main.async {
+                            filteredThumbnails[filter.id] = result
+                        }
+                    }
+                }
             }
         }
         .sheet(isPresented: $showCropper) {

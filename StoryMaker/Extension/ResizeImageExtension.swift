@@ -8,13 +8,17 @@
 import SwiftUI
 
 extension UIImage {
-    func resized(to size: CGSize) -> UIImage {
-        let format = UIGraphicsImageRendererFormat.default()
-        format.scale = 1
-        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+    func resizedMaintainingAspectRatio(toMaxSize maxSize: CGSize) -> UIImage {
+        let aspectWidth = maxSize.width / self.size.width
+        let aspectHeight = maxSize.height / self.size.height
+        let aspectRatio = min(aspectWidth, aspectHeight)
+
+        let newSize = CGSize(width: self.size.width * aspectRatio,
+                             height: self.size.height * aspectRatio)
+
+        let renderer = UIGraphicsImageRenderer(size: newSize)
         return renderer.image { _ in
-            self.draw(in: CGRect(origin: .zero, size: size))
+            self.draw(in: CGRect(origin: .zero, size: newSize))
         }
     }
 }
-

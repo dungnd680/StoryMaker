@@ -11,7 +11,8 @@ struct TextBoxModel: Identifiable {
     var id: UUID = UUID()
     var text: String
     var position: CGPoint
-    var scale: CGFloat
-    var rotation: Angle
+//    var scale: CGFloat
+//    var rotation: Angle
     var isSelected: Bool
+    var isEditing: Bool = false
 }

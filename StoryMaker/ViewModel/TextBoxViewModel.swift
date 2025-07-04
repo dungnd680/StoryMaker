@@ -14,9 +14,10 @@ class TextBoxViewModel: ObservableObject {
         let newBox = TextBoxModel(
             text: "",
             position: CGPoint(x: 540, y: 960),
-            scale: 1.0,
-            rotation: .zero,
-            isSelected: true
+//            scale: 1.0,
+//            rotation: .zero,
+            isSelected: true,
+            isEditing: false
         )
         textBoxes.append(newBox)
     }

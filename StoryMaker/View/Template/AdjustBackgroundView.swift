@@ -34,6 +34,7 @@ struct AdjustBackgroundView: View {
     var body: some View {
         VStack {
             Spacer()
+            
             VStack(spacing: 0) {
                 ZStack {
                     Text(selectedTab == .brightness ? "Brightness" : "Filters")

@@ -20,6 +20,8 @@ let toolsText: [(image: String, title: String)] = [
 
 struct ToolTextView: View {
     @Binding var isVisible: Bool
+    
+    var toolTextHeight: CGFloat = 80
 
     var body: some View {
         VStack {
@@ -32,19 +34,26 @@ struct ToolTextView: View {
                             Button {
                                 
                             } label: {
-                                Image(tool.image)
+                                VStack {
+                                    Image(tool.image)
+                                    
+                                    Text(tool.title)
+                                        .font(.caption)
+                                        .foregroundStyle(Color.black)
+                                }
                             }
-                            
-                            Text(tool.title)
-                                .font(.caption)
                         }
                     }
                 }
+                .padding(.horizontal, 32)
+                .padding(.bottom, 22)
             }
-            .padding(.horizontal, 32)
+            .frame(height: toolTextHeight)
+            .background(Color.white)
         }
-        .offset(y: isVisible ? 0 : 100)
-        .animation(.easeInOut(duration: 0.2), value: isVisible)
+        .offset(y: isVisible ? 0 : toolTextHeight)
+        .animation(.easeInOut(duration: 0.15), value: isVisible)
+        .ignoresSafeArea()
     }
 }
 

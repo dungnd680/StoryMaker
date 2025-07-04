@@ -19,14 +19,14 @@ struct TemplateView: View {
     @State private var originalImage: UIImage? = nil
     @State private var showBackgroundPicker = false
     @State private var showBrightnessView = false
-    @State private var showToolTextView = false
     @State private var lightness: Double = 0
     @State private var saturation: Double = 0
     @State private var blur: Double = 0
     @State private var selectedFilter: FiltersModel = filters[0]
     @State private var filteredThumbnails: [UUID: UIImage] = [:]
+    @State private var showToolTextView: Bool = false
 
-    @StateObject private var viewModel = TextBoxViewModel()
+    @StateObject private var textBoxViewModel = TextBoxViewModel()
     
     var body: some View {
         ZStack {
@@ -35,9 +35,11 @@ struct TemplateView: View {
                     Button {
                         selectedImage = nil
                         showBrightnessView = false
+                        showToolTextView = false
                     } label: {
                         Image("Back")
                     }
+                    .padding(.leading, 8)
                     
                     Spacer()
                     
@@ -48,6 +50,7 @@ struct TemplateView: View {
                             .opacity(selectedImage == nil ? 0.5 : 1.0)
                     }
                     .disabled(selectedImage == nil)
+                    .padding(.trailing, 8)
                 }
                 .padding(.horizontal)
                 .padding(.top)
@@ -60,7 +63,8 @@ struct TemplateView: View {
                             saturation: $saturation,
                             blur: $blur,
                             selectedFilter: $selectedFilter,
-                            viewModel: viewModel
+                            showToolTextView: $showToolTextView,
+                            textBoxViewModel: textBoxViewModel
                         )
                     } else {
                         Color.colorLightGray
@@ -102,7 +106,7 @@ struct TemplateView: View {
                 HStack {
                     Spacer()
                     Button {
-                        viewModel.addTextBox()
+                        textBoxViewModel.addTextBox()
                     } label: {
                         VStack {
                             Image("Format Shape")
@@ -153,7 +157,7 @@ struct TemplateView: View {
 //        }
         .onChange(of: selectedImage) {
             if let image = selectedImage {
-                viewModel.textBoxes = []
+                textBoxViewModel.textBoxes = []
                 showBrightnessView = false
                 lightness = 0
                 saturation = 0
@@ -197,19 +201,21 @@ struct TemplateView: View {
             saturation: $saturation,
             blur: $blur,
             selectedFilter: $selectedFilter,
-            viewModel: viewModel
+            showToolTextView: $showToolTextView,
+            textBoxViewModel: textBoxViewModel
         )
         
         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
             print("Export result: \(message)")
             if success {
                 showBrightnessView = false
+                showToolTextView = false
                 self.selectedImage = nil
             }
         }
     }
 }
 
-#Preview {
-    TemplateView()
-}
+//#Preview {
+//    TemplateView()
+//}

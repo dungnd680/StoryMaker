@@ -15,8 +15,9 @@ struct EditorImageView: View {
     @Binding var saturation: Double
     @Binding var blur: Double
     @Binding var selectedFilter: FiltersModel
+    @Binding var showToolTextView: Bool
     
-    @ObservedObject var viewModel: TextBoxViewModel
+    @ObservedObject var textBoxViewModel: TextBoxViewModel
 
     var body: some View {
         GeometryReader { geometry in
@@ -34,8 +35,36 @@ struct EditorImageView: View {
                     .blur(radius: blur / 5.0)
                     .clipped()
                 
-                ForEach($viewModel.textBoxes) { $box in
-                    TextBoxView(box: $box, text: $box.text)
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        showToolTextView = false
+                        for i in 0..<textBoxViewModel.textBoxes.count {
+                            if !textBoxViewModel.textBoxes[i].text.isEmpty {
+                                textBoxViewModel.textBoxes[i].isSelected = false
+                                textBoxViewModel.textBoxes[i].isEditing = false
+                            }
+                        }
+                    }
+                
+                ForEach($textBoxViewModel.textBoxes) { $box in
+                    TextBoxView(
+                        box: $box,
+                        text: $box.text,
+                        showToolTextView: $showToolTextView,
+                        isSelected: $box.isSelected,
+                        isEditing: $box.isEditing,
+                        onSelect: {
+                            for i in 0..<textBoxViewModel.textBoxes.count {
+                                if textBoxViewModel.textBoxes[i].id != box.id && !textBoxViewModel.textBoxes[i].text.isEmpty {
+                                    textBoxViewModel.textBoxes[i].isSelected = false
+                                    textBoxViewModel.textBoxes[i].isEditing = false
+                                }
+                            }
+                            
+                            showToolTextView = true
+                        }
+                    )
                 }
             }
             .frame(width: designSize.width, height: designSize.height)

@@ -7,12 +7,22 @@
 
 import SwiftUI
 
-struct TextBoxModel: Identifiable {
-    var id: UUID = UUID()
-    var text: String
-    var position: CGPoint
-//    var scale: CGFloat
-//    var rotation: Angle
-    var isSelected: Bool
-    var isEditing: Bool = false
+class TextBoxModel: ObservableObject, Identifiable {
+    var id: String = ""
+    
+    @Published var content: String = ""
+    @Published var x: CGFloat = 0
+    @Published var y: CGFloat = -200
+    @Published var size: CGFloat = 100
+    @Published var color: String = "#FFFFFF"
+    
+    static func empty() -> TextBoxModel {
+        return TextBoxModel()
+    }
+    
+//    static func empty() -> TextBoxModel {
+//        let model = TextBoxModel()
+//        model.id = "empty"
+//        return model
+//    }
 }

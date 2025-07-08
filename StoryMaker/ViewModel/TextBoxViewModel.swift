@@ -9,16 +9,12 @@ import Foundation
 
 class TextBoxViewModel: ObservableObject {
     @Published var textBoxes: [TextBoxModel] = []
+    @Published var activeTextBox: TextBoxModel = .empty()
     
     func addTextBox() {
-        let newBox = TextBoxModel(
-            text: "",
-            position: CGPoint(x: 540, y: 960),
-//            scale: 1.0,
-//            rotation: .zero,
-            isSelected: true,
-            isEditing: false
-        )
+        let newBox = TextBoxModel()
+        newBox.id = UUID().uuidString
         textBoxes.append(newBox)
+        activeTextBox = newBox
     }
 }

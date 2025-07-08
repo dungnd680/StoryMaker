@@ -25,7 +25,10 @@ struct TemplateView: View {
     @State private var selectedFilter: FiltersModel = filters[0]
     @State private var filteredThumbnails: [UUID: UIImage] = [:]
     @State private var showToolTextView: Bool = false
-
+    @State private var showEditTextView: Bool = false
+    @State private var isEditing: Bool = false
+    
+    @StateObject private var keyboard = KeyboardObserver()
     @StateObject private var textBoxViewModel = TextBoxViewModel()
     
     var body: some View {
@@ -58,13 +61,13 @@ struct TemplateView: View {
                 ZStack {
                     if let image = selectedImage {
                         EditorImageView(
-                            image: image,
+                            textBoxViewModel: textBoxViewModel,
                             lightness: $lightness,
                             saturation: $saturation,
                             blur: $blur,
                             selectedFilter: $selectedFilter,
-                            showToolTextView: $showToolTextView,
-                            textBoxViewModel: textBoxViewModel
+                            showToolTextView: $showToolTextView, isEditing: $isEditing,
+                            image: image
                         )
                     } else {
                         Color.colorLightGray
@@ -107,6 +110,7 @@ struct TemplateView: View {
                     Spacer()
                     Button {
                         textBoxViewModel.addTextBox()
+                        print(textBoxViewModel.textBoxes.count)
                     } label: {
                         VStack {
                             Image("Format Shape")
@@ -138,6 +142,10 @@ struct TemplateView: View {
                 }
             }
             
+            ToolTextView(isVisible: $showToolTextView)
+            
+            EditTextView(isVisible: $showEditTextView, onClose: {showEditTextView = false})
+            
             AdjustBackgroundView(
                 lightness: $lightness,
                 saturation: $saturation,
@@ -149,7 +157,9 @@ struct TemplateView: View {
                 onClose: { showBrightnessView = false }
             )
             
-            ToolTextView(isVisible: $showToolTextView)
+            ToolKeyboardView(isEditing: $isEditing, showEditTextView: $showEditTextView)
+                .offset(y: keyboard.keyboardHeight == 0 ? UIScreen.main.bounds.height : -keyboardEffectiveHeight(keyboard.keyboardHeight))
+                .animation(keyboard.keyboardAnimation, value: keyboard.keyboardHeight)
         }
         .ignoresSafeArea(.keyboard)
 //        .onAppear {
@@ -196,13 +206,13 @@ struct TemplateView: View {
     private func exportImage() {
         guard let selectedImage = selectedImage else { return }
         let editorImageView = EditorImageView(
-            image: selectedImage,
+            textBoxViewModel: textBoxViewModel,
             lightness: $lightness,
             saturation: $saturation,
             blur: $blur,
             selectedFilter: $selectedFilter,
-            showToolTextView: $showToolTextView,
-            textBoxViewModel: textBoxViewModel
+            showToolTextView: $showToolTextView, isEditing: $isEditing,
+            image: selectedImage
         )
         
         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
@@ -213,6 +223,13 @@ struct TemplateView: View {
                 self.selectedImage = nil
             }
         }
+    }
+    
+    private func keyboardEffectiveHeight(_ height: CGFloat) -> CGFloat {
+        let bottomInset = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?.safeAreaInsets.bottom ?? 0
+        return height - bottomInset
     }
 }
 

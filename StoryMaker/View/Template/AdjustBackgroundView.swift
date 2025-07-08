@@ -13,6 +13,10 @@ enum AdjustTab {
 }
 
 struct AdjustBackgroundView: View {
+    
+    @State private var showBackgroundPicker = false
+    @State private var selectedTab: AdjustTab = .filters
+    
     @Binding var lightness: Double
     @Binding var saturation: Double
     @Binding var blur: Double
@@ -20,9 +24,6 @@ struct AdjustBackgroundView: View {
     @Binding var selectedFilter: FiltersModel
     @Binding var filteredThumbnails: [UUID: UIImage]
     @Binding var isVisible: Bool
-
-    @State private var showBackgroundPicker = false
-    @State private var selectedTab: AdjustTab = .filters
     
     var tabHeight: [AdjustTab : CGFloat] = [
         .brightness: 280,
@@ -65,7 +66,7 @@ struct AdjustBackgroundView: View {
                         }
                     } label: {
                         Image("Filters")
-                            .foregroundColor(selectedTab == .filters ? .red.opacity(0.9) : .primary)
+                            .foregroundStyle(selectedTab == .filters ? .backgroundColor2 : .colorDarkGray)
                     }
 
                     Button {
@@ -74,7 +75,7 @@ struct AdjustBackgroundView: View {
                         }
                     } label: {
                         Image("Brightness")
-                            .foregroundColor(selectedTab == .brightness ? .red.opacity(0.9) : .primary)
+                            .foregroundStyle(selectedTab == .brightness ? .backgroundColor2 : .colorDarkGray)
                     }
                 }
                 .padding(.horizontal, 26)
@@ -151,7 +152,7 @@ struct BrightnessView: View {
                 .font(.caption)
             HStack {
                 Slider(value: $lightness, in: -100...100, step: 1)
-                    .tint(.colorRed)
+                    .tint(.backgroundColor2)
                 Text(String(format: "%.0f", lightness))
                     .frame(width: 32)
             }
@@ -161,7 +162,7 @@ struct BrightnessView: View {
                 .font(.caption)
             HStack {
                 Slider(value: $saturation, in: -100...100, step: 1)
-                    .tint(.colorRed)
+                    .tint(.backgroundColor2)
                 Text(String(format: "%.0f", saturation))
                     .frame(width: 32)
             }
@@ -171,7 +172,7 @@ struct BrightnessView: View {
                 .font(.caption)
             HStack {
                 Slider(value: $blur, in: 0...100, step: 1)
-                    .tint(.colorRed)
+                    .tint(.backgroundColor2)
                 Text(String(format: "%.0f", blur))
                     .frame(width: 32)
             }

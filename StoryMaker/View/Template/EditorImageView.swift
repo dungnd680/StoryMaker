@@ -5,20 +5,21 @@
 //  Created by devmacmini on 20/6/25.
 //
 
-import Foundation
 import SwiftUI
 
 struct EditorImageView: View {
-    let image: UIImage
+
+    @ObservedObject var textBoxViewModel: TextBoxViewModel
     
     @Binding var lightness: Double
     @Binding var saturation: Double
     @Binding var blur: Double
     @Binding var selectedFilter: FiltersModel
     @Binding var showToolTextView: Bool
+    @Binding var isEditing: Bool
     
-    @ObservedObject var textBoxViewModel: TextBoxViewModel
-
+    let image: UIImage
+    
     var body: some View {
         GeometryReader { geometry in
             let designSize = CGSize(width: 1080, height: 1920)
@@ -38,32 +39,16 @@ struct EditorImageView: View {
                 Color.clear
                     .contentShape(Rectangle())
                     .onTapGesture {
+                        isEditing = false
                         showToolTextView = false
-                        for i in 0..<textBoxViewModel.textBoxes.count {
-                            if !textBoxViewModel.textBoxes[i].text.isEmpty {
-                                textBoxViewModel.textBoxes[i].isSelected = false
-                                textBoxViewModel.textBoxes[i].isEditing = false
-                            }
-                        }
                     }
                 
-                ForEach($textBoxViewModel.textBoxes) { $box in
+                ForEach(textBoxViewModel.textBoxes, id: \.id) { box in
                     TextBoxView(
-                        box: $box,
-                        text: $box.text,
+                        box: box,
+                        textBoxViewModel: textBoxViewModel,
                         showToolTextView: $showToolTextView,
-                        isSelected: $box.isSelected,
-                        isEditing: $box.isEditing,
-                        onSelect: {
-                            for i in 0..<textBoxViewModel.textBoxes.count {
-                                if textBoxViewModel.textBoxes[i].id != box.id && !textBoxViewModel.textBoxes[i].text.isEmpty {
-                                    textBoxViewModel.textBoxes[i].isSelected = false
-                                    textBoxViewModel.textBoxes[i].isEditing = false
-                                }
-                            }
-                            
-                            showToolTextView = true
-                        }
+                        isEditing: $isEditing
                     )
                 }
             }

@@ -28,7 +28,7 @@ struct ToolTextView: View {
             Spacer()
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 32) {
+                HStack(spacing: 38) {
                     ForEach(toolsText, id: \.title) { tool in
                         VStack {
                             Button {
@@ -36,6 +36,7 @@ struct ToolTextView: View {
                             } label: {
                                 VStack {
                                     Image(tool.image)
+                                        .foregroundStyle(.colorDarkGray)
                                     
                                     Text(tool.title)
                                         .font(.caption)

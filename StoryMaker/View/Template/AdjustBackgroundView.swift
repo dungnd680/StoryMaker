@@ -40,6 +40,7 @@ struct AdjustBackgroundView: View {
                 ZStack {
                     Text(selectedTab == .brightness ? "Brightness" : "Filters")
                         .font(.headline)
+                        .foregroundStyle(.colorDarkGray)
 
                     HStack {
                         Spacer()

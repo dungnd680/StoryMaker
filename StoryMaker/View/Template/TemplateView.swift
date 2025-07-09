@@ -10,6 +10,9 @@ import PhotosUI
 import Mantis
 
 struct TemplateView: View {
+    
+    @FocusState private var isTextFieldFocused: Bool
+    
     @State private var showSubscription = false
     @State private var showConfirmationDialog = false
     @State private var showPhotoPicker = false
@@ -18,7 +21,7 @@ struct TemplateView: View {
     @State private var showCropper = false
     @State private var originalImage: UIImage? = nil
     @State private var showBackgroundPicker = false
-    @State private var showBrightnessView = false
+    @State private var showAdjustBackgroundView = false
     @State private var lightness: Double = 0
     @State private var saturation: Double = 0
     @State private var blur: Double = 0
@@ -28,7 +31,7 @@ struct TemplateView: View {
     @State private var showEditTextView: Bool = false
     @State private var isEditing: Bool = false
     
-    @StateObject private var keyboard = KeyboardObserver()
+//    @StateObject private var keyboard = KeyboardObserver()
     @StateObject private var textBoxViewModel = TextBoxViewModel()
     
     var body: some View {
@@ -37,7 +40,7 @@ struct TemplateView: View {
                 HStack {
                     Button {
                         selectedImage = nil
-                        showBrightnessView = false
+                        showAdjustBackgroundView = false
                         showToolTextView = false
                     } label: {
                         Image("Back")
@@ -66,8 +69,12 @@ struct TemplateView: View {
                             saturation: $saturation,
                             blur: $blur,
                             selectedFilter: $selectedFilter,
-                            showToolTextView: $showToolTextView, isEditing: $isEditing,
-                            image: image
+                            showToolTextView: $showToolTextView,
+                            isEditing: $isEditing,
+                            showEditTextView: $showEditTextView,
+                            showAdjustBackgroundView: $showAdjustBackgroundView,
+                            image: image,
+                            isTextFieldFocused: $isTextFieldFocused
                         )
                     } else {
                         Color.colorLightGray
@@ -110,7 +117,7 @@ struct TemplateView: View {
                     Spacer()
                     Button {
                         textBoxViewModel.addTextBox()
-                        print(textBoxViewModel.textBoxes.count)
+                        showToolTextView = true
                     } label: {
                         VStack {
                             Image("Format Shape")
@@ -126,7 +133,7 @@ struct TemplateView: View {
                     Spacer()
                     
                     Button {
-                        showBrightnessView = true
+                        showAdjustBackgroundView = true
                     } label: {
                         VStack {
                             Image("Background Filter")
@@ -144,7 +151,15 @@ struct TemplateView: View {
             
             ToolTextView(isVisible: $showToolTextView)
             
-            EditTextView(isVisible: $showEditTextView, onClose: {showEditTextView = false})
+            EditTextView(
+                isVisible: $showEditTextView,
+                showEditTextView: $showEditTextView,
+                isEditing: $isEditing,
+                isTextFieldFocused: $isTextFieldFocused,
+                onClose: {
+                    showEditTextView = false
+                }
+            )
             
             AdjustBackgroundView(
                 lightness: $lightness,
@@ -153,13 +168,10 @@ struct TemplateView: View {
                 selectedImage: $selectedImage,
                 selectedFilter: $selectedFilter,
                 filteredThumbnails: $filteredThumbnails,
-                isVisible: $showBrightnessView,
-                onClose: { showBrightnessView = false }
+                isVisible: $showAdjustBackgroundView,
+                onClose: { showAdjustBackgroundView = false }
             )
-            
-            ToolKeyboardView(isEditing: $isEditing, showEditTextView: $showEditTextView)
-                .offset(y: keyboard.keyboardHeight == 0 ? UIScreen.main.bounds.height : -keyboardEffectiveHeight(keyboard.keyboardHeight))
-                .animation(keyboard.keyboardAnimation, value: keyboard.keyboardHeight)
+
         }
         .ignoresSafeArea(.keyboard)
 //        .onAppear {
@@ -168,7 +180,7 @@ struct TemplateView: View {
         .onChange(of: selectedImage) {
             if let image = selectedImage {
                 textBoxViewModel.textBoxes = []
-                showBrightnessView = false
+                showAdjustBackgroundView = false
                 lightness = 0
                 saturation = 0
                 blur = 0
@@ -211,28 +223,25 @@ struct TemplateView: View {
             saturation: $saturation,
             blur: $blur,
             selectedFilter: $selectedFilter,
-            showToolTextView: $showToolTextView, isEditing: $isEditing,
-            image: selectedImage
+            showToolTextView: $showToolTextView,
+            isEditing: $isEditing,
+            showEditTextView: $showEditTextView,
+            showAdjustBackgroundView: $showAdjustBackgroundView,
+            image: selectedImage,
+            isTextFieldFocused: $isTextFieldFocused
         )
         
         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
             print("Export result: \(message)")
             if success {
-                showBrightnessView = false
+                showAdjustBackgroundView = false
                 showToolTextView = false
                 self.selectedImage = nil
             }
         }
     }
-    
-    private func keyboardEffectiveHeight(_ height: CGFloat) -> CGFloat {
-        let bottomInset = UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
-            .first?.safeAreaInsets.bottom ?? 0
-        return height - bottomInset
-    }
 }
 
-//#Preview {
-//    TemplateView()
-//}
+#Preview {
+    TemplateView()
+}

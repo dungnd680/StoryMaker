@@ -18,6 +18,7 @@ enum AppScreen {
 
 struct ContentView: View {
     @AppStorage("hasSeenIntro") private var hasSeenIntro = false
+    
     @State private var currentScreen: AppScreen = .splash
     
 //    init() {

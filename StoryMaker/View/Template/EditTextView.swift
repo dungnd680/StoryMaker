@@ -14,8 +14,12 @@ enum EditTextTab {
 struct EditTextView: View {
     
     @State private var selectedTab: EditTextTab = .size
-    @Binding var isVisible: Bool
     
+    @Binding var isVisible: Bool
+    @Binding var showEditTextView: Bool
+    @Binding var isEditing: Bool
+    
+    var isTextFieldFocused: FocusState<Bool>.Binding
     var onClose: () -> Void
     
     var body: some View {
@@ -26,9 +30,15 @@ struct EditTextView: View {
                 ZStack {
                     Text(selectedTab.displayName)
                         .font(.headline)
+                        .foregroundStyle(.colorDarkGray)
                     
                     HStack {
                         Image("Keyboard")
+                            .onTapGesture {
+                                isTextFieldFocused.wrappedValue = true
+                                isEditing = true
+                                showEditTextView = false
+                            }
                         
                         Spacer()
                         
@@ -43,11 +53,13 @@ struct EditTextView: View {
                 
                 HStack(spacing: 24) {
                     ForEach([EditTextTab.size, .font, .color, .gradient, .stroke, .align, .background, .shadow], id: \.self) { tab in
-                        Button {
-                            selectedTab = tab
-                        } label: {
-                            Image(imageName(for: tab))
-                                .foregroundStyle(selectedTab == tab ? .backgroundColor2 : .colorDarkGray)
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            Button {
+                                selectedTab = tab
+                            } label: {
+                                Image(imageName(for: tab))
+                                    .foregroundStyle(selectedTab == tab ? .backgroundColor2 : .colorDarkGray)
+                            }
                         }
                     }
                 }

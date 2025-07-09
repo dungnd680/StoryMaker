@@ -28,7 +28,7 @@ struct ToolTextView: View {
             Spacer()
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 38) {
+                HStack(spacing: 40) {
                     ForEach(toolsText, id: \.title) { tool in
                         VStack {
                             Button {
@@ -53,7 +53,7 @@ struct ToolTextView: View {
             .background(Color.white)
         }
         .offset(y: isVisible ? 0 : toolTextHeight)
-        .animation(.easeInOut(duration: 0.15), value: isVisible)
+        .animation(.easeInOut(duration: 0.2), value: isVisible)
         .ignoresSafeArea()
     }
 }

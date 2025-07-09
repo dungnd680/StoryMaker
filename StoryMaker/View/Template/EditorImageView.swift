@@ -17,8 +17,12 @@ struct EditorImageView: View {
     @Binding var selectedFilter: FiltersModel
     @Binding var showToolTextView: Bool
     @Binding var isEditing: Bool
+    @Binding var showEditTextView: Bool
+    @Binding var showAdjustBackgroundView: Bool
     
     let image: UIImage
+    
+    var isTextFieldFocused: FocusState<Bool>.Binding
     
     var body: some View {
         GeometryReader { geometry in
@@ -39,8 +43,10 @@ struct EditorImageView: View {
                 Color.clear
                     .contentShape(Rectangle())
                     .onTapGesture {
+                        isTextFieldFocused.wrappedValue = false
                         isEditing = false
                         showToolTextView = false
+                        showEditTextView = false
                     }
                 
                 ForEach(textBoxViewModel.textBoxes, id: \.id) { box in
@@ -48,7 +54,10 @@ struct EditorImageView: View {
                         box: box,
                         textBoxViewModel: textBoxViewModel,
                         showToolTextView: $showToolTextView,
-                        isEditing: $isEditing
+                        isEditing: $isEditing,
+                        showEditTextView: $showEditTextView,
+                        showAdjustBackgroundView: $showAdjustBackgroundView,
+                        isTextFieldFocused: isTextFieldFocused
                     )
                 }
             }

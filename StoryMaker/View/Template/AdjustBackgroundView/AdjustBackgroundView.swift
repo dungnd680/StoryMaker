@@ -95,7 +95,7 @@ struct AdjustBackgroundView: View {
             }
             .background(Color.white)
         }
-        .offset(y:(isVisible ? 0 : (tabHeight[selectedTab] ?? 300)))
+        .offset(y:(isVisible ? 0 : tabHeight[selectedTab] ?? 0))
         .animation(.easeInOut(duration: 0.2), value: isVisible)
         .ignoresSafeArea()
         .sheet(isPresented: $showBackgroundPicker) {
@@ -103,86 +103,6 @@ struct AdjustBackgroundView: View {
                 selectedImage = image
             }
         }
-    }
-}
-
-struct FiltersView: View {
-    @Binding var selectedFilter: FiltersModel
-    @Binding var filteredThumbnails: [UUID: UIImage]
-
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(filters) { filter in
-                    VStack {
-                        Image(uiImage: filteredThumbnails[filter.id] ?? UIImage())
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 60, height: 60)
-                            .background(Color.gray.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 6))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(selectedFilter.id == filter.id ? Color.red.opacity(0.9) : .clear, lineWidth: 2)
-                            )
-
-                        Text(filter.name)
-                            .font(.caption)
-                            .foregroundColor(selectedFilter.id == filter.id ? .red : .gray)
-                    }
-                    .onTapGesture {
-                        selectedFilter = filter
-                    }
-                }
-            }
-            .padding(.horizontal, 22)
-            .padding(.bottom, 22)
-            .frame(height: 180)
-        }
-    }
-}
-
-struct BrightnessView: View {
-    @Binding var lightness: Double
-    @Binding var saturation: Double
-    @Binding var blur: Double
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text("Lightness")
-                .font(.caption)
-            HStack {
-                Slider(value: $lightness, in: -100...100, step: 1)
-                    .tint(.backgroundColor2)
-                Text(String(format: "%.0f", lightness))
-                    .frame(width: 32)
-            }
-            .font(.subheadline)
-
-            Text("Saturation")
-                .font(.caption)
-            HStack {
-                Slider(value: $saturation, in: -100...100, step: 1)
-                    .tint(.backgroundColor2)
-                Text(String(format: "%.0f", saturation))
-                    .frame(width: 32)
-            }
-            .font(.subheadline)
-
-            Text("Blur")
-                .font(.caption)
-            HStack {
-                Slider(value: $blur, in: 0...100, step: 1)
-                    .tint(.backgroundColor2)
-                Text(String(format: "%.0f", blur))
-                    .frame(width: 32)
-            }
-            .font(.subheadline)
-        }
-        .padding(.leading, 26)
-        .padding(.trailing)
-        .padding(.bottom)
-        .frame(height: 200)
     }
 }
 

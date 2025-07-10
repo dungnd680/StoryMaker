@@ -22,16 +22,17 @@ struct TemplateView: View {
     @State private var originalImage: UIImage? = nil
     @State private var showBackgroundPicker = false
     @State private var showAdjustBackgroundView = false
-    @State private var lightness: Double = 0
-    @State private var saturation: Double = 0
-    @State private var blur: Double = 0
     @State private var selectedFilter: FiltersModel = filters[0]
     @State private var filteredThumbnails: [UUID: UIImage] = [:]
     @State private var showToolTextView: Bool = false
     @State private var showEditTextView: Bool = false
     @State private var isEditing: Bool = false
+    @State private var selectedTab: EditTextTab = .size
     
-//    @StateObject private var keyboard = KeyboardObserver()
+    @State private var lightness: Double = 0
+    @State private var saturation: Double = 0
+    @State private var blur: Double = 0
+    
     @StateObject private var textBoxViewModel = TextBoxViewModel()
     
     var body: some View {
@@ -43,9 +44,11 @@ struct TemplateView: View {
                         showAdjustBackgroundView = false
                         showToolTextView = false
                     } label: {
-                        Image("Back")
+                        Image(systemName: "xmark")
+                            .foregroundStyle(.colorDarkGray)
                     }
                     .padding(.leading, 8)
+                    .padding(.bottom, 3)
                     
                     Spacer()
                     
@@ -57,6 +60,7 @@ struct TemplateView: View {
                     }
                     .disabled(selectedImage == nil)
                     .padding(.trailing, 8)
+                    .padding(.bottom, 3)
                 }
                 .padding(.horizontal)
                 .padding(.top)
@@ -117,7 +121,6 @@ struct TemplateView: View {
                     Spacer()
                     Button {
                         textBoxViewModel.addTextBox()
-                        showToolTextView = true
                     } label: {
                         VStack {
                             Image("Format Shape")
@@ -149,12 +152,18 @@ struct TemplateView: View {
                 }
             }
             
-            ToolTextView(isVisible: $showToolTextView)
+            ToolTextView(
+                isVisible: $showToolTextView,
+                selectedTab: $selectedTab,
+                showEditTextView: $showEditTextView
+            )
             
             EditTextView(
+                textBoxViewModel: textBoxViewModel,
                 isVisible: $showEditTextView,
                 showEditTextView: $showEditTextView,
                 isEditing: $isEditing,
+                selectedTab: $selectedTab,
                 isTextFieldFocused: $isTextFieldFocused,
                 onClose: {
                     showEditTextView = false

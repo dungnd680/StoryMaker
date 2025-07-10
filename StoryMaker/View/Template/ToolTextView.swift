@@ -12,14 +12,16 @@ let toolsText: [(image: String, title: String)] = [
     ("Font Text", "Font"),
     ("Color Text", "Color"),
     ("Gradient Text", "Gradient"),
-    ("Stroke Text", "Stroke"),
     ("Align Text", "Align"),
     ("Shadow Text", "Shadow"),
     ("Background Text", "Background")
 ]
 
 struct ToolTextView: View {
+    
     @Binding var isVisible: Bool
+    @Binding var selectedTab: EditTextTab
+    @Binding var showEditTextView: Bool
     
     var toolTextHeight: CGFloat = 80
 
@@ -32,7 +34,16 @@ struct ToolTextView: View {
                     ForEach(toolsText, id: \.title) { tool in
                         VStack {
                             Button {
-                                
+                                switch tool.title {
+                                case "Size": showEditorText(for: .size)
+                                case "Font": showEditorText(for: .font)
+                                case "Color": showEditorText(for: .color)
+                                case "Gradient": showEditorText(for: .gradient)
+                                case "Align": showEditorText(for: .align)
+                                case "Shadow": showEditorText(for: .shadow)
+                                case "Background": showEditorText(for: .background)
+                                default: break
+                                }
                             } label: {
                                 VStack {
                                     Image(tool.image)
@@ -56,8 +67,13 @@ struct ToolTextView: View {
         .animation(.easeInOut(duration: 0.2), value: isVisible)
         .ignoresSafeArea()
     }
+    
+    private func showEditorText(for tab: EditTextTab) {
+        selectedTab = tab
+        showEditTextView = true
+    }
 }
 
-#Preview {
-    ToolTextView(isVisible: .constant(true))
-}
+//#Preview {
+//    ToolTextView(isVisible: .constant(true), selectedTab: .constant(.size))
+//}

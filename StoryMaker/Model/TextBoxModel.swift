@@ -13,16 +13,24 @@ class TextBoxModel: ObservableObject, Identifiable {
     @Published var content: String = ""
     @Published var x: CGFloat = 0
     @Published var y: CGFloat = -200
-    @Published var size: CGFloat = 100
+    @Published var sizeText: CGFloat = 100
+    @Published var lineHeight: CGFloat = 0
+    @Published var letterSpacing: CGFloat = 0
     @Published var color: String = "#FFFFFF"
     
     static func empty() -> TextBoxModel {
         return TextBoxModel()
     }
-    
+}
+
+extension TextBoxModel {
+    var isEmpty: Bool {
+        return id.isEmpty
+    }
+}
+
 //    static func empty() -> TextBoxModel {
 //        let model = TextBoxModel()
 //        model.id = "empty"
 //        return model
 //    }
-}

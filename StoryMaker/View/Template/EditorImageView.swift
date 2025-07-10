@@ -43,8 +43,9 @@ struct EditorImageView: View {
                 Color.clear
                     .contentShape(Rectangle())
                     .onTapGesture {
+                        textBoxViewModel.activeTextBox = .empty()
                         isTextFieldFocused.wrappedValue = false
-                        isEditing = false
+//                        isEditing = false
                         showToolTextView = false
                         showEditTextView = false
                     }
@@ -59,11 +60,23 @@ struct EditorImageView: View {
                         showAdjustBackgroundView: $showAdjustBackgroundView,
                         isTextFieldFocused: isTextFieldFocused
                     )
+                    .zIndex(textBoxViewModel.activeTextBox.id == box.id ? 1 : 0)
                 }
             }
             .frame(width: designSize.width, height: designSize.height)
             .scaleEffect(scale)
             .frame(width: geometry.size.width, height: geometry.size.height)
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        let activeBox = textBoxViewModel.activeTextBox
+                        guard !activeBox.isEmpty,
+                              let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == activeBox.id }) else { return }
+                        
+                        textBoxViewModel.textBoxes[index].x += value.translation.width
+                        textBoxViewModel.textBoxes[index].y += value.translation.height
+                    }
+            )
         }
     }
 }

@@ -7,20 +7,25 @@
 
 import SwiftUI
 
-enum EditTextTab {
-    case size, font, color, gradient, stroke, align, shadow, background
+enum EditTextTab: String, CaseIterable, Equatable, Hashable {
+    case size, font, color, gradient, align, shadow, background
 }
 
 struct EditTextView: View {
     
-    @State private var selectedTab: EditTextTab = .size
+    @ObservedObject var textBoxViewModel: TextBoxViewModel
     
     @Binding var isVisible: Bool
     @Binding var showEditTextView: Bool
     @Binding var isEditing: Bool
+    @Binding var selectedTab: EditTextTab
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     var onClose: () -> Void
+    var tabHeight: [EditTextTab : CGFloat] = [
+        .size: 280, .font: 200, .color: 200, .gradient: 200,
+        .align: 200, .shadow: 200, .background: 200
+    ]
     
     var body: some View {
         VStack {
@@ -52,14 +57,15 @@ struct EditTextView: View {
                 .frame(height: 50)
                 
                 HStack(spacing: 24) {
-                    ForEach([EditTextTab.size, .font, .color, .gradient, .stroke, .align, .background, .shadow], id: \.self) { tab in
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            Button {
+                    ForEach([EditTextTab.size, .font, .color, .gradient, .align, .shadow, .background], id: \.self) { tab in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
                                 selectedTab = tab
-                            } label: {
-                                Image(imageName(for: tab))
-                                    .foregroundStyle(selectedTab == tab ? .backgroundColor2 : .colorDarkGray)
+                                isVisible = true
                             }
+                        } label: {
+                            Image(imageName(for: tab))
+                                .foregroundStyle(selectedTab == tab ? .backgroundColor2 : .colorDarkGray)
                         }
                     }
                 }
@@ -68,12 +74,36 @@ struct EditTextView: View {
                 .background(Color.gray.opacity(0.2))
                 .clipShape(RoundedRectangle(cornerRadius: 30))
                 
-                Text(selectedTab.displayName)
-                    .frame(height: 150)
+                switch selectedTab {
+                case .size:
+                    SizeTextView(
+                        sizeText: $textBoxViewModel.activeTextBox.sizeText,
+                        lineHeight: $textBoxViewModel.activeTextBox.lineHeight,
+                        letterSpacing: $textBoxViewModel.activeTextBox.letterSpacing
+                    )
+                case .font:
+                    Text("Font View")
+                        .frame(height: 120)
+                case .color:
+                    Text("Color View")
+                        .frame(height: 120)
+                case .gradient:
+                    Text("Gradient View")
+                        .frame(height: 120)
+                case .align:
+                    Text("Align View")
+                        .frame(height: 120)
+                case .shadow:
+                    Text("Shadow View")
+                        .frame(height: 120)
+                case .background:
+                    Text("Background View")
+                        .frame(height: 120)
+                }
             }
             .background(Color.white)
         }
-        .offset(y:(isVisible ? 0 : 230))
+        .offset(y:(isVisible ? 0 : tabHeight[selectedTab] ?? 0))
         .animation(.easeInOut(duration: 0.2), value: isVisible)
         .ignoresSafeArea()
     }
@@ -84,7 +114,6 @@ struct EditTextView: View {
         case .font: return "Font Text"
         case .color: return "Color Text"
         case .gradient: return "Gradient Text"
-        case .stroke: return "Stroke Text"
         case .align: return "Align Text"
         case .shadow: return "Shadow Text"
         case .background: return "Background Text"
@@ -99,7 +128,6 @@ extension EditTextTab {
         case .font: return "Font"
         case .color: return "Color"
         case .gradient: return "Gradient"
-        case .stroke: return "Stroke"
         case .align: return "Align"
         case .shadow: return "Shadow"
         case .background: return "Background"
@@ -108,5 +136,11 @@ extension EditTextTab {
 }
 
 //#Preview {
-//    EditTextView(onClose: {})
+//    EditTextView(
+//        isVisible: .constant(true),
+//        showEditTextView: .constant(true),
+//        isEditing: .constant(true),
+//        isTextFieldFocused: FocusState<Bool>().projectedValue,
+//        onClose: {}
+//    )
 //}

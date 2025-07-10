@@ -27,16 +27,25 @@ struct TextBoxView: View {
         Group {
             if isExporting || (!isEditing && !box.content.isEmpty) {
                 Text(box.content)
+                    .font(.system(size: box.sizeText))
+                    .lineSpacing(box.lineHeight)
+                    .tracking(box.letterSpacing)
             } else {
                 ZStack {
                     if box.content.isEmpty {
                         Text("Double Tap To Edit")
+                            .font(.system(size: box.sizeText))
+                            .lineSpacing(box.lineHeight)
+                            .tracking(box.letterSpacing)
                     }
                     
                     if box.id == textBoxViewModel.activeTextBox.id && isEditing {
                         TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
+                            .font(.system(size: box.sizeText))
+                            .lineSpacing(box.lineHeight)
+                            .tracking(box.letterSpacing)
                             .toolbar {
                                 ToolbarItem(placement: .keyboard) {
                                     ZStack {
@@ -52,9 +61,11 @@ struct TextBoxView: View {
                                                     .foregroundStyle(.colorDarkGray)
                                             }
                                             .onTapGesture {
-                                                isTextFieldFocused.wrappedValue = false
-                                                showEditTextView = true
-                                                isEditing = false
+                                                if !textBoxViewModel.activeTextBox.content.isEmpty {
+                                                    isTextFieldFocused.wrappedValue = false
+                                                    showEditTextView = true
+                                                    isEditing = false
+                                                }
                                             }
                                             
                                             Spacer()
@@ -70,14 +81,43 @@ struct TextBoxView: View {
                             }
                     } else {
                         Text(box.content)
+                            .font(.system(size: box.sizeText))
+                            .lineSpacing(box.lineHeight)
+                            .tracking(box.letterSpacing)
                     }
                 }
             }
         }
-        .font(.system(size: box.size))
         .foregroundStyle(.white)
         .multilineTextAlignment(.center)
         .offset(x: box.x + dragOffset.width, y: box.y + dragOffset.height)
+        .gesture(
+            TapGesture(count: 1)
+                .onEnded {
+                    textBoxViewModel.activeTextBox = box
+                    isTextFieldFocused.wrappedValue = false
+                    isEditing = false
+                    showToolTextView = !box.content.isEmpty
+
+                    if box.content.isEmpty {
+                        showEditTextView = false
+                    }
+
+                    if showAdjustBackgroundView {
+                        showAdjustBackgroundView = false
+                        if !box.content.isEmpty {
+                            showEditTextView = true
+                        }
+                    }
+
+                    if showEditTextView {
+                        showEditTextView = false
+                        showEditTextView = true
+                    }
+
+                    print("Tapped box ID: \(box.id)")
+                }
+        )
         .highPriorityGesture(
             TapGesture(count: 2)
                 .onEnded {
@@ -89,35 +129,23 @@ struct TextBoxView: View {
                     showEditTextView = false
                     showToolTextView = false
                     showAdjustBackgroundView = false
+                    
                     print("Tapped box ID: \(box.id)")
                 }
         )
         .gesture(
-            TapGesture(count: 1)
-                .onEnded {
-                    textBoxViewModel.activeTextBox = box
-                    isTextFieldFocused.wrappedValue = false
-                    isEditing = false
-                    if !textBoxViewModel.activeTextBox.content.isEmpty || !showEditTextView {
-                        if showAdjustBackgroundView {
-                            showEditTextView = true
-                        } else {
-                            showToolTextView = true
-                        }
-                        showAdjustBackgroundView = false
-                    }
-                    print("Tapped box ID: \(box.id)")
-                }
-        )
-        .gesture(
-            DragGesture()
+            DragGesture(minimumDistance: 0)
                 .updating($dragOffset) { value, state, _ in
-                    state = value.translation
+                    if (textBoxViewModel.activeTextBox.id == box.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
+                        state = value.translation
+                    }
                 }
                 .onEnded { value in
-                    if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == box.id }) {
-                        textBoxViewModel.textBoxes[index].x += value.translation.width
-                        textBoxViewModel.textBoxes[index].y += value.translation.height
+                    if (textBoxViewModel.activeTextBox.id == box.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
+                        if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == box.id }) {
+                            textBoxViewModel.textBoxes[index].x += value.translation.width
+                            textBoxViewModel.textBoxes[index].y += value.translation.height
+                        }
                     }
                 }
         )

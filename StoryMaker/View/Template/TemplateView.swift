@@ -21,11 +21,11 @@ struct TemplateView: View {
     @State private var showCropper = false
     @State private var originalImage: UIImage? = nil
     @State private var showBackgroundPicker = false
-    @State private var showAdjustBackgroundView = false
+    @State private var showAdjustBackground = false
     @State private var selectedFilter: FiltersModel = filters[0]
     @State private var filteredThumbnails: [UUID: UIImage] = [:]
-    @State private var showToolTextView: Bool = false
-    @State private var showEditTextView: Bool = false
+    @State private var showToolText: Bool = false
+    @State private var showEditText: Bool = false
     @State private var isEditing: Bool = false
     @State private var selectedTab: EditTextTab = .size
     
@@ -41,8 +41,8 @@ struct TemplateView: View {
                 HStack {
                     Button {
                         selectedImage = nil
-                        showAdjustBackgroundView = false
-                        showToolTextView = false
+                        showAdjustBackground = false
+                        showToolText = false
                     } label: {
                         Image(systemName: "xmark")
                             .foregroundStyle(.colorDarkGray)
@@ -73,10 +73,10 @@ struct TemplateView: View {
                             saturation: $saturation,
                             blur: $blur,
                             selectedFilter: $selectedFilter,
-                            showToolTextView: $showToolTextView,
+                            showToolTextView: $showToolText,
                             isEditing: $isEditing,
-                            showEditTextView: $showEditTextView,
-                            showAdjustBackgroundView: $showAdjustBackgroundView,
+                            showEditTextView: $showEditText,
+                            showAdjustBackgroundView: $showAdjustBackground,
                             image: image,
                             isTextFieldFocused: $isTextFieldFocused
                         )
@@ -136,7 +136,7 @@ struct TemplateView: View {
                     Spacer()
                     
                     Button {
-                        showAdjustBackgroundView = true
+                        showAdjustBackground = true
                     } label: {
                         VStack {
                             Image("Background Filter")
@@ -153,20 +153,21 @@ struct TemplateView: View {
             }
             
             ToolTextView(
-                isVisible: $showToolTextView,
+                isVisible: $showToolText,
                 selectedTab: $selectedTab,
-                showEditTextView: $showEditTextView
+                showEditTextView: $showEditText
             )
             
             EditTextView(
                 textBoxViewModel: textBoxViewModel,
-                isVisible: $showEditTextView,
-                showEditTextView: $showEditTextView,
+                isVisible: $showEditText,
+                showEditTextView: $showEditText,
                 isEditing: $isEditing,
                 selectedTab: $selectedTab,
+                showSubscription: $showSubscription,
                 isTextFieldFocused: $isTextFieldFocused,
                 onClose: {
-                    showEditTextView = false
+                    showEditText = false
                 }
             )
             
@@ -177,8 +178,8 @@ struct TemplateView: View {
                 selectedImage: $selectedImage,
                 selectedFilter: $selectedFilter,
                 filteredThumbnails: $filteredThumbnails,
-                isVisible: $showAdjustBackgroundView,
-                onClose: { showAdjustBackgroundView = false }
+                isVisible: $showAdjustBackground,
+                onClose: { showAdjustBackground = false }
             )
 
         }
@@ -189,7 +190,7 @@ struct TemplateView: View {
         .onChange(of: selectedImage) {
             if let image = selectedImage {
                 textBoxViewModel.textBoxes = []
-                showAdjustBackgroundView = false
+                showAdjustBackground = false
                 lightness = 0
                 saturation = 0
                 blur = 0
@@ -232,10 +233,10 @@ struct TemplateView: View {
             saturation: $saturation,
             blur: $blur,
             selectedFilter: $selectedFilter,
-            showToolTextView: $showToolTextView,
+            showToolTextView: $showToolText,
             isEditing: $isEditing,
-            showEditTextView: $showEditTextView,
-            showAdjustBackgroundView: $showAdjustBackgroundView,
+            showEditTextView: $showEditText,
+            showAdjustBackgroundView: $showAdjustBackground,
             image: selectedImage,
             isTextFieldFocused: $isTextFieldFocused
         )
@@ -243,8 +244,8 @@ struct TemplateView: View {
         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message in
             print("Export result: \(message)")
             if success {
-                showAdjustBackgroundView = false
-                showToolTextView = false
+                showAdjustBackground = false
+                showToolText = false
                 self.selectedImage = nil
             }
         }

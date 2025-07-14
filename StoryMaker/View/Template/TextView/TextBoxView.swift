@@ -29,26 +29,25 @@ struct TextBoxView: View {
     var body: some View {
         Group {
             if isExporting || (!isEditing && !box.content.isEmpty) {
-                Text(box.content)
-                    .font(.custom(box.fontFamily, size: box.sizeText))
-                    .lineSpacing(box.lineHeight)
-                    .tracking(box.letterSpacing)
+                if let gradient = box.gradientText {
+                    Text(box.content)
+                        .overlay(gradient.linearGradient)
+                        .mask(
+                            Text(box.content)
+                        )
+                } else {
+                    Text(box.content)
+                }
             } else {
                 ZStack {
                     if box.content.isEmpty {
                         Text("Double Tap To Edit")
-                            .font(.custom(box.fontFamily, size: box.sizeText))
-                            .lineSpacing(box.lineHeight)
-                            .tracking(box.letterSpacing)
                     }
                     
                     if box.id == textBoxViewModel.activeTextBox.id && isEditing {
                         TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
-                            .font(.custom(box.fontFamily, size: box.sizeText))
-                            .lineSpacing(box.lineHeight)
-                            .tracking(box.letterSpacing)
                             .toolbar {
                                 ToolbarItem(placement: .keyboard) {
                                     ZStack {
@@ -77,21 +76,30 @@ struct TextBoxView: View {
                                                 .onTapGesture {
                                                     isTextFieldFocused.wrappedValue = false
                                                     isEditing = false
+                                                    showToolTextView = true
                                                 }
                                         }
                                     }
                                 }
                             }
                     } else {
-                        Text(box.content)
-                            .font(.custom(box.fontFamily, size: box.sizeText))
-                            .lineSpacing(box.lineHeight)
-                            .tracking(box.letterSpacing)
+                        if let gradient = box.gradientText {
+                            Text(box.content)
+                                .overlay(gradient.linearGradient)
+                                .mask(
+                                    Text(box.content)
+                                )
+                        } else {
+                            Text(box.content)
+                        }
                     }
                 }
             }
         }
-        .foregroundStyle(.white)
+        .font(.custom(box.fontFamily, size: box.sizeText))
+        .lineSpacing(box.lineHeight)
+        .tracking(box.letterSpacing)
+        .foregroundStyle(Color(box.colorText))
         .multilineTextAlignment(.center)
         .offset(x: box.x + dragOffset.width, y: box.y + dragOffset.height)
         .gesture(
@@ -110,7 +118,8 @@ struct TextBoxView: View {
                         showEditTextView = false
                         showToolTextView = false
                         showAdjustBackgroundView = false
-                        print("Double tapped box ID: \(box.id)")
+                        
+                        print("2 tap: \(box.id)")
                     } else {
                         let workItem = DispatchWorkItem {
                             textBoxViewModel.activeTextBox = box
@@ -134,7 +143,7 @@ struct TextBoxView: View {
                                 showEditTextView = true
                             }
 
-                            print("Single tapped box ID: \(box.id)")
+                            print("1 tap: \(box.id)")
                         }
 
                         tapWorkItem = workItem
@@ -156,12 +165,6 @@ struct TextBoxView: View {
                         if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == box.id }) {
                             textBoxViewModel.textBoxes[index].x += value.translation.width
                             textBoxViewModel.textBoxes[index].y += value.translation.height
-                            if abs(textBoxViewModel.textBoxes[index].x) < 20 {
-                                textBoxViewModel.textBoxes[index].x = 0
-                            }
-                            if abs(textBoxViewModel.textBoxes[index].y) < 20 {
-                                textBoxViewModel.textBoxes[index].y = 0
-                            }
                         }
                     }
                 }

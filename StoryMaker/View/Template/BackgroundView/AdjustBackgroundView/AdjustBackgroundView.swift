@@ -21,7 +21,7 @@ struct AdjustBackgroundView: View {
     @Binding var saturation: Double
     @Binding var blur: Double
     @Binding var selectedImage: UIImage?
-    @Binding var selectedFilter: FiltersModel
+    @Binding var selectedFilter: FilterModel
     @Binding var filteredThumbnails: [UUID: UIImage]
     @Binding var isVisible: Bool
     

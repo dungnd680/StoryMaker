@@ -22,7 +22,7 @@ struct TemplateView: View {
     @State private var originalImage: UIImage? = nil
     @State private var showBackgroundPicker = false
     @State private var showAdjustBackground = false
-    @State private var selectedFilter: FiltersModel = filters[0]
+    @State private var selectedFilter: FilterModel = filters[0]
     @State private var filteredThumbnails: [UUID: UIImage] = [:]
     @State private var showToolText: Bool = false
     @State private var showEditText: Bool = false
@@ -161,10 +161,11 @@ struct TemplateView: View {
             EditTextView(
                 textBoxViewModel: textBoxViewModel,
                 isVisible: $showEditText,
-                showEditTextView: $showEditText,
+                showEditText: $showEditText,
                 isEditing: $isEditing,
                 selectedTab: $selectedTab,
                 showSubscription: $showSubscription,
+                showToolText: $showToolText,
                 isTextFieldFocused: $isTextFieldFocused,
                 onClose: {
                     showEditText = false

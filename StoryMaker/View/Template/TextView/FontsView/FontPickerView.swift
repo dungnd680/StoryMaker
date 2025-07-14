@@ -39,12 +39,12 @@ struct FontPickerView: View {
                                         }
                                         selectedFont = font.iosFamily
                                         viewModel.selectedFont = font
-//                                        textBoxViewModel.activeTextBox.fontFamily = font.iosFamily
+                                        textBoxViewModel.activeTextBox.fontFamily = font.iosFamily
                                     } label: {
                                         FontItemView(
                                             content: textBoxViewModel.activeTextBox.content,
                                             font: font,
-                                            isSelected: font == viewModel.selectedFont
+                                            isSelected: !textBoxViewModel.activeTextBox.fontFamily.isEmpty && font.iosFamily == textBoxViewModel.activeTextBox.fontFamily
                                         )
                                     }
                                 }

@@ -8,33 +8,33 @@
 import Foundation
 import SwiftUI
 
-struct FiltersModel: Identifiable, Equatable {
+struct FilterModel: Identifiable, Equatable {
     let id = UUID()
     let name: String
     let filterName: String?
 }
 
-let filters: [FiltersModel] = [
-    FiltersModel(name: "Normal", filterName: nil),
-    FiltersModel(name: "Warm", filterName: "CITemperatureAndTint"),
-    FiltersModel(name: "Cool", filterName: "CITemperatureAndTint"),
-    FiltersModel(name: "Bright", filterName: "CIColorControls"),
-    FiltersModel(name: "Dark", filterName: "CIColorControls"),
-    FiltersModel(name: "Saturated", filterName: "CIColorControls"),
-    FiltersModel(name: "Desaturated", filterName: "CIColorControls"),
-    FiltersModel(name: "Fade", filterName: "CIPhotoEffectFade"),
-    FiltersModel(name: "Sepia", filterName: "CISepiaTone"),
-    FiltersModel(name: "Process", filterName: "CIPhotoEffectProcess"),
-    FiltersModel(name: "Transfer", filterName: "CIPhotoEffectTransfer"),
-    FiltersModel(name: "Noir", filterName: "CIPhotoEffectNoir"),
-    FiltersModel(name: "Chrome", filterName: "CIPhotoEffectChrome"),
-    FiltersModel(name: "Instant", filterName: "CIPhotoEffectInstant"),
-    FiltersModel(name: "Mono", filterName: "CIPhotoEffectMono"),
-    FiltersModel(name: "Tonal", filterName: "CIPhotoEffectTonal"),
-    FiltersModel(name: "Invert", filterName: "CIColorInvert")
+let filters: [FilterModel] = [
+    FilterModel(name: "Normal", filterName: nil),
+    FilterModel(name: "Warm", filterName: "CITemperatureAndTint"),
+    FilterModel(name: "Cool", filterName: "CITemperatureAndTint"),
+    FilterModel(name: "Bright", filterName: "CIColorControls"),
+    FilterModel(name: "Dark", filterName: "CIColorControls"),
+    FilterModel(name: "Saturated", filterName: "CIColorControls"),
+    FilterModel(name: "Desaturated", filterName: "CIColorControls"),
+    FilterModel(name: "Fade", filterName: "CIPhotoEffectFade"),
+    FilterModel(name: "Sepia", filterName: "CISepiaTone"),
+    FilterModel(name: "Process", filterName: "CIPhotoEffectProcess"),
+    FilterModel(name: "Transfer", filterName: "CIPhotoEffectTransfer"),
+    FilterModel(name: "Noir", filterName: "CIPhotoEffectNoir"),
+    FilterModel(name: "Chrome", filterName: "CIPhotoEffectChrome"),
+    FilterModel(name: "Instant", filterName: "CIPhotoEffectInstant"),
+    FilterModel(name: "Mono", filterName: "CIPhotoEffectMono"),
+    FilterModel(name: "Tonal", filterName: "CIPhotoEffectTonal"),
+    FilterModel(name: "Invert", filterName: "CIColorInvert")
 ]
 
-func applyFilter(_ filter: FiltersModel, to image: UIImage) -> UIImage {
+func applyFilter(_ filter: FilterModel, to image: UIImage) -> UIImage {
     guard let name = filter.filterName,
           let ciImage = CIImage(image: image),
           let ciFilter = CIFilter(name: name)

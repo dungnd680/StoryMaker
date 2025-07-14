@@ -14,7 +14,7 @@ struct EditorImageView: View {
     @Binding var lightness: Double
     @Binding var saturation: Double
     @Binding var blur: Double
-    @Binding var selectedFilter: FiltersModel
+    @Binding var selectedFilter: FilterModel
     @Binding var showToolTextView: Bool
     @Binding var isEditing: Bool
     @Binding var showEditTextView: Bool
@@ -45,6 +45,7 @@ struct EditorImageView: View {
                     .onTapGesture {
                         textBoxViewModel.activeTextBox = .empty()
                         isTextFieldFocused.wrappedValue = false
+                        isEditing = false
                         showToolTextView = false
                         showEditTextView = false
                     }
@@ -65,17 +66,17 @@ struct EditorImageView: View {
             .frame(width: designSize.width, height: designSize.height)
             .scaleEffect(scale)
             .frame(width: geometry.size.width, height: geometry.size.height)
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        let activeBox = textBoxViewModel.activeTextBox
-                        guard !activeBox.isEmpty,
-                              let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == activeBox.id }) else { return }
-                        
-                        textBoxViewModel.textBoxes[index].x += value.translation.width
-                        textBoxViewModel.textBoxes[index].y += value.translation.height
-                    }
-            )
+//            .gesture(
+//                DragGesture()
+//                    .onChanged { value in
+//                        let activeBox = textBoxViewModel.activeTextBox
+//                        guard !activeBox.isEmpty,
+//                              let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == activeBox.id }) else { return }
+//                        
+//                        textBoxViewModel.textBoxes[index].x += value.translation.width
+//                        textBoxViewModel.textBoxes[index].y += value.translation.height
+//                    }
+//            )
         }
     }
 }

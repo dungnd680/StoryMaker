@@ -11,22 +11,30 @@ enum EditTextTab: String, CaseIterable, Equatable, Hashable {
     case size, font, color, gradient, align, shadow, background
 }
 
+enum ColorType {
+    case solid
+    case gradient
+}
+
 struct EditTextView: View {
+    
+    @State private var activeColorType: ColorType = .solid
     
     @StateObject var fontViewModel = FontPickerViewModel()
     
     @ObservedObject var textBoxViewModel: TextBoxViewModel
     
     @Binding var isVisible: Bool
-    @Binding var showEditTextView: Bool
+    @Binding var showEditText: Bool
     @Binding var isEditing: Bool
     @Binding var selectedTab: EditTextTab
     @Binding var showSubscription: Bool
+    @Binding var showToolText: Bool
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     var onClose: () -> Void
     var tabHeight: [EditTextTab : CGFloat] = [
-        .size: 280, .font: 430, .color: 200, .gradient: 200,
+        .size: 280, .font: 430, .color: 230, .gradient: 230,
         .align: 200, .shadow: 200, .background: 200
     ]
     
@@ -45,7 +53,7 @@ struct EditTextView: View {
                             .onTapGesture {
                                 isTextFieldFocused.wrappedValue = true
                                 isEditing = true
-                                showEditTextView = false
+                                showEditText = false
                             }
                         
                         Spacer()
@@ -53,6 +61,7 @@ struct EditTextView: View {
                         Image("Done")
                             .onTapGesture {
                                 onClose()
+                                showToolText = true
                             }
                     }
                     .padding(.horizontal)
@@ -92,11 +101,16 @@ struct EditTextView: View {
                         showSubscription: $showSubscription
                     )
                 case .color:
-                    Text("Color View")
-                        .frame(height: 120)
+                    ColorTextView(
+                        colorText: $textBoxViewModel.activeTextBox.colorText,
+                        activeColorType: $activeColorType
+                    )
                 case .gradient:
-                    Text("Gradient View")
-                        .frame(height: 120)
+                    GradientTextView(
+                        gradient: $textBoxViewModel.activeTextBox.gradientText,
+                        showSubscription: $showSubscription,
+                        activeColorType: $activeColorType
+                    )
                 case .align:
                     Text("Align View")
                         .frame(height: 120)

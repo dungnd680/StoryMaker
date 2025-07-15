@@ -11,55 +11,83 @@ struct GradientTextView: View {
     
     @State private var previousGradient: GradientColor? = nil
     
-    @Binding var gradient: GradientColor?
+    @ObservedObject var textBoxViewModel: TextBoxViewModel
+    
+    @Binding var colorText: TextFill
+    @Binding var triggerScroll: Bool
     @Binding var showSubscription: Bool
-    @Binding var activeColorType: ColorType
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(Colors.gradientColors, id: \.colors) { item in
-                    Circle()
-                        .fill(item.linearGradient)
-                        .frame(width: 55, height: 55)
-                        .overlay(
+        VStack {
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(Colors.gradientColors, id: \.colors) { item in
                             Circle()
-                                .stroke(
-                                    gradient?.colors == item.colors && activeColorType == .gradient ? Color.red : .clear,
-                                    lineWidth: 2
-                                )
-                        )
-                        .overlay(
-                            gradient?.colors == item.colors && activeColorType == .gradient ? Image("Selected Color") : nil
-                        )
-                        .overlay(
-                            item.isPremium ? Image("Premium") : nil,
-                            alignment: .topTrailing
-                        )
-                        .onTapGesture {
-                            previousGradient = gradient
-                            if item.isPremium {
-                                showSubscription = true
-                            }
-                            gradient = item
-                            activeColorType = .gradient
+                                .fill(item.linearGradient)
+                                .frame(width: 55, height: 55)
+                                .id(item.colors)
+                                .overlay {
+                                    ZStack {
+                                        if case .gradient(let selected) = colorText, selected.colors == item.colors {
+                                            Circle()
+                                                .stroke(Color.red, lineWidth: 2)
+                                            Image("Selected Color")
+                                        }
+                                        
+                                        if item.isPremium {
+                                            VStack {
+                                                HStack {
+                                                    Spacer()
+                                                    Image("Premium")
+                                                }
+                                                Spacer()
+                                            }
+                                        }
+                                    }
+                                }
+                                .onTapGesture {
+                                    if case .gradient(let selected) = colorText {
+                                        previousGradient = selected
+                                    }
+                                    if item.isPremium {
+                                        showSubscription = true
+                                    }
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        colorText = .gradient(item)
+                                        proxy.scrollTo(item.colors, anchor: .center)
+                                    }
+                                }
                         }
+                    }
+                    .padding(.horizontal, 26)
+                    .padding(.vertical, 1)
+                }
+                .onAppear {
+                    if case .gradient(let selected) = colorText {
+                        proxy.scrollTo(selected.colors, anchor: .center)
+                    }
+                }
+                .onChange(of: triggerScroll) {
+                    if case .gradient(let selected) = colorText {
+                        proxy.scrollTo(selected.colors, anchor: .center)
+                    }
                 }
             }
-            .padding(.horizontal, 26)
-            .padding(.bottom, 20)
-            .padding(.top, 1)
+            
+            Spacer()
         }
-        .frame(height: 150)
+        .frame(height: 130)
         .onChange(of: showSubscription) {
             if !showSubscription {
-                gradient = previousGradient
-//                viewModel.selectedFont = CFont.fonts.first { $0.iosFamily == previousFont } ?? CFont.fonts[0]
+                if let prev = previousGradient {
+                    colorText = .gradient(prev)
+                }
             }
         }
     }
 }
 
 //#Preview {
-//    GradientTextView(gradient: .constant(Colors.gradientColors[0]))
+//    GradientTextView()
 //}

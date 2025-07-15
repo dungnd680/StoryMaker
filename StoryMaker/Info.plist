@@ -4,462 +4,462 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-        <string>SinoretaPersonalUseRegular-eZdEl.otf</string>
-        <string>JuneMorning-Regular.otf</string>
-        <string>Lora-Italic.ttf</string>
-        <string>DreamCatchersPersonalUse.otf</string>
-        <string>RedHatText-Medium.ttf</string>
-        <string>DroidSansMono.ttf</string>
-        <string>Backstreet.ttf</string>
-        <string>blaster-rgpv7.ttf</string>
-        <string>Roboto-Medium.ttf</string>
-        <string>Sundaytime.otf</string>
-        <string>refunk-blackfree.ttf</string>
-        <string>AmaticSC-Regular.ttf</string>
-        <string>Aghisna-Serif-BF647107dec1509.ttf</string>
-        <string>RogerHeart.otf</string>
-        <string>Insomnia 1.ttf</string>
-        <string>Tangsel.ttf</string>
-        <string>spectreregular-mv4yb.otf</string>
-        <string>DMSans-Regular.ttf</string>
-        <string>Kranky-Regular.ttf</string>
-        <string>Rokkitt-Bold.ttf</string>
-        <string>DMSans-Medium.ttf</string>
-        <string>Roboto-Light.ttf</string>
-        <string>unispace rg.otf</string>
-        <string>TastyDrips.ttf</string>
-        <string>CRENZO.ttf</string>
-        <string>Godan.otf</string>
-        <string>Bronix.ttf</string>
-        <string>Sasvac.ttf</string>
-        <string>Words-Taken-Demo-BF6462020f099d1.ttf</string>
-        <string>DarkerGrotesque-Black.ttf</string>
-        <string>Montserrat-LightItalic.ttf</string>
-        <string>Ignotum-mLyw2.ttf</string>
-        <string>DMSans-SemiBoldItalic.ttf</string>
-        <string>UmbaSlabDemo-AltRegular.otf</string>
-        <string>DMSans-Bold.ttf</string>
-        <string>RedHatText-Bold.ttf</string>
-        <string>Montserrat-Medium.ttf</string>
-        <string>SimplyMono-Bold.ttf</string>
-        <string>REDFIVE_.TTF</string>
-        <string>JetBrainsMono-Thin.ttf</string>
-        <string>Delight.ttf</string>
-        <string>Aksana.ttf</string>
-        <string>MADE Tommy Soft ExtraBold PERSONAL USE.otf</string>
-        <string>Andora.ttf</string>
-        <string>ToysShadow.ttf</string>
-        <string>RedHatText-SemiBold.ttf</string>
-        <string>Smart Schools.ttf</string>
-        <string>JetBrainsMono-Bold.ttf</string>
-        <string>helios-bold.otf</string>
-        <string>Trirong-Medium.ttf</string>
-        <string>Geovana.ttf</string>
-        <string>signatureforest-1gj2g.ttf</string>
-        <string>Broetown Signature.ttf</string>
-        <string>Bochan Serif.ttf</string>
-        <string>DMSans-Thin.ttf</string>
-        <string>Ndiscover - Point Soft DEMO Semi Bold.otf</string>
-        <string>AkuinaPersonaluse-ExtraBold.otf</string>
-        <string>JetBrainsMono-Italic.ttf</string>
-        <string>Maroonblack Regular.ttf</string>
-        <string>JandaHideAndSeek.ttf</string>
-        <string>Bitstream Vera Sans Mono Roman.ttf</string>
-        <string>Brand.ttf</string>
-        <string>Honeymoon Avenue Script Demo.otf</string>
-        <string>RobotoCondensed-Bold.ttf</string>
-        <string>THE CREEPY HUNTER.ttf</string>
-        <string>JetBrainsMono-LightItalic.ttf</string>
-        <string>Heebo-Bold.ttf</string>
-        <string>Hiylard.ttf</string>
-        <string>Annette Bradford DEMO.ttf</string>
-        <string>Concetta Kalvani Signature.ttf</string>
-        <string>Maftuh.otf</string>
-        <string>Rocky Display.ttf</string>
-        <string>MartianMono-VariableFont_wdth,wght.ttf</string>
-        <string>Southam Demo.otf</string>
-        <string>DMSans-Light.ttf</string>
-        <string>strasua.otf</string>
-        <string>Lora-Bold.ttf</string>
-        <string>Angel Cry.ttf</string>
-        <string>Aesthetic-Regular.ttf</string>
-        <string>Lora-SemiBold.ttf</string>
-        <string>ConsolaMono-Book.ttf</string>
-        <string>BloviateDemoRegular.ttf</string>
-        <string>JetBrainsMono-Regular.ttf</string>
-        <string>Matchbook-Serif.ttf</string>
-        <string>Rokkitt-Thin.ttf</string>
-        <string>Men Nefer.ttf</string>
-        <string>Santeria Signature.ttf</string>
-        <string>Zetafonts - Lovelace Text Bold Italic.otf</string>
-        <string>fantasquesansmono-regular.otf</string>
-        <string>Singeldust-Regular-BF63be68fe5efcc.ttf</string>
-        <string>Babymom.otf</string>
-        <string>Amarula Personal Use.ttf</string>
-        <string>RedHatText-LightItalic.ttf</string>
-        <string>Pitch Display Regular Demo.ttf</string>
-        <string>breaked-nrwa0.ttf</string>
-        <string>RedHatText-BoldItalic.ttf</string>
-        <string>Carrinady.otf</string>
-        <string>Rohana.ttf</string>
-        <string>Bartolomew.otf</string>
-        <string>Stanford.ttf</string>
-        <string>BACKTO1982.TTF</string>
-        <string>DMSans-ExtraLightItalic.ttf</string>
-        <string>Sweet Husky.ttf</string>
-        <string>PTMono-Regular.ttf</string>
-        <string>plasdrpe.ttf</string>
-        <string>RedHatText-SemiBoldItalic.ttf</string>
-        <string>Roboto-Regular.ttf</string>
-        <string>Bonithy Rossela.otf</string>
-        <string>DiceGameDEMO.ttf</string>
-        <string>BPmonoItalics.ttf</string>
-        <string>Rahgbok.ttf</string>
-        <string>Qasbyne.otf</string>
-        <string>MountainsofChristmas-Regular.ttf</string>
-        <string>ntailub.ttf</string>
-        <string>Bambina Regular.ttf</string>
-        <string>Cattie-Regular.ttf</string>
-        <string>AzeretMono-VariableFont_wght.ttf</string>
-        <string>Thorletto (free).Otf</string>
-        <string>Bates Shower.ttf</string>
-        <string>Asteria Regular.ttf</string>
-        <string>AzeretMono-Thin.ttf</string>
-        <string>HandSignatureDemoRegular.ttf</string>
-        <string>Rokkitt-ExtraBold.ttf</string>
-        <string>DMSans-ThinItalic.ttf</string>
-        <string>Unaria Regular.ttf</string>
-        <string>Degila.ttf</string>
-        <string>Sincere Valentine DEMO.ttf</string>
-        <string>Geovana.otf</string>
-        <string>Janji_neue.ttf</string>
-        <string>Lumber-Regular.ttf</string>
-        <string>Arion Typeface.ttf</string>
-        <string>Roboto-MediumItalic.ttf</string>
-        <string>Hegimeda-BF645c5bd94b82c.otf</string>
-        <string>Montserrat-BoldItalic.ttf</string>
-        <string>Westerny Barnett.otf</string>
-        <string>Plante.ttf</string>
-        <string>Martel-Regular.ttf</string>
-        <string>PTM75F.ttf</string>
-        <string>Catthy Wellingten.ttf</string>
-        <string>DMSans-ExtraLight.ttf</string>
-        <string>Unna-Regular.ttf</string>
-        <string>Ndiscover - Point DEMO Semi Bold.otf</string>
-        <string>Sansation_Light.ttf</string>
-        <string>Nomark.otf</string>
-        <string>DarkerGrotesque-Bold.ttf</string>
-        <string>Giveny-Regular.ttf</string>
-        <string>SmoochSans-VariableFont_wght.ttf</string>
-        <string>Courier Prime.ttf</string>
-        <string>botes.ttf</string>
-        <string>Diezma-ExtraBold.otf</string>
-        <string>Martel-SemiBold.ttf</string>
-        <string>metrofutura.ttf</string>
-        <string>Montserrat-Light.ttf</string>
-        <string>QuentinPro.ttf</string>
-        <string>Amandavesignature.otf</string>
-        <string>Alcantera-Serif.ttf</string>
-        <string>Moscato-Script.otf</string>
-        <string>Montserrat-ThinItalic.ttf</string>
-        <string>enoway-oblique.ttf</string>
-        <string>SometypeMono-Medium.ttf</string>
-        <string>Cheria-DO5Y3.otf</string>
-        <string>defoils.ttf</string>
-        <string>monalisa-serif.ttf</string>
-        <string>gomarice_sandome.ttf</string>
-        <string>SCRIPTIN.ttf</string>
-        <string>Rokkitt-Black.ttf</string>
-        <string>HarmoniasDemoRegular.ttf</string>
-        <string>Geliano.ttf</string>
-        <string>SpaceMono-Regular.ttf</string>
-        <string>Doppelganger Display.otf</string>
-        <string>cour.ttf</string>
-        <string>Game Shark.otf</string>
-        <string>Run! Demo.otf</string>
-        <string>Dollamin-1GlzL.ttf</string>
-        <string>Montserrat-ExtraLight.ttf</string>
-        <string>Montserrat-Thin.ttf</string>
-        <string>DMSans-BoldItalic.ttf</string>
-        <string>RobotoCondensed-BoldItalic.ttf</string>
-        <string>Bluettelli.ttf</string>
-        <string>DejaVuSansMono-BoldOblique.ttf</string>
-        <string>Bristol maver.ttf</string>
-        <string>Martel-Light.ttf</string>
-        <string>Robecha Daniera-Regular.ttf</string>
-        <string>astetica.ttf</string>
-        <string>Rokkitt-Medium.ttf</string>
-        <string>Montserrat-Bold.ttf</string>
-        <string>Flycatcher.otf</string>
-        <string>Estermoon-BF6478aa100de79.ttf</string>
-        <string>IBMPlexMono-Regular.ttf</string>
-        <string>nk57-monospace-se-eb-it.otf</string>
-        <string>WermlandGothic_FREE_FOR_PERSONAL_USE_ONLY.ttf</string>
-        <string>Montserrat-MediumItalic.ttf</string>
-        <string>lilard-x36gj.ttf</string>
-        <string>Undercut.ttf</string>
-        <string>Bakole Regatoni.ttf</string>
-        <string>JetBrainsMono-ExtraLightItalic.ttf</string>
-        <string>CafollasDemoRegular-nRW6g.ttf</string>
-        <string>Warbones.ttf</string>
-        <string>Rokkitt-Regular.ttf</string>
-        <string>Ashytha-Free.ttf</string>
-        <string>StephenGillion DEMO.otf</string>
-        <string>excrallik.ttf</string>
-        <string>MADE Dillan PERSONAL USE.otf</string>
-        <string>BioRhymeExpanded-Regular.ttf</string>
-        <string>herova.ttf</string>
-        <string>Heroum.ttf</string>
-        <string>DMSans-SemiBold.ttf</string>
-        <string>Metroland Semibold.ttf</string>
-        <string>skintone.otf</string>
-        <string>Unna-Bold.ttf</string>
-        <string>Christmasfest Regular.ttf</string>
-        <string>ComicNeue-Light.ttf</string>
-        <string>magoa.ttf</string>
-        <string>Lora-SemiBoldItalic.ttf</string>
-        <string>Montserrat-BlackItalic.ttf</string>
-        <string>Skinner-Morgan-BF63cb9164123c6.otf</string>
-        <string>DarkerGrotesque-ExtraBold.ttf</string>
-        <string>Kolgimba.ttf</string>
-        <string>Brecelets Demo.otf</string>
-        <string>ComicNeue-Regular.ttf</string>
-        <string>Jhon Wave.ttf</string>
-        <string>Emily Yorke - Signature Script Font.otf</string>
-        <string>SpaceMono-BoldItalic.ttf</string>
-        <string>Maldives-L3YxW.otf</string>
-        <string>Fontspring-DEMO-ceraroundpro-medium.otf</string>
-        <string>Rafaela Grante.ttf</string>
-        <string>Martel-Bold.ttf</string>
-        <string>GreatVictorian-SwashedSC.otf</string>
-        <string>Lora-VariableFont_wght.ttf</string>
-        <string>whimsterglympsedemo-k7j2z.otf</string>
-        <string>Gayathri-Regular.ttf</string>
-        <string>Siestha.otf</string>
-        <string>saevul-ezo3b.ttf</string>
-        <string>LARUDE.ttf</string>
-        <string>Travelisty.otf</string>
-        <string>Defencewar Regular.ttf</string>
-        <string>Salmander Bentols Script.otf</string>
-        <string>HeavenGate.ttf</string>
-        <string>ZenzeroGroteskSans-Round.otf</string>
-        <string>ratual-free-personal-use.otf</string>
-        <string>RUSTY ATTACK DEMO Regular.otf</string>
-        <string>JetBrainsMono-SemiBoldItalic.ttf</string>
-        <string>tape-rail.ttf</string>
-        <string>Nostalgia.otf</string>
-        <string>savec.ttf</string>
-        <string>Qalisha Signature Serif.ttf</string>
-        <string>DarkerGrotesque-Medium.ttf</string>
-        <string>Parallove TTF.ttf</string>
-        <string>Heebo-Regular.ttf</string>
-        <string>Frightmare-Demo.otf</string>
-        <string>Roschelle-BF63bcf2756c30f.otf</string>
-        <string>AmaticSC-Bold.ttf</string>
-        <string>Sajola-PersonalUse.otf</string>
-        <string>Reinatha-PKaoZ.ttf</string>
-        <string>maaz-regulardemo.ttf</string>
-        <string>the flash TTF.ttf</string>
-        <string>jacklane_2.otf</string>
-        <string>Veltloved.ttf</string>
-        <string>Candle.ttf</string>
-        <string>emerland.ttf</string>
-        <string>Emitanela-BF63ca69c05c2db.otf</string>
-        <string>Allison Tessa Oblique.ttf</string>
-        <string>JetBrainsMono-Light.ttf</string>
-        <string>Unna-BoldItalic.ttf</string>
-        <string>Catty Funny TTF.ttf</string>
-        <string>Monstrocity.ttf</string>
-        <string>BlackWidow.ttf</string>
-        <string>Scizzorwreck Halbfett.otf</string>
-        <string>Trifelia.otf</string>
-        <string>Helttox.otf</string>
-        <string>ComicNeue-Bold.ttf</string>
-        <string>Marquise.otf</string>
-        <string>Bastliga One.otf</string>
-        <string>Snowby.ttf</string>
-        <string>balbek-personal-use-only.otf</string>
-        <string>JetBrainsMono-MediumItalic.ttf</string>
-        <string>FuzzyBubbles-Regular.ttf</string>
-        <string>micker-pkgyr.otf</string>
-        <string>Sagres.ttf</string>
-        <string>JetBrainsMono-ExtraBold.ttf</string>
-        <string>JetBrainsMono-SemiBold.ttf</string>
-        <string>StripesCaps.ttf</string>
-        <string>reallishmy-d9wbl.otf</string>
-        <string>DarkerGrotesque-SemiBold.ttf</string>
-        <string>Exo-ExtraBold.otf</string>
-        <string>XanhMono-Regular.ttf</string>
-        <string>gratelosdisplay.ttf</string>
-        <string>Brobrq.otf</string>
-        <string>Inconsolata-VariableFont_wdth,wght.ttf</string>
-        <string>Linnett.ttf</string>
-        <string>Montserrat-SemiBold.ttf</string>
-        <string>Bargiery.ttf</string>
-        <string>WORDSOFLOVE.ttf</string>
-        <string>Blues Malone.ttf</string>
-        <string>MosaicCaps.ttf</string>
-        <string>DMSans-ExtraBold.ttf</string>
-        <string>Manti Sans Fixed Demo.otf</string>
-        <string>UrbanSignature.otf</string>
-        <string>December Holidays.otf</string>
-        <string>Fonseca Bold - Free ver.otf</string>
-        <string>Martel-ExtraLight.ttf</string>
-        <string>Le Jour Serif.ttf</string>
-        <string>Kallem.ttf</string>
-        <string>Montserrat-ExtraLightItalic.ttf</string>
-        <string>Donne.otf</string>
-        <string>RedHatText-MediumItalic.ttf</string>
-        <string>Reef.otf</string>
-        <string>Lora-MediumItalic.ttf</string>
-        <string>Quostige.ttf</string>
-        <string>Airin.ttf</string>
-        <string>primer print bold.otf</string>
-        <string>Montserrat-ExtraBold.ttf</string>
-        <string>Aventurine.ttf</string>
-        <string>RedHatText-Light.ttf</string>
-        <string>UbuntuMono-Regular.ttf</string>
-        <string>Kingkey Demo.ttf</string>
-        <string>Suissnord.otf</string>
-        <string>ALBAM___.TTF</string>
-        <string>scary forest.ttf</string>
-        <string>Roboto-ThinItalic.ttf</string>
-        <string>RobotoCondensed-Regular.ttf</string>
-        <string>waylimo.ttf</string>
-        <string>HONZO.otf</string>
-        <string>Highdream-Bold.otf</string>
-        <string>coolvetica rg.otf</string>
-        <string>Zetafonts - Lovelace Text Regular.otf</string>
-        <string>Remish-gxJn4.otf</string>
-        <string>TefisRegular.otf</string>
-        <string>The Illusion of Beauty - TTF.ttf</string>
-        <string>Roboto-BoldItalic.ttf</string>
-        <string>Westie Ametta.otf</string>
-        <string>Nervous.ttf</string>
-        <string>DPSDbeyond.otf</string>
-        <string>DMSans-BlackItalic.ttf</string>
-        <string>ThousandLake-Alternative3.otf</string>
-        <string>Noguf.otf</string>
-        <string>Courier New Bold Italic font.ttf</string>
-        <string>CamingoCode-Regular.ttf</string>
-        <string>Barbed Wires.ttf</string>
-        <string>Westonia.ttf</string>
-        <string>NimbusMono-BoldOblique.otf</string>
-        <string>mercy-christole.ttf</string>
-        <string>Martel-Black.ttf</string>
-        <string>Mantilda Kristine.ttf</string>
-        <string>Eagon.ttf</string>
-        <string>Boiling-BlackDemo.ttf</string>
-        <string>JimAlistairDemoSerif.ttf</string>
-        <string>B612Mono-Regular.ttf</string>
-        <string>Hello Glow.otf</string>
-        <string>Montserrat-Black.ttf</string>
-        <string>Meilleur.ttf</string>
-        <string>Monoton-Regular.ttf</string>
-        <string>Renaisans.ttf</string>
-        <string>Basaro.ttf</string>
-        <string>Frankie-Twist.ttf</string>
-        <string>Roboto-LightItalic.ttf</string>
-        <string>Martel-ExtraBold.ttf</string>
-        <string>Lebrone-Bold.ttf</string>
-        <string>monofonto rg.otf</string>
-        <string>Reman.ttf</string>
-        <string>Viorath.ttf</string>
-        <string>Angelissa.otf</string>
-        <string>Tasy Tuwek.ttf</string>
-        <string>maria.ttf</string>
-        <string>DMSans-MediumItalic.ttf</string>
-        <string>Youth Syndicate - Personal Use Only.ttf</string>
-        <string>MaregyRegular-1GKB2.otf</string>
-        <string>Runsell Type - Yaribe Regular.otf</string>
-        <string>Varvara.ttf</string>
-        <string>rusillaserif-2ozpl.otf</string>
-        <string>Montserrat-Regular.ttf</string>
-        <string>Montserrat-Italic.ttf</string>
-        <string>Magic Sparkle.ttf</string>
-        <string>DarkerGrotesque-Regular.ttf</string>
-        <string>RedHatText-Italic.ttf</string>
-        <string>Gold_Song.otf</string>
-        <string>Langrove.ttf</string>
-        <string>Roboto-Italic.ttf</string>
-        <string>Cousine-Regular.ttf</string>
-        <string>Doppelganger-Display 400.otf</string>
-        <string>Hanover-Light.ttf</string>
-        <string>BeautyOne-_demo_.ttf</string>
-        <string>Noguf.ttf</string>
-        <string>DMSans-LightItalic.ttf</string>
-        <string>Boomolla.ttf</string>
-        <string>Lora-Medium.ttf</string>
-        <string>Jacky Black Demo.ttf</string>
-        <string>Lora-BoldItalic.ttf</string>
-        <string>B612-Regular.ttf</string>
-        <string>RedHatText-Regular.ttf</string>
-        <string>Gayathri-Thin.ttf</string>
-        <string>ntailu.ttf</string>
-        <string>NIght Space.ttf</string>
-        <string>Roboto-BlackItalic.ttf</string>
-        <string>Mazreha-5146L.ttf</string>
-        <string>Solerin Magica.otf</string>
-        <string>ParadiseSunsetPerosnalUse-GO20D.otf</string>
-        <string>Flying Sneakers.otf</string>
-        <string>DMSans-Black.ttf</string>
-        <string>cissele.ttf</string>
-        <string>DMSans-Italic.ttf</string>
-        <string>JetBrainsMono-ExtraBoldItalic.ttf</string>
-        <string>Sengatz.otf</string>
-        <string>American Frights.otf</string>
-        <string>Bridetown.ttf</string>
-        <string>iAWriterDuospace-Regular.otf</string>
-        <string>Cano.otf</string>
-        <string>light_sans_serif_7.ttf</string>
-        <string>against regular.ttf</string>
-        <string>Instruction Bold.otf</string>
-        <string>Roboto-Bold.ttf</string>
-        <string>Foundry-Font Pack.ttf</string>
-        <string>Gufin.ttf</string>
-        <string>Curely-Free Typeface.otf</string>
-        <string>Helios Rounded.otf</string>
-        <string>Rokkitt-SemiBold.ttf</string>
-        <string>Glory Sunshine.ttf</string>
-        <string>JetBrainsMono-ThinItalic.ttf</string>
-        <string>Hack-RegularOblique.ttf</string>
-        <string>Mashita.ttf</string>
-        <string>Restiany.ttf</string>
-        <string>Roboto-Thin.ttf</string>
-        <string>Lora-Regular.ttf</string>
-        <string>Ultra-Regular.ttf</string>
-        <string>KARA.otf</string>
-        <string>Roboto-Black.ttf</string>
-        <string>SplineSansMono-VariableFont_wght.ttf</string>
-        <string>Fredella.ttf</string>
-        <string>BloodLust.ttf</string>
-        <string>HALLOWEEN STORY.ttf</string>
-        <string>Bathedya.otf</string>
-        <string>OpulentDemo.ttf</string>
-        <string>Inconsolata-Regular.ttf</string>
-        <string>texgyrecursor-regular.otf</string>
-        <string>Gundam.otf</string>
-        <string>The Suavity.ttf</string>
-        <string>Unna-Italic.ttf</string>
-        <string>Gayathri-Bold.ttf</string>
-        <string>Satherday.otf</string>
-        <string>MATHD.TTF</string>
-        <string>Erika Type_B.ttf</string>
-        <string>greenos-8mpl0.ttf</string>
-        <string>JetBrainsMono-ExtraLight.ttf</string>
-        <string>SouciSansNF.ttf</string>
-        <string>hangingtreestagrotal.ttf</string>
-        <string>ButterflyKids-Regular.ttf</string>
-        <string>Bettina Signature Regular.ttf</string>
-        <string>Yanking.ttf</string>
-        <string>Holland.ttf</string>
-        <string>ROLLINA.otf</string>
-        <string>SourceCodePro-VariableFont_wght.ttf</string>
-        <string>Acordise.ttf</string>
-        <string>JetBrainsMono-Medium.ttf</string>
-        <string>Govers.ttf</string>
-        <string>PUPPY LOVE BRUSH.ttf</string>
-        <string>Targa.ttf</string>
+		<string>SinoretaPersonalUseRegular-eZdEl.otf</string>
+		<string>JuneMorning-Regular.otf</string>
+		<string>Lora-Italic.ttf</string>
+		<string>DreamCatchersPersonalUse.otf</string>
+		<string>RedHatText-Medium.ttf</string>
+		<string>DroidSansMono.ttf</string>
+		<string>Backstreet.ttf</string>
+		<string>blaster-rgpv7.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Sundaytime.otf</string>
+		<string>refunk-blackfree.ttf</string>
+		<string>AmaticSC-Regular.ttf</string>
+		<string>Aghisna-Serif-BF647107dec1509.ttf</string>
+		<string>RogerHeart.otf</string>
+		<string>Insomnia 1.ttf</string>
+		<string>Tangsel.ttf</string>
+		<string>spectreregular-mv4yb.otf</string>
+		<string>DMSans-Regular.ttf</string>
+		<string>Kranky-Regular.ttf</string>
+		<string>Rokkitt-Bold.ttf</string>
+		<string>DMSans-Medium.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>unispace rg.otf</string>
+		<string>TastyDrips.ttf</string>
+		<string>CRENZO.ttf</string>
+		<string>Godan.otf</string>
+		<string>Bronix.ttf</string>
+		<string>Sasvac.ttf</string>
+		<string>Words-Taken-Demo-BF6462020f099d1.ttf</string>
+		<string>DarkerGrotesque-Black.ttf</string>
+		<string>Montserrat-LightItalic.ttf</string>
+		<string>Ignotum-mLyw2.ttf</string>
+		<string>DMSans-SemiBoldItalic.ttf</string>
+		<string>UmbaSlabDemo-AltRegular.otf</string>
+		<string>DMSans-Bold.ttf</string>
+		<string>RedHatText-Bold.ttf</string>
+		<string>Montserrat-Medium.ttf</string>
+		<string>SimplyMono-Bold.ttf</string>
+		<string>REDFIVE_.TTF</string>
+		<string>JetBrainsMono-Thin.ttf</string>
+		<string>Delight.ttf</string>
+		<string>Aksana.ttf</string>
+		<string>MADE Tommy Soft ExtraBold PERSONAL USE.otf</string>
+		<string>Andora.ttf</string>
+		<string>ToysShadow.ttf</string>
+		<string>RedHatText-SemiBold.ttf</string>
+		<string>Smart Schools.ttf</string>
+		<string>JetBrainsMono-Bold.ttf</string>
+		<string>helios-bold.otf</string>
+		<string>Trirong-Medium.ttf</string>
+		<string>Geovana.ttf</string>
+		<string>signatureforest-1gj2g.ttf</string>
+		<string>Broetown Signature.ttf</string>
+		<string>Bochan Serif.ttf</string>
+		<string>DMSans-Thin.ttf</string>
+		<string>Ndiscover - Point Soft DEMO Semi Bold.otf</string>
+		<string>AkuinaPersonaluse-ExtraBold.otf</string>
+		<string>JetBrainsMono-Italic.ttf</string>
+		<string>Maroonblack Regular.ttf</string>
+		<string>JandaHideAndSeek.ttf</string>
+		<string>Bitstream Vera Sans Mono Roman.ttf</string>
+		<string>Brand.ttf</string>
+		<string>Honeymoon Avenue Script Demo.otf</string>
+		<string>RobotoCondensed-Bold.ttf</string>
+		<string>THE CREEPY HUNTER.ttf</string>
+		<string>JetBrainsMono-LightItalic.ttf</string>
+		<string>Heebo-Bold.ttf</string>
+		<string>Hiylard.ttf</string>
+		<string>Annette Bradford DEMO.ttf</string>
+		<string>Concetta Kalvani Signature.ttf</string>
+		<string>Maftuh.otf</string>
+		<string>Rocky Display.ttf</string>
+		<string>MartianMono-VariableFont_wdth,wght.ttf</string>
+		<string>Southam Demo.otf</string>
+		<string>DMSans-Light.ttf</string>
+		<string>strasua.otf</string>
+		<string>Lora-Bold.ttf</string>
+		<string>Angel Cry.ttf</string>
+		<string>Aesthetic-Regular.ttf</string>
+		<string>Lora-SemiBold.ttf</string>
+		<string>ConsolaMono-Book.ttf</string>
+		<string>BloviateDemoRegular.ttf</string>
+		<string>JetBrainsMono-Regular.ttf</string>
+		<string>Matchbook-Serif.ttf</string>
+		<string>Rokkitt-Thin.ttf</string>
+		<string>Men Nefer.ttf</string>
+		<string>Santeria Signature.ttf</string>
+		<string>Zetafonts - Lovelace Text Bold Italic.otf</string>
+		<string>fantasquesansmono-regular.otf</string>
+		<string>Singeldust-Regular-BF63be68fe5efcc.ttf</string>
+		<string>Babymom.otf</string>
+		<string>Amarula Personal Use.ttf</string>
+		<string>RedHatText-LightItalic.ttf</string>
+		<string>Pitch Display Regular Demo.ttf</string>
+		<string>breaked-nrwa0.ttf</string>
+		<string>RedHatText-BoldItalic.ttf</string>
+		<string>Carrinady.otf</string>
+		<string>Rohana.ttf</string>
+		<string>Bartolomew.otf</string>
+		<string>Stanford.ttf</string>
+		<string>BACKTO1982.TTF</string>
+		<string>DMSans-ExtraLightItalic.ttf</string>
+		<string>Sweet Husky.ttf</string>
+		<string>PTMono-Regular.ttf</string>
+		<string>plasdrpe.ttf</string>
+		<string>RedHatText-SemiBoldItalic.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>Bonithy Rossela.otf</string>
+		<string>DiceGameDEMO.ttf</string>
+		<string>BPmonoItalics.ttf</string>
+		<string>Rahgbok.ttf</string>
+		<string>Qasbyne.otf</string>
+		<string>MountainsofChristmas-Regular.ttf</string>
+		<string>ntailub.ttf</string>
+		<string>Bambina Regular.ttf</string>
+		<string>Cattie-Regular.ttf</string>
+		<string>AzeretMono-VariableFont_wght.ttf</string>
+		<string>Thorletto (free).Otf</string>
+		<string>Bates Shower.ttf</string>
+		<string>Asteria Regular.ttf</string>
+		<string>AzeretMono-Thin.ttf</string>
+		<string>HandSignatureDemoRegular.ttf</string>
+		<string>Rokkitt-ExtraBold.ttf</string>
+		<string>DMSans-ThinItalic.ttf</string>
+		<string>Unaria Regular.ttf</string>
+		<string>Degila.ttf</string>
+		<string>Sincere Valentine DEMO.ttf</string>
+		<string>Geovana.otf</string>
+		<string>Janji_neue.ttf</string>
+		<string>Lumber-Regular.ttf</string>
+		<string>Arion Typeface.ttf</string>
+		<string>Roboto-MediumItalic.ttf</string>
+		<string>Hegimeda-BF645c5bd94b82c.otf</string>
+		<string>Montserrat-BoldItalic.ttf</string>
+		<string>Westerny Barnett.otf</string>
+		<string>Plante.ttf</string>
+		<string>Martel-Regular.ttf</string>
+		<string>PTM75F.ttf</string>
+		<string>Catthy Wellingten.ttf</string>
+		<string>DMSans-ExtraLight.ttf</string>
+		<string>Unna-Regular.ttf</string>
+		<string>Ndiscover - Point DEMO Semi Bold.otf</string>
+		<string>Sansation_Light.ttf</string>
+		<string>Nomark.otf</string>
+		<string>DarkerGrotesque-Bold.ttf</string>
+		<string>Giveny-Regular.ttf</string>
+		<string>SmoochSans-VariableFont_wght.ttf</string>
+		<string>Courier Prime.ttf</string>
+		<string>botes.ttf</string>
+		<string>Diezma-ExtraBold.otf</string>
+		<string>Martel-SemiBold.ttf</string>
+		<string>metrofutura.ttf</string>
+		<string>Montserrat-Light.ttf</string>
+		<string>QuentinPro.ttf</string>
+		<string>Amandavesignature.otf</string>
+		<string>Alcantera-Serif.ttf</string>
+		<string>Moscato-Script.otf</string>
+		<string>Montserrat-ThinItalic.ttf</string>
+		<string>enoway-oblique.ttf</string>
+		<string>SometypeMono-Medium.ttf</string>
+		<string>Cheria-DO5Y3.otf</string>
+		<string>defoils.ttf</string>
+		<string>monalisa-serif.ttf</string>
+		<string>gomarice_sandome.ttf</string>
+		<string>SCRIPTIN.ttf</string>
+		<string>Rokkitt-Black.ttf</string>
+		<string>HarmoniasDemoRegular.ttf</string>
+		<string>Geliano.ttf</string>
+		<string>SpaceMono-Regular.ttf</string>
+		<string>Doppelganger Display.otf</string>
+		<string>cour.ttf</string>
+		<string>Game Shark.otf</string>
+		<string>Run! Demo.otf</string>
+		<string>Dollamin-1GlzL.ttf</string>
+		<string>Montserrat-ExtraLight.ttf</string>
+		<string>Montserrat-Thin.ttf</string>
+		<string>DMSans-BoldItalic.ttf</string>
+		<string>RobotoCondensed-BoldItalic.ttf</string>
+		<string>Bluettelli.ttf</string>
+		<string>DejaVuSansMono-BoldOblique.ttf</string>
+		<string>Bristol maver.ttf</string>
+		<string>Martel-Light.ttf</string>
+		<string>Robecha Daniera-Regular.ttf</string>
+		<string>astetica.ttf</string>
+		<string>Rokkitt-Medium.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Flycatcher.otf</string>
+		<string>Estermoon-BF6478aa100de79.ttf</string>
+		<string>IBMPlexMono-Regular.ttf</string>
+		<string>nk57-monospace-se-eb-it.otf</string>
+		<string>WermlandGothic_FREE_FOR_PERSONAL_USE_ONLY.ttf</string>
+		<string>Montserrat-MediumItalic.ttf</string>
+		<string>lilard-x36gj.ttf</string>
+		<string>Undercut.ttf</string>
+		<string>Bakole Regatoni.ttf</string>
+		<string>JetBrainsMono-ExtraLightItalic.ttf</string>
+		<string>CafollasDemoRegular-nRW6g.ttf</string>
+		<string>Warbones.ttf</string>
+		<string>Rokkitt-Regular.ttf</string>
+		<string>Ashytha-Free.ttf</string>
+		<string>StephenGillion DEMO.otf</string>
+		<string>excrallik.ttf</string>
+		<string>MADE Dillan PERSONAL USE.otf</string>
+		<string>BioRhymeExpanded-Regular.ttf</string>
+		<string>herova.ttf</string>
+		<string>Heroum.ttf</string>
+		<string>DMSans-SemiBold.ttf</string>
+		<string>Metroland Semibold.ttf</string>
+		<string>skintone.otf</string>
+		<string>Unna-Bold.ttf</string>
+		<string>Christmasfest Regular.ttf</string>
+		<string>ComicNeue-Light.ttf</string>
+		<string>magoa.ttf</string>
+		<string>Lora-SemiBoldItalic.ttf</string>
+		<string>Montserrat-BlackItalic.ttf</string>
+		<string>Skinner-Morgan-BF63cb9164123c6.otf</string>
+		<string>DarkerGrotesque-ExtraBold.ttf</string>
+		<string>Kolgimba.ttf</string>
+		<string>Brecelets Demo.otf</string>
+		<string>ComicNeue-Regular.ttf</string>
+		<string>Jhon Wave.ttf</string>
+		<string>Emily Yorke - Signature Script Font.otf</string>
+		<string>SpaceMono-BoldItalic.ttf</string>
+		<string>Maldives-L3YxW.otf</string>
+		<string>Fontspring-DEMO-ceraroundpro-medium.otf</string>
+		<string>Rafaela Grante.ttf</string>
+		<string>Martel-Bold.ttf</string>
+		<string>GreatVictorian-SwashedSC.otf</string>
+		<string>Lora-VariableFont_wght.ttf</string>
+		<string>whimsterglympsedemo-k7j2z.otf</string>
+		<string>Gayathri-Regular.ttf</string>
+		<string>Siestha.otf</string>
+		<string>saevul-ezo3b.ttf</string>
+		<string>LARUDE.ttf</string>
+		<string>Travelisty.otf</string>
+		<string>Defencewar Regular.ttf</string>
+		<string>Salmander Bentols Script.otf</string>
+		<string>HeavenGate.ttf</string>
+		<string>ZenzeroGroteskSans-Round.otf</string>
+		<string>ratual-free-personal-use.otf</string>
+		<string>RUSTY ATTACK DEMO Regular.otf</string>
+		<string>JetBrainsMono-SemiBoldItalic.ttf</string>
+		<string>tape-rail.ttf</string>
+		<string>Nostalgia.otf</string>
+		<string>savec.ttf</string>
+		<string>Qalisha Signature Serif.ttf</string>
+		<string>DarkerGrotesque-Medium.ttf</string>
+		<string>Parallove TTF.ttf</string>
+		<string>Heebo-Regular.ttf</string>
+		<string>Frightmare-Demo.otf</string>
+		<string>Roschelle-BF63bcf2756c30f.otf</string>
+		<string>AmaticSC-Bold.ttf</string>
+		<string>Sajola-PersonalUse.otf</string>
+		<string>Reinatha-PKaoZ.ttf</string>
+		<string>maaz-regulardemo.ttf</string>
+		<string>the flash TTF.ttf</string>
+		<string>jacklane_2.otf</string>
+		<string>Veltloved.ttf</string>
+		<string>Candle.ttf</string>
+		<string>emerland.ttf</string>
+		<string>Emitanela-BF63ca69c05c2db.otf</string>
+		<string>Allison Tessa Oblique.ttf</string>
+		<string>JetBrainsMono-Light.ttf</string>
+		<string>Unna-BoldItalic.ttf</string>
+		<string>Catty Funny TTF.ttf</string>
+		<string>Monstrocity.ttf</string>
+		<string>BlackWidow.ttf</string>
+		<string>Scizzorwreck Halbfett.otf</string>
+		<string>Trifelia.otf</string>
+		<string>Helttox.otf</string>
+		<string>ComicNeue-Bold.ttf</string>
+		<string>Marquise.otf</string>
+		<string>Bastliga One.otf</string>
+		<string>Snowby.ttf</string>
+		<string>balbek-personal-use-only.otf</string>
+		<string>JetBrainsMono-MediumItalic.ttf</string>
+		<string>FuzzyBubbles-Regular.ttf</string>
+		<string>micker-pkgyr.otf</string>
+		<string>Sagres.ttf</string>
+		<string>JetBrainsMono-ExtraBold.ttf</string>
+		<string>JetBrainsMono-SemiBold.ttf</string>
+		<string>StripesCaps.ttf</string>
+		<string>reallishmy-d9wbl.otf</string>
+		<string>DarkerGrotesque-SemiBold.ttf</string>
+		<string>Exo-ExtraBold.otf</string>
+		<string>XanhMono-Regular.ttf</string>
+		<string>gratelosdisplay.ttf</string>
+		<string>Brobrq.otf</string>
+		<string>Inconsolata-VariableFont_wdth,wght.ttf</string>
+		<string>Linnett.ttf</string>
+		<string>Montserrat-SemiBold.ttf</string>
+		<string>Bargiery.ttf</string>
+		<string>WORDSOFLOVE.ttf</string>
+		<string>Blues Malone.ttf</string>
+		<string>MosaicCaps.ttf</string>
+		<string>DMSans-ExtraBold.ttf</string>
+		<string>Manti Sans Fixed Demo.otf</string>
+		<string>UrbanSignature.otf</string>
+		<string>December Holidays.otf</string>
+		<string>Fonseca Bold - Free ver.otf</string>
+		<string>Martel-ExtraLight.ttf</string>
+		<string>Le Jour Serif.ttf</string>
+		<string>Kallem.ttf</string>
+		<string>Montserrat-ExtraLightItalic.ttf</string>
+		<string>Donne.otf</string>
+		<string>RedHatText-MediumItalic.ttf</string>
+		<string>Reef.otf</string>
+		<string>Lora-MediumItalic.ttf</string>
+		<string>Quostige.ttf</string>
+		<string>Airin.ttf</string>
+		<string>primer print bold.otf</string>
+		<string>Montserrat-ExtraBold.ttf</string>
+		<string>Aventurine.ttf</string>
+		<string>RedHatText-Light.ttf</string>
+		<string>UbuntuMono-Regular.ttf</string>
+		<string>Kingkey Demo.ttf</string>
+		<string>Suissnord.otf</string>
+		<string>ALBAM___.TTF</string>
+		<string>scary forest.ttf</string>
+		<string>Roboto-ThinItalic.ttf</string>
+		<string>RobotoCondensed-Regular.ttf</string>
+		<string>waylimo.ttf</string>
+		<string>HONZO.otf</string>
+		<string>Highdream-Bold.otf</string>
+		<string>coolvetica rg.otf</string>
+		<string>Zetafonts - Lovelace Text Regular.otf</string>
+		<string>Remish-gxJn4.otf</string>
+		<string>TefisRegular.otf</string>
+		<string>The Illusion of Beauty - TTF.ttf</string>
+		<string>Roboto-BoldItalic.ttf</string>
+		<string>Westie Ametta.otf</string>
+		<string>Nervous.ttf</string>
+		<string>DPSDbeyond.otf</string>
+		<string>DMSans-BlackItalic.ttf</string>
+		<string>ThousandLake-Alternative3.otf</string>
+		<string>Noguf.otf</string>
+		<string>Courier New Bold Italic font.ttf</string>
+		<string>CamingoCode-Regular.ttf</string>
+		<string>Barbed Wires.ttf</string>
+		<string>Westonia.ttf</string>
+		<string>NimbusMono-BoldOblique.otf</string>
+		<string>mercy-christole.ttf</string>
+		<string>Martel-Black.ttf</string>
+		<string>Mantilda Kristine.ttf</string>
+		<string>Eagon.ttf</string>
+		<string>Boiling-BlackDemo.ttf</string>
+		<string>JimAlistairDemoSerif.ttf</string>
+		<string>B612Mono-Regular.ttf</string>
+		<string>Hello Glow.otf</string>
+		<string>Montserrat-Black.ttf</string>
+		<string>Meilleur.ttf</string>
+		<string>Monoton-Regular.ttf</string>
+		<string>Renaisans.ttf</string>
+		<string>Basaro.ttf</string>
+		<string>Frankie-Twist.ttf</string>
+		<string>Roboto-LightItalic.ttf</string>
+		<string>Martel-ExtraBold.ttf</string>
+		<string>Lebrone-Bold.ttf</string>
+		<string>monofonto rg.otf</string>
+		<string>Reman.ttf</string>
+		<string>Viorath.ttf</string>
+		<string>Angelissa.otf</string>
+		<string>Tasy Tuwek.ttf</string>
+		<string>maria.ttf</string>
+		<string>DMSans-MediumItalic.ttf</string>
+		<string>Youth Syndicate - Personal Use Only.ttf</string>
+		<string>MaregyRegular-1GKB2.otf</string>
+		<string>Runsell Type - Yaribe Regular.otf</string>
+		<string>Varvara.ttf</string>
+		<string>rusillaserif-2ozpl.otf</string>
+		<string>Montserrat-Regular.ttf</string>
+		<string>Montserrat-Italic.ttf</string>
+		<string>Magic Sparkle.ttf</string>
+		<string>DarkerGrotesque-Regular.ttf</string>
+		<string>RedHatText-Italic.ttf</string>
+		<string>Gold_Song.otf</string>
+		<string>Langrove.ttf</string>
+		<string>Roboto-Italic.ttf</string>
+		<string>Cousine-Regular.ttf</string>
+		<string>Doppelganger-Display 400.otf</string>
+		<string>Hanover-Light.ttf</string>
+		<string>BeautyOne-_demo_.ttf</string>
+		<string>Noguf.ttf</string>
+		<string>DMSans-LightItalic.ttf</string>
+		<string>Boomolla.ttf</string>
+		<string>Lora-Medium.ttf</string>
+		<string>Jacky Black Demo.ttf</string>
+		<string>Lora-BoldItalic.ttf</string>
+		<string>B612-Regular.ttf</string>
+		<string>RedHatText-Regular.ttf</string>
+		<string>Gayathri-Thin.ttf</string>
+		<string>ntailu.ttf</string>
+		<string>NIght Space.ttf</string>
+		<string>Roboto-BlackItalic.ttf</string>
+		<string>Mazreha-5146L.ttf</string>
+		<string>Solerin Magica.otf</string>
+		<string>ParadiseSunsetPerosnalUse-GO20D.otf</string>
+		<string>Flying Sneakers.otf</string>
+		<string>DMSans-Black.ttf</string>
+		<string>cissele.ttf</string>
+		<string>DMSans-Italic.ttf</string>
+		<string>JetBrainsMono-ExtraBoldItalic.ttf</string>
+		<string>Sengatz.otf</string>
+		<string>American Frights.otf</string>
+		<string>Bridetown.ttf</string>
+		<string>iAWriterDuospace-Regular.otf</string>
+		<string>Cano.otf</string>
+		<string>light_sans_serif_7.ttf</string>
+		<string>against regular.ttf</string>
+		<string>Instruction Bold.otf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Foundry-Font Pack.ttf</string>
+		<string>Gufin.ttf</string>
+		<string>Curely-Free Typeface.otf</string>
+		<string>Helios Rounded.otf</string>
+		<string>Rokkitt-SemiBold.ttf</string>
+		<string>Glory Sunshine.ttf</string>
+		<string>JetBrainsMono-ThinItalic.ttf</string>
+		<string>Hack-RegularOblique.ttf</string>
+		<string>Mashita.ttf</string>
+		<string>Restiany.ttf</string>
+		<string>Roboto-Thin.ttf</string>
+		<string>Lora-Regular.ttf</string>
+		<string>Ultra-Regular.ttf</string>
+		<string>KARA.otf</string>
+		<string>Roboto-Black.ttf</string>
+		<string>SplineSansMono-VariableFont_wght.ttf</string>
+		<string>Fredella.ttf</string>
+		<string>BloodLust.ttf</string>
+		<string>HALLOWEEN STORY.ttf</string>
+		<string>Bathedya.otf</string>
+		<string>OpulentDemo.ttf</string>
+		<string>Inconsolata-Regular.ttf</string>
+		<string>texgyrecursor-regular.otf</string>
+		<string>Gundam.otf</string>
+		<string>The Suavity.ttf</string>
+		<string>Unna-Italic.ttf</string>
+		<string>Gayathri-Bold.ttf</string>
+		<string>Satherday.otf</string>
+		<string>MATHD.TTF</string>
+		<string>Erika Type_B.ttf</string>
+		<string>greenos-8mpl0.ttf</string>
+		<string>JetBrainsMono-ExtraLight.ttf</string>
+		<string>SouciSansNF.ttf</string>
+		<string>hangingtreestagrotal.ttf</string>
+		<string>ButterflyKids-Regular.ttf</string>
+		<string>Bettina Signature Regular.ttf</string>
+		<string>Yanking.ttf</string>
+		<string>Holland.ttf</string>
+		<string>ROLLINA.otf</string>
+		<string>SourceCodePro-VariableFont_wght.ttf</string>
+		<string>Acordise.ttf</string>
+		<string>JetBrainsMono-Medium.ttf</string>
+		<string>Govers.ttf</string>
+		<string>PUPPY LOVE BRUSH.ttf</string>
+		<string>Targa.ttf</string>
 	</array>
 </dict>
 </plist>

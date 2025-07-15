@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum TextFill: Equatable {
+    case solid(String)
+    case gradient(GradientColor)
+}
+
 class TextBoxModel: ObservableObject, Identifiable {
     var id: String = ""
     
@@ -17,9 +22,17 @@ class TextBoxModel: ObservableObject, Identifiable {
     @Published var lineHeight: CGFloat = 0
     @Published var letterSpacing: CGFloat = 0
     @Published var fontFamily: String = ""
-    @Published var colorText: Color = .white
-    @Published var gradientText: GradientColor?
-//    @Published var colorText: TextColor = .solid(.white)
+    @Published var colorText: TextFill = .solid("#FFFFFF")
+    @Published var opacity: CGFloat = 100
+    
+    var shapeStyle: AnyShapeStyle {
+        switch colorText {
+        case .solid(let hex):
+            return AnyShapeStyle(Color(hex))
+        case .gradient(let gradient):
+            return AnyShapeStyle(gradient.linearGradient)
+        }
+    }
     
     static func empty() -> TextBoxModel {
         return TextBoxModel()
@@ -31,19 +44,3 @@ extension TextBoxModel {
         return id.isEmpty
     }
 }
-
-//enum TextColor: Equatable {
-//    case solid(Color)
-//    case gradient(GradientColor)
-//    
-//    static func == (lhs: TextColor, rhs: TextColor) -> Bool {
-//        switch (lhs, rhs) {
-//        case (.solid(let c1), .solid(let c2)):
-//            return c1.description == c2.description
-//        case (.gradient(let g1), .gradient(let g2)):
-//            return g1.colors == g2.colors && g1.angle == g2.angle
-//        default:
-//            return false
-//        }
-//    }
-//}

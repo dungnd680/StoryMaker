@@ -29,25 +29,20 @@ struct TextBoxView: View {
     var body: some View {
         Group {
             if isExporting || (!isEditing && !box.content.isEmpty) {
-                if let gradient = box.gradientText {
-                    Text(box.content)
-                        .overlay(gradient.linearGradient)
-                        .mask(
-                            Text(box.content)
-                        )
-                } else {
-                    Text(box.content)
-                }
+                Text(box.content)
+                    .tracking(box.letterSpacing)
             } else {
                 ZStack {
                     if box.content.isEmpty {
                         Text("Double Tap To Edit")
+                            .tracking(box.letterSpacing)
                     }
                     
                     if box.id == textBoxViewModel.activeTextBox.id && isEditing {
                         TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
+                            .tracking(box.letterSpacing)
                             .toolbar {
                                 ToolbarItem(placement: .keyboard) {
                                     ZStack {
@@ -76,30 +71,25 @@ struct TextBoxView: View {
                                                 .onTapGesture {
                                                     isTextFieldFocused.wrappedValue = false
                                                     isEditing = false
-                                                    showToolTextView = true
+                                                    if !textBoxViewModel.activeTextBox.content.isEmpty {
+                                                        showToolTextView = true
+                                                    }
                                                 }
                                         }
                                     }
                                 }
                             }
                     } else {
-                        if let gradient = box.gradientText {
-                            Text(box.content)
-                                .overlay(gradient.linearGradient)
-                                .mask(
-                                    Text(box.content)
-                                )
-                        } else {
-                            Text(box.content)
-                        }
+                        Text(box.content)
+                            .tracking(box.letterSpacing)
                     }
                 }
             }
         }
         .font(.custom(box.fontFamily, size: box.sizeText))
         .lineSpacing(box.lineHeight)
-        .tracking(box.letterSpacing)
-        .foregroundStyle(Color(box.colorText))
+        .foregroundStyle(box.shapeStyle)
+        .opacity(box.opacity / 100)
         .multilineTextAlignment(.center)
         .offset(x: box.x + dragOffset.width, y: box.y + dragOffset.height)
         .gesture(
@@ -115,8 +105,6 @@ struct TextBoxView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             isTextFieldFocused.wrappedValue = true
                         }
-                        showEditTextView = false
-                        showToolTextView = false
                         showAdjustBackgroundView = false
                         
                         print("2 tap: \(box.id)")
@@ -138,16 +126,11 @@ struct TextBoxView: View {
                                 }
                             }
 
-                            if showEditTextView {
-                                showEditTextView = false
-                                showEditTextView = true
-                            }
-
                             print("1 tap: \(box.id)")
                         }
 
                         tapWorkItem = workItem
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: workItem)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
                     }
 
                     lastTapDate = now

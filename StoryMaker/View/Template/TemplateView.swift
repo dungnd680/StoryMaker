@@ -28,6 +28,7 @@ struct TemplateView: View {
     @State private var showEditText: Bool = false
     @State private var isEditing: Bool = false
     @State private var selectedTab: EditTextTab = .size
+    @State private var triggerScroll: Bool = false
     
     @State private var lightness: Double = 0
     @State private var saturation: Double = 0
@@ -161,15 +162,12 @@ struct TemplateView: View {
             EditTextView(
                 textBoxViewModel: textBoxViewModel,
                 isVisible: $showEditText,
-                showEditText: $showEditText,
                 isEditing: $isEditing,
                 selectedTab: $selectedTab,
                 showSubscription: $showSubscription,
                 showToolText: $showToolText,
-                isTextFieldFocused: $isTextFieldFocused,
-                onClose: {
-                    showEditText = false
-                }
+                triggerScroll: $triggerScroll,
+                isTextFieldFocused: $isTextFieldFocused
             )
             
             AdjustBackgroundView(

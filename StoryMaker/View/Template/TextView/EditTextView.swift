@@ -11,30 +11,22 @@ enum EditTextTab: String, CaseIterable, Equatable, Hashable {
     case size, font, color, gradient, align, shadow, background
 }
 
-enum ColorType {
-    case solid
-    case gradient
-}
-
 struct EditTextView: View {
-    
-    @State private var activeColorType: ColorType = .solid
     
     @StateObject var fontViewModel = FontPickerViewModel()
     
     @ObservedObject var textBoxViewModel: TextBoxViewModel
     
     @Binding var isVisible: Bool
-    @Binding var showEditText: Bool
     @Binding var isEditing: Bool
     @Binding var selectedTab: EditTextTab
     @Binding var showSubscription: Bool
     @Binding var showToolText: Bool
+    @Binding var triggerScroll: Bool
     
     var isTextFieldFocused: FocusState<Bool>.Binding
-    var onClose: () -> Void
     var tabHeight: [EditTextTab : CGFloat] = [
-        .size: 280, .font: 430, .color: 230, .gradient: 230,
+        .size: 280, .font: 430, .color: 260, .gradient: 260,
         .align: 200, .shadow: 200, .background: 200
     ]
     
@@ -53,14 +45,17 @@ struct EditTextView: View {
                             .onTapGesture {
                                 isTextFieldFocused.wrappedValue = true
                                 isEditing = true
-                                showEditText = false
+                                isVisible = false
                             }
                         
                         Spacer()
                         
                         Image("Done")
                             .onTapGesture {
-                                onClose()
+                                isVisible = false
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    triggerScroll.toggle()
+                                }
                                 showToolText = true
                             }
                     }
@@ -74,6 +69,7 @@ struct EditTextView: View {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 selectedTab = tab
                                 isVisible = true
+                                showToolText = false
                             }
                         } label: {
                             Image(imageName(for: tab))
@@ -86,6 +82,27 @@ struct EditTextView: View {
                 .background(Color.gray.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 30))
                 
+                if selectedTab == .color || selectedTab == .gradient {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Opacity")
+                            .font(.caption)
+                            .padding(.horizontal, 26)
+                        
+                        HStack {
+                            Slider(value: $textBoxViewModel.activeTextBox.opacity, in: 0...100,step: 1)
+                                .tint(.backgroundColor2)
+                            
+                            Text(String(format: "%.0f", textBoxViewModel.activeTextBox.opacity))
+                                .font(.subheadline)
+                                .frame(width: 29)
+                        }
+                        .padding(.leading, 26)
+                        .padding(.trailing)
+                    }
+                    .frame(height: 50)
+                    .padding(.vertical)
+                }
+                
                 switch selectedTab {
                 case .size:
                     SizeTextView(
@@ -93,6 +110,7 @@ struct EditTextView: View {
                         lineHeight: $textBoxViewModel.activeTextBox.lineHeight,
                         letterSpacing: $textBoxViewModel.activeTextBox.letterSpacing
                     )
+                    
                 case .font:
                     FontPickerView(
                         viewModel: fontViewModel,
@@ -100,17 +118,22 @@ struct EditTextView: View {
                         selectedFont: $textBoxViewModel.activeTextBox.fontFamily,
                         showSubscription: $showSubscription
                     )
+                    
                 case .color:
                     ColorTextView(
+                        textBoxViewModel: textBoxViewModel,
                         colorText: $textBoxViewModel.activeTextBox.colorText,
-                        activeColorType: $activeColorType
+                        triggerScroll: $triggerScroll
                     )
+                    
                 case .gradient:
                     GradientTextView(
-                        gradient: $textBoxViewModel.activeTextBox.gradientText,
-                        showSubscription: $showSubscription,
-                        activeColorType: $activeColorType
+                        textBoxViewModel: textBoxViewModel,
+                        colorText: $textBoxViewModel.activeTextBox.colorText,
+                        triggerScroll: $triggerScroll,
+                        showSubscription: $showSubscription
                     )
+                    
                 case .align:
                     Text("Align View")
                         .frame(height: 120)

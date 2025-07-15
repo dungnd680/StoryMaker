@@ -60,7 +60,7 @@ struct EditorImageView: View {
                         showAdjustBackgroundView: $showAdjustBackgroundView,
                         isTextFieldFocused: isTextFieldFocused
                     )
-                    .zIndex(textBoxViewModel.activeTextBox.id == box.id ? 1 : 0)
+//                    .zIndex(textBoxViewModel.activeTextBox.id == box.id ? 1 : 0)
                 }
             }
             .frame(width: designSize.width, height: designSize.height)

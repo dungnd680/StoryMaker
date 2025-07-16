@@ -37,9 +37,9 @@ struct FiltersView: View {
                     }
                 }
             }
-            .padding(.horizontal, 22)
+            .padding(.horizontal, 26)
             .padding(.bottom, 22)
-            .frame(height: 180)
+            .frame(height: 160)
         }
     }
 }

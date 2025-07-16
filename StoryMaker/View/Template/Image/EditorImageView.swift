@@ -52,7 +52,7 @@ struct EditorImageView: View {
                 
                 ForEach(textBoxViewModel.textBoxes, id: \.id) { box in
                     TextBoxView(
-                        box: box,
+                        textBoxModel: box,
                         textBoxViewModel: textBoxViewModel,
                         showToolTextView: $showToolTextView,
                         isEditing: $isEditing,

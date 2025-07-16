@@ -12,6 +12,14 @@ enum TextFill: Equatable {
     case gradient(GradientColor)
 }
 
+enum TextAlign: String, CaseIterable {
+    case left, center, right
+}
+
+enum TextCase: String, CaseIterable {
+    case normal, uppercase, capitalize, lowercase
+}
+
 class TextBoxModel: ObservableObject, Identifiable {
     var id: String = ""
     
@@ -23,14 +31,54 @@ class TextBoxModel: ObservableObject, Identifiable {
     @Published var letterSpacing: CGFloat = 0
     @Published var fontFamily: String = ""
     @Published var colorText: TextFill = .solid("#FFFFFF")
-    @Published var opacity: CGFloat = 100
+    @Published var opacityText: CGFloat = 100
+    @Published var alignText: TextAlign = .center
+    @Published var caseText: TextCase = .normal
+    @Published var opacityShadowText: CGFloat = 0
+    @Published var blurShadowText: CGFloat = 0
+    @Published var xShadowText: CGFloat = -10
+    @Published var yShadowText: CGFloat = -10
+    @Published var colorShadowText: String = "#000000"
+    @Published var paddingBackgroundText: CGFloat = 0
+    @Published var cornerBackgroundText: CGFloat = 0
+    @Published var opacityBackgroundText: CGFloat = 100
+    @Published var colorBackgroundText: String = "#00000000"
+    
     
     var shapeStyle: AnyShapeStyle {
         switch colorText {
         case .solid(let hex):
             return AnyShapeStyle(Color(hex))
+            
         case .gradient(let gradient):
             return AnyShapeStyle(gradient.linearGradient)
+        }
+    }
+    
+    var textAlignment: TextAlignment {
+        switch alignText {
+        case .left:
+            return .leading
+        case .center:
+            return .center
+        case .right:
+            return .trailing
+        }
+    }
+    
+    var formatText: String {
+        switch caseText {
+        case .normal:
+            return content
+            
+        case .uppercase:
+            return content.uppercased()
+            
+        case .lowercase:
+            return content.lowercased()
+            
+        case .capitalize:
+            return content.capitalized
         }
     }
     

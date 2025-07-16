@@ -35,6 +35,7 @@ struct TemplateView: View {
     @State private var blur: Double = 0
     
     @StateObject private var textBoxViewModel = TextBoxViewModel()
+    @StateObject private var textBoxModel = TextBoxModel()
     
     var body: some View {
         ZStack {
@@ -161,6 +162,7 @@ struct TemplateView: View {
             
             EditTextView(
                 textBoxViewModel: textBoxViewModel,
+                textBoxModel: textBoxModel,
                 isVisible: $showEditText,
                 isEditing: $isEditing,
                 selectedTab: $selectedTab,

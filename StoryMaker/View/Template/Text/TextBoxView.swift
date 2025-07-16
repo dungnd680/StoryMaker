@@ -16,7 +16,7 @@ struct TextBoxView: View {
     @State private var lastTapDate: Date = .distantPast
     @State private var tapWorkItem: DispatchWorkItem?
     
-    @ObservedObject var box: TextBoxModel
+    @ObservedObject var textBoxModel: TextBoxModel
     @ObservedObject var textBoxViewModel: TextBoxViewModel
     
     @Binding var showToolTextView: Bool
@@ -28,21 +28,21 @@ struct TextBoxView: View {
     
     var body: some View {
         Group {
-            if isExporting || (!isEditing && !box.content.isEmpty) {
-                Text(box.content)
-                    .tracking(box.letterSpacing)
+            if isExporting || (!isEditing && !textBoxModel.content.isEmpty) {
+                Text(textBoxModel.formatText)
+                    .tracking(textBoxModel.letterSpacing)
             } else {
                 ZStack {
-                    if box.content.isEmpty {
+                    if textBoxModel.content.isEmpty {
                         Text("Double Tap To Edit")
-                            .tracking(box.letterSpacing)
+                            .tracking(textBoxModel.letterSpacing)
                     }
                     
-                    if box.id == textBoxViewModel.activeTextBox.id && isEditing {
+                    if textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing {
                         TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
+                            .tracking(textBoxModel.letterSpacing)
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
-                            .tracking(box.letterSpacing)
                             .toolbar {
                                 ToolbarItem(placement: .keyboard) {
                                     ZStack {
@@ -80,18 +80,28 @@ struct TextBoxView: View {
                                 }
                             }
                     } else {
-                        Text(box.content)
-                            .tracking(box.letterSpacing)
+                        Text(textBoxModel.formatText)
+                            .tracking(textBoxModel.letterSpacing)
                     }
                 }
             }
         }
-        .font(.custom(box.fontFamily, size: box.sizeText))
-        .lineSpacing(box.lineHeight)
-        .foregroundStyle(box.shapeStyle)
-        .opacity(box.opacity / 100)
-        .multilineTextAlignment(.center)
-        .offset(x: box.x + dragOffset.width, y: box.y + dragOffset.height)
+        .padding(48)
+        .padding(textBoxModel.paddingBackgroundText)
+        .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
+        .lineSpacing(textBoxModel.lineHeight)
+        .foregroundStyle(textBoxModel.shapeStyle)
+        .opacity(textBoxModel.opacityText / 100)
+        .multilineTextAlignment(textBoxModel.textAlignment)
+        .shadow(
+            color: Color(textBoxModel.colorShadowText).opacity(textBoxModel.opacityShadowText / 100),
+            radius: textBoxModel.blurShadowText,
+            x: textBoxModel.xShadowText,
+            y: textBoxModel.yShadowText
+        )
+        .background(Color(textBoxModel.colorBackgroundText).opacity(textBoxModel.opacityBackgroundText / 100))
+        .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
+        .offset(x: textBoxModel.x + dragOffset.width, y: textBoxModel.y + dragOffset.height)
         .gesture(
             TapGesture()
                 .onEnded {
@@ -101,32 +111,32 @@ struct TextBoxView: View {
                         tapWorkItem = nil
 
                         isEditing = true
-                        textBoxViewModel.activeTextBox = box
+                        textBoxViewModel.activeTextBox = textBoxModel
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             isTextFieldFocused.wrappedValue = true
                         }
                         showAdjustBackgroundView = false
                         
-                        print("2 tap: \(box.id)")
+                        print("2 tap: \(textBoxModel.id)")
                     } else {
                         let workItem = DispatchWorkItem {
-                            textBoxViewModel.activeTextBox = box
+                            textBoxViewModel.activeTextBox = textBoxModel
                             isTextFieldFocused.wrappedValue = false
                             isEditing = false
-                            showToolTextView = !box.content.isEmpty
+                            showToolTextView = !textBoxModel.content.isEmpty
 
-                            if box.content.isEmpty {
+                            if textBoxModel.content.isEmpty {
                                 showEditTextView = false
                             }
 
                             if showAdjustBackgroundView {
                                 showAdjustBackgroundView = false
-                                if !box.content.isEmpty {
+                                if !textBoxModel.content.isEmpty {
                                     showEditTextView = true
                                 }
                             }
 
-                            print("1 tap: \(box.id)")
+                            print("1 tap: \(textBoxModel.id)")
                         }
 
                         tapWorkItem = workItem
@@ -139,13 +149,13 @@ struct TextBoxView: View {
         .gesture(
             DragGesture(minimumDistance: 0)
                 .updating($dragOffset) { value, state, _ in
-                    if (textBoxViewModel.activeTextBox.id == box.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
+                    if (textBoxViewModel.activeTextBox.id == textBoxModel.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
                         state = value.translation
                     }
                 }
                 .onEnded { value in
-                    if (textBoxViewModel.activeTextBox.id == box.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
-                        if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == box.id }) {
+                    if (textBoxViewModel.activeTextBox.id == textBoxModel.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
+                        if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxModel.id }) {
                             textBoxViewModel.textBoxes[index].x += value.translation.width
                             textBoxViewModel.textBoxes[index].y += value.translation.height
                         }

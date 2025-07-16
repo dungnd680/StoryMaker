@@ -27,7 +27,7 @@ struct AdjustBackgroundView: View {
     
     var tabHeight: [AdjustTab : CGFloat] = [
         .brightness: 280,
-        .filters: 260
+        .filters: 240
     ]
     
     var onClose: () -> Void

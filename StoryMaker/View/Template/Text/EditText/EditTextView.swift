@@ -16,6 +16,7 @@ struct EditTextView: View {
     @StateObject var fontViewModel = FontPickerViewModel()
     
     @ObservedObject var textBoxViewModel: TextBoxViewModel
+    @ObservedObject var textBoxModel: TextBoxModel
     
     @Binding var isVisible: Bool
     @Binding var isEditing: Bool
@@ -26,8 +27,8 @@ struct EditTextView: View {
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     var tabHeight: [EditTextTab : CGFloat] = [
-        .size: 280, .font: 430, .color: 260, .gradient: 260,
-        .align: 200, .shadow: 200, .background: 200
+        .size: 300, .font: 430, .color: 260, .gradient: 260,
+        .align: 240, .shadow: 450, .background: 380
     ]
     
     var body: some View {
@@ -89,18 +90,17 @@ struct EditTextView: View {
                             .padding(.horizontal, 26)
                         
                         HStack {
-                            Slider(value: $textBoxViewModel.activeTextBox.opacity, in: 0...100,step: 1)
+                            Slider(value: $textBoxViewModel.activeTextBox.opacityText, in: 0...100,step: 1)
                                 .tint(.backgroundColor2)
                             
-                            Text(String(format: "%.0f", textBoxViewModel.activeTextBox.opacity))
+                            Text(String(format: "%.0f", textBoxViewModel.activeTextBox.opacityText))
                                 .font(.subheadline)
                                 .frame(width: 29)
                         }
                         .padding(.leading, 26)
                         .padding(.trailing)
                     }
-                    .frame(height: 50)
-                    .padding(.vertical)
+                    .frame(height: 80)
                 }
                 
                 switch selectedTab {
@@ -135,14 +135,30 @@ struct EditTextView: View {
                     )
                     
                 case .align:
-                    Text("Align View")
-                        .frame(height: 120)
+                    AlignTextView(
+                        textBoxModel: textBoxModel,
+                        textBoxViewModel: textBoxViewModel
+                    )
+                    
                 case .shadow:
-                    Text("Shadow View")
-                        .frame(height: 120)
+                    ShadowTextView(
+                        textBoxViewModel: textBoxViewModel,
+                        colorShadowText: $textBoxViewModel.activeTextBox.colorShadowText,
+                        opacityShadowText: $textBoxViewModel.activeTextBox.opacityShadowText,
+                        blurShadowText: $textBoxViewModel.activeTextBox.blurShadowText,
+                        xShadowText: $textBoxViewModel.activeTextBox.xShadowText,
+                        yShadowText: $textBoxViewModel.activeTextBox.yShadowText,
+                        triggerScroll: $triggerScroll)
+                    
                 case .background:
-                    Text("Background View")
-                        .frame(height: 120)
+                    BackgroundTextView(
+                        textBoxViewModel: textBoxViewModel,
+                        colorBackgroundText: $textBoxViewModel.activeTextBox.colorBackgroundText,
+                        paddingBackgroundText: $textBoxViewModel.activeTextBox.paddingBackgroundText,
+                        cornerBackgroundText: $textBoxViewModel.activeTextBox.cornerBackgroundText,
+                        opacityBackgroundText: $textBoxViewModel.activeTextBox.opacityBackgroundText,
+                        triggerScroll: $triggerScroll
+                    )
                 }
             }
             .background(Color.white)
@@ -179,12 +195,24 @@ extension EditTextTab {
     }
 }
 
-//#Preview {
-//    EditTextView(
-//        isVisible: .constant(true),
-//        showEditTextView: .constant(true),
-//        isEditing: .constant(true),
-//        isTextFieldFocused: FocusState<Bool>().projectedValue,
-//        onClose: {}
-//    )
-//}
+#Preview {
+    struct InlinePreview: View {
+        @FocusState private var isTextFieldFocused: Bool
+        
+        var body: some View {
+            EditTextView(
+                textBoxViewModel: TextBoxViewModel(),
+                textBoxModel: TextBoxModel(),
+                isVisible: .constant(true),
+                isEditing: .constant(true),
+                selectedTab: .constant(.background),
+                showSubscription: .constant(false),
+                showToolText: .constant(true),
+                triggerScroll: .constant(false),
+                isTextFieldFocused: $isTextFieldFocused
+            )
+        }
+    }
+
+    return InlinePreview()
+}

@@ -246,6 +246,7 @@ struct TemplateView: View {
             print("Export result: \(message)")
             if success {
                 showAdjustBackground = false
+                showEditText = false
                 showToolText = false
                 self.selectedImage = nil
             }

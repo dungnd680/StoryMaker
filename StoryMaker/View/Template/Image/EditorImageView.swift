@@ -64,6 +64,10 @@ struct EditorImageView: View {
                 }
             }
             .frame(width: designSize.width, height: designSize.height)
+            .mask(
+                Rectangle()
+                    .frame(width: designSize.width, height: designSize.height)
+            )
             .scaleEffect(scale)
             .frame(width: geometry.size.width, height: geometry.size.height)
 //            .gesture(

@@ -15,6 +15,7 @@ struct TextBoxView: View {
     
     @State private var lastTapDate: Date = .distantPast
     @State private var tapWorkItem: DispatchWorkItem?
+    @State private var textSize: CGSize = .zero
     
     @ObservedObject var textBoxModel: TextBoxModel
     @ObservedObject var textBoxViewModel: TextBoxViewModel
@@ -28,7 +29,7 @@ struct TextBoxView: View {
     
     var body: some View {
         Group {
-            if isExporting || (!isEditing && !textBoxModel.content.isEmpty) {
+            if isExporting || (!(textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing) && !textBoxModel.content.isEmpty) {
                 Text(textBoxModel.formatText)
                     .tracking(textBoxModel.letterSpacing)
             } else {
@@ -41,6 +42,7 @@ struct TextBoxView: View {
                     if textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing {
                         TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
                             .tracking(textBoxModel.letterSpacing)
+                            .frame(width: textSize.width, height: textSize.height)
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
                             .toolbar {
@@ -79,10 +81,21 @@ struct TextBoxView: View {
                                     }
                                 }
                             }
-                    } else {
-                        Text(textBoxModel.formatText)
-                            .tracking(textBoxModel.letterSpacing)
                     }
+                    
+                    Text(textBoxViewModel.activeTextBox.content)
+                        .background(
+                            GeometryReader { geo in
+                                Color.clear
+                                    .onAppear {
+                                        textSize = geo.size
+                                    }
+                                    .onChange(of: geo.size) {
+                                        textSize = geo.size
+                                    }
+                            }
+                        )
+                        .opacity(0)
                 }
             }
         }
@@ -101,6 +114,15 @@ struct TextBoxView: View {
         )
         .background(Color(textBoxModel.colorBackgroundText).opacity(textBoxModel.opacityBackgroundText / 100))
         .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
+        .overlay(
+            GeometryReader { geo in
+                TextBoxBorderView(
+                    size: geo.size,
+                    showBorder: textBoxModel.id == textBoxViewModel.activeTextBox.id
+                )
+                .position(x: geo.size.width / 2, y: geo.size.height / 2)
+            }
+        )
         .offset(x: textBoxModel.x + dragOffset.width, y: textBoxModel.y + dragOffset.height)
         .gesture(
             TapGesture()
@@ -109,7 +131,6 @@ struct TextBoxView: View {
                     if now.timeIntervalSince(lastTapDate) < 0.3 {
                         tapWorkItem?.cancel()
                         tapWorkItem = nil
-
                         isEditing = true
                         textBoxViewModel.activeTextBox = textBoxModel
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {

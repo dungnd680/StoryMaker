@@ -43,7 +43,8 @@ class TextBoxModel: ObservableObject, Identifiable {
     @Published var cornerBackgroundText: CGFloat = 0
     @Published var opacityBackgroundText: CGFloat = 100
     @Published var colorBackgroundText: String = "#00000000"
-    
+    @Published var measuredSize: CGSize = .zero
+    @Published var textSize: CGSize = .zero
     
     var shapeStyle: AnyShapeStyle {
         switch colorText {
@@ -84,6 +85,32 @@ class TextBoxModel: ObservableObject, Identifiable {
     
     static func empty() -> TextBoxModel {
         return TextBoxModel()
+    }
+    
+    init() {}
+
+    init(copying original: TextBoxModel) {
+        self.id = UUID().uuidString
+        self.content = original.content
+        self.x = original.x + 50
+        self.y = original.y + 50
+        self.sizeText = original.sizeText
+        self.lineHeight = original.lineHeight
+        self.letterSpacing = original.letterSpacing
+        self.fontFamily = original.fontFamily
+        self.colorText = original.colorText
+        self.opacityText = original.opacityText
+        self.alignText = original.alignText
+        self.caseText = original.caseText
+        self.opacityShadowText = original.opacityShadowText
+        self.blurShadowText = original.blurShadowText
+        self.xShadowText = original.xShadowText
+        self.yShadowText = original.yShadowText
+        self.colorShadowText = original.colorShadowText
+        self.paddingBackgroundText = original.paddingBackgroundText
+        self.cornerBackgroundText = original.cornerBackgroundText
+        self.opacityBackgroundText = original.opacityBackgroundText
+        self.colorBackgroundText = original.colorBackgroundText
     }
 }
 

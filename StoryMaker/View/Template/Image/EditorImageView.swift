@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct EditorImageView: View {
+    
+    @State private var startDragPosition: CGPoint = .zero
 
     @ObservedObject var textBoxViewModel: TextBoxViewModel
     
@@ -15,10 +17,10 @@ struct EditorImageView: View {
     @Binding var saturation: Double
     @Binding var blur: Double
     @Binding var selectedFilter: FilterModel
-    @Binding var showToolTextView: Bool
+    @Binding var showToolText: Bool
     @Binding var isEditing: Bool
-    @Binding var showEditTextView: Bool
-    @Binding var showAdjustBackgroundView: Bool
+    @Binding var showEditText: Bool
+    @Binding var showAdjustBackground: Bool
     
     let image: UIImage
     
@@ -42,25 +44,78 @@ struct EditorImageView: View {
                 
                 Color.clear
                     .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 1)
+                            .onChanged { value in
+                                if !textBoxViewModel.activeTextBox.isEmpty {
+                                    if startDragPosition == .zero {
+                                        startDragPosition = CGPoint(x: textBoxViewModel.activeTextBox.x,
+                                                                    y: textBoxViewModel.activeTextBox.y)
+                                    }
+
+                                    if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxViewModel.activeTextBox.id }) {
+                                        let newX = startDragPosition.x + value.translation.width
+                                        let newY = startDragPosition.y + value.translation.height
+
+                                        textBoxViewModel.textBoxes[index].x = newX
+                                        textBoxViewModel.textBoxes[index].y = newY
+                                        textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]
+                                    }
+                                }
+                            }
+                            .onEnded { _ in
+                                if !textBoxViewModel.activeTextBox.isEmpty {
+                                    if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxViewModel.activeTextBox.id }) {
+                                        textBoxViewModel.textBoxes[index].x = textBoxViewModel.activeTextBox.x
+                                        textBoxViewModel.textBoxes[index].y = textBoxViewModel.activeTextBox.y
+                                    }
+                                    startDragPosition = .zero
+                                }
+                            }
+                    )
                     .onTapGesture {
                         textBoxViewModel.activeTextBox = .empty()
                         isTextFieldFocused.wrappedValue = false
                         isEditing = false
-                        showToolTextView = false
-                        showEditTextView = false
+                        showToolText = false
+                        showEditText = false
                     }
                 
                 ForEach(textBoxViewModel.textBoxes, id: \.id) { box in
                     TextBoxView(
                         textBoxModel: box,
                         textBoxViewModel: textBoxViewModel,
-                        showToolTextView: $showToolTextView,
+                        showToolText: $showToolText,
                         isEditing: $isEditing,
-                        showEditTextView: $showEditTextView,
-                        showAdjustBackgroundView: $showAdjustBackgroundView,
+                        showEditText: $showEditText,
+                        showAdjustBackground: $showAdjustBackground,
                         isTextFieldFocused: isTextFieldFocused
                     )
-//                    .zIndex(textBoxViewModel.activeTextBox.id == box.id ? 1 : 0)
+                }
+                
+                if !textBoxViewModel.activeTextBox.isEmpty {
+                    let box = textBoxViewModel.activeTextBox
+
+                    TextBoxBorderView(
+                        size: textBoxViewModel.activeBoxSize,
+                        showBorder: true,
+                        onDelete: {
+                            showEditText = false
+                            showToolText = false
+                            textBoxViewModel.delete(box)
+                        },
+                        onDuplicate: {
+                            isEditing = false
+                            textBoxViewModel.duplicate(box)
+                        },
+                        moveUp: {
+                            textBoxViewModel.up(box)
+                        },
+                        moveDown: {
+                            textBoxViewModel.down(box)
+                        }
+                    )
+                    .offset(x: box.x, y: box.y)
                 }
             }
             .frame(width: designSize.width, height: designSize.height)
@@ -70,17 +125,6 @@ struct EditorImageView: View {
             )
             .scaleEffect(scale)
             .frame(width: geometry.size.width, height: geometry.size.height)
-//            .gesture(
-//                DragGesture()
-//                    .onChanged { value in
-//                        let activeBox = textBoxViewModel.activeTextBox
-//                        guard !activeBox.isEmpty,
-//                              let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == activeBox.id }) else { return }
-//                        
-//                        textBoxViewModel.textBoxes[index].x += value.translation.width
-//                        textBoxViewModel.textBoxes[index].y += value.translation.height
-//                    }
-//            )
         }
     }
 }

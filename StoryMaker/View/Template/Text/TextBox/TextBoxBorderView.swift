@@ -11,6 +11,10 @@ struct TextBoxBorderView: View {
     
     var size: CGSize
     var showBorder: Bool
+    var onDelete: () -> Void
+    var onDuplicate: () -> Void
+    var moveUp: () -> Void
+    var moveDown: () -> Void
     
     var body: some View {
         if showBorder {
@@ -20,45 +24,33 @@ struct TextBoxBorderView: View {
                     .stroke(.black, lineWidth: 3)
                     .frame(width: size.width, height: size.height)
 
-                Button {
-                    
-                } label: {
-                    Image("Delete Text")
-                        .resizable()
-                        .frame(width: 90, height: 90)
-                        .offset(x: -size.width / 2, y: -size.height / 2)
-                }
+                Image("Delete Text Box")
+                    .resizable()
+                    .frame(width: 70, height: 70)
+                    .offset(x: -size.width / 2, y: -size.height / 2)
+                    .onTapGesture {
+                        onDelete()
+                    }
 
-                Button {
-                    
-                } label: {
-                    Image("Duplicate Text")
-                        .resizable()
-                        .frame(width: 90, height: 90)
-                        .offset(x: size.width / 2, y: -size.height / 2)
-                }
+                Image("Duplicate Text Box")
+                    .resizable()
+                    .frame(width: 70, height: 70)
+                    .offset(x: size.width / 2, y: -size.height / 2)
+                    .onTapGesture {
+                        onDuplicate()
+                    }
 
-                Button {
-                    
-                } label: {
-                    Image("Rotate Text")
-                        .resizable()
-                        .frame(width: 90, height: 90)
-                        .offset(x: -size.width / 2, y: size.height / 2)
-                }
-
-                Button {
-                    
-                } label: {
-                    Image("Scale Text")
-                        .resizable()
-                        .frame(width: 90, height: 90)
-                        .offset(x: size.width / 2, y: size.height / 2)
-                }
+                Image("Rotate Text Box")
+                    .resizable()
+                    .frame(width: 70, height: 70)
+                    .offset(x: size.width / 2, y: size.height / 2)
+                    .onTapGesture {
+                        
+                    }
                 
                 HStack(spacing: 18) {
                     Button {
-                        
+                        moveUp()
                     } label: {
                         HStack(spacing: 0) {
                             Image(systemName: "arrow.up")
@@ -67,7 +59,7 @@ struct TextBoxBorderView: View {
                     }
                     
                     Button {
-                        
+                        moveDown()
                     } label: {
                         HStack(spacing: 0) {
                             Image(systemName: "square.3.layers.3d.top.filled")
@@ -76,6 +68,7 @@ struct TextBoxBorderView: View {
                     }
                 }
                 .frame(width: 120, height:  40)
+                .foregroundStyle(.colorDarkGray)
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 68))
                 .scaleEffect(2)
@@ -86,5 +79,12 @@ struct TextBoxBorderView: View {
 }
 
 #Preview {
-    TextBoxBorderView(size: CGSize(width: 200, height: 100), showBorder: true)
+    TextBoxBorderView(
+        size: CGSize(width: 200, height: 100),
+        showBorder: true,
+        onDelete: {},
+        onDuplicate: {},
+        moveUp: {},
+        moveDown: {}
+    )
 }

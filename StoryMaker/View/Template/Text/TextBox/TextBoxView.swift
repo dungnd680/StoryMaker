@@ -15,15 +15,16 @@ struct TextBoxView: View {
     
     @State private var lastTapDate: Date = .distantPast
     @State private var tapWorkItem: DispatchWorkItem?
-    @State private var textSize: CGSize = .zero
+//    @State private var textSize: CGSize = .zero
+    @State private var startDragPosition: CGPoint = .zero
     
     @ObservedObject var textBoxModel: TextBoxModel
     @ObservedObject var textBoxViewModel: TextBoxViewModel
     
-    @Binding var showToolTextView: Bool
+    @Binding var showToolText: Bool
     @Binding var isEditing: Bool
-    @Binding var showEditTextView: Bool
-    @Binding var showAdjustBackgroundView: Bool
+    @Binding var showEditText: Bool
+    @Binding var showAdjustBackground: Bool
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     
@@ -34,7 +35,7 @@ struct TextBoxView: View {
                     .tracking(textBoxModel.letterSpacing)
             } else {
                 ZStack {
-                    if textBoxModel.content.isEmpty {
+                    if textBoxViewModel.textBoxes.contains(where: { $0.id == textBoxModel.id }) && textBoxModel.content.isEmpty {
                         Text("Double Tap To Edit")
                             .tracking(textBoxModel.letterSpacing)
                     }
@@ -42,7 +43,7 @@ struct TextBoxView: View {
                     if textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing {
                         TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
                             .tracking(textBoxModel.letterSpacing)
-                            .frame(width: textSize.width, height: textSize.height)
+                            .frame(width: textBoxModel.textSize.width, height: textBoxModel.textSize.height)
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
                             .toolbar {
@@ -62,7 +63,7 @@ struct TextBoxView: View {
                                             .onTapGesture {
                                                 if !textBoxViewModel.activeTextBox.content.isEmpty {
                                                     isTextFieldFocused.wrappedValue = false
-                                                    showEditTextView = true
+                                                    showEditText = true
                                                     isEditing = false
                                                 }
                                             }
@@ -74,7 +75,7 @@ struct TextBoxView: View {
                                                     isTextFieldFocused.wrappedValue = false
                                                     isEditing = false
                                                     if !textBoxViewModel.activeTextBox.content.isEmpty {
-                                                        showToolTextView = true
+                                                        showToolText = true
                                                     }
                                                 }
                                         }
@@ -84,14 +85,19 @@ struct TextBoxView: View {
                     }
                     
                     Text(textBoxViewModel.activeTextBox.content)
+                        .id(textBoxModel.id)
+                        .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
+                        .tracking(textBoxModel.letterSpacing)
+                        .lineSpacing(textBoxModel.lineHeight)
+                        .multilineTextAlignment(textBoxModel.textAlignment)
                         .background(
                             GeometryReader { geo in
                                 Color.clear
                                     .onAppear {
-                                        textSize = geo.size
+                                        textBoxModel.textSize = geo.size
                                     }
                                     .onChange(of: geo.size) {
-                                        textSize = geo.size
+                                        textBoxModel.textSize = geo.size
                                     }
                             }
                         )
@@ -116,14 +122,16 @@ struct TextBoxView: View {
         .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
         .overlay(
             GeometryReader { geo in
-                TextBoxBorderView(
-                    size: geo.size,
-                    showBorder: textBoxModel.id == textBoxViewModel.activeTextBox.id
-                )
-                .position(x: geo.size.width / 2, y: geo.size.height / 2)
+                Color.clear
+                    .onAppear {
+                        updateSizeIfNeeded(geo: geo)
+                    }
+                    .onChange(of: geo.size) {
+                        updateSizeIfNeeded(geo: geo)
+                    }
             }
         )
-        .offset(x: textBoxModel.x + dragOffset.width, y: textBoxModel.y + dragOffset.height)
+        .offset(x: textBoxModel.x, y: textBoxModel.y)
         .gesture(
             TapGesture()
                 .onEnded {
@@ -136,7 +144,7 @@ struct TextBoxView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             isTextFieldFocused.wrappedValue = true
                         }
-                        showAdjustBackgroundView = false
+                        showAdjustBackground = false
                         
                         print("2 tap: \(textBoxModel.id)")
                     } else {
@@ -144,16 +152,16 @@ struct TextBoxView: View {
                             textBoxViewModel.activeTextBox = textBoxModel
                             isTextFieldFocused.wrappedValue = false
                             isEditing = false
-                            showToolTextView = !textBoxModel.content.isEmpty
+                            showToolText = !textBoxModel.content.isEmpty
 
                             if textBoxModel.content.isEmpty {
-                                showEditTextView = false
+                                showEditText = false
                             }
 
-                            if showAdjustBackgroundView {
-                                showAdjustBackgroundView = false
+                            if showAdjustBackground {
+                                showAdjustBackground = false
                                 if !textBoxModel.content.isEmpty {
-                                    showEditTextView = true
+                                    showEditText = true
                                 }
                             }
 
@@ -167,22 +175,48 @@ struct TextBoxView: View {
                     lastTapDate = now
                 }
         )
-        .gesture(
-            DragGesture(minimumDistance: 0)
+        .highPriorityGesture(
+            DragGesture(minimumDistance: 1)
                 .updating($dragOffset) { value, state, _ in
                     if (textBoxViewModel.activeTextBox.id == textBoxModel.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
-                        state = value.translation
+                        state = .zero
+
+                        if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxModel.id }) {
+                            if startDragPosition == .zero {
+                                startDragPosition = CGPoint(
+                                    x: textBoxViewModel.textBoxes[index].x,
+                                    y: textBoxViewModel.textBoxes[index].y
+                                )
+                            }
+
+                            let newX = startDragPosition.x + value.translation.width
+                            let newY = startDragPosition.y + value.translation.height
+
+                            textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]
+                            textBoxViewModel.activeTextBox.x = newX
+                            textBoxViewModel.activeTextBox.y = newY
+                        }
                     }
                 }
                 .onEnded { value in
                     if (textBoxViewModel.activeTextBox.id == textBoxModel.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
                         if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxModel.id }) {
-                            textBoxViewModel.textBoxes[index].x += value.translation.width
-                            textBoxViewModel.textBoxes[index].y += value.translation.height
+                            textBoxViewModel.textBoxes[index].x = textBoxViewModel.activeTextBox.x
+                            textBoxViewModel.textBoxes[index].y = textBoxViewModel.activeTextBox.y
+
+                            textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]
                         }
                     }
+                    startDragPosition = .zero
                 }
         )
+    }
+    
+    private func updateSizeIfNeeded(geo: GeometryProxy) {
+        let newSize = geo.size
+        if textBoxModel.id == textBoxViewModel.activeTextBox.id {
+            textBoxViewModel.activeBoxSize = newSize
+        }
     }
 }
 

@@ -75,10 +75,10 @@ struct TemplateView: View {
                             saturation: $saturation,
                             blur: $blur,
                             selectedFilter: $selectedFilter,
-                            showToolTextView: $showToolText,
+                            showToolText: $showToolText,
                             isEditing: $isEditing,
-                            showEditTextView: $showEditText,
-                            showAdjustBackgroundView: $showAdjustBackground,
+                            showEditText: $showEditText,
+                            showAdjustBackground: $showAdjustBackground,
                             image: image,
                             isTextFieldFocused: $isTextFieldFocused
                         )
@@ -234,10 +234,10 @@ struct TemplateView: View {
             saturation: $saturation,
             blur: $blur,
             selectedFilter: $selectedFilter,
-            showToolTextView: $showToolText,
+            showToolText: $showToolText,
             isEditing: $isEditing,
-            showEditTextView: $showEditText,
-            showAdjustBackgroundView: $showAdjustBackground,
+            showEditText: $showEditText,
+            showAdjustBackground: $showAdjustBackground,
             image: selectedImage,
             isTextFieldFocused: $isTextFieldFocused
         )

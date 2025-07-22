@@ -15,6 +15,8 @@ struct TextBoxBorderView: View {
     var onDuplicate: () -> Void
     var moveUp: () -> Void
     var moveDown: () -> Void
+    var canMoveUp: Bool
+    var canMoveDown: Bool
     
     var body: some View {
         if showBorder {
@@ -48,7 +50,7 @@ struct TextBoxBorderView: View {
                         
                     }
                 
-                HStack(spacing: 18) {
+                HStack(spacing: 16) {
                     Button {
                         moveUp()
                     } label: {
@@ -57,7 +59,9 @@ struct TextBoxBorderView: View {
                             Image(systemName: "square.3.layers.3d.top.filled")
                         }
                     }
-                    
+                    .disabled(!canMoveUp)
+                    .opacity(canMoveUp ? 1 : 0.3)
+
                     Button {
                         moveDown()
                     } label: {
@@ -66,8 +70,10 @@ struct TextBoxBorderView: View {
                             Image(systemName: "arrow.down")
                         }
                     }
+                    .disabled(!canMoveDown)
+                    .opacity(canMoveDown ? 1 : 0.3)
                 }
-                .frame(width: 120, height:  40)
+                .frame(width: 110, height:  40)
                 .foregroundStyle(.colorDarkGray)
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 68))
@@ -78,13 +84,13 @@ struct TextBoxBorderView: View {
     }
 }
 
-#Preview {
-    TextBoxBorderView(
-        size: CGSize(width: 200, height: 100),
-        showBorder: true,
-        onDelete: {},
-        onDuplicate: {},
-        moveUp: {},
-        moveDown: {}
-    )
-}
+//#Preview {
+//    TextBoxBorderView(
+//        size: CGSize(width: 200, height: 100),
+//        showBorder: true,
+//        onDelete: {},
+//        onDuplicate: {},
+//        moveUp: {},
+//        moveDown: {}
+//    )
+//}

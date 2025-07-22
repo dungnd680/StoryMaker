@@ -15,7 +15,6 @@ struct TextBoxView: View {
     
     @State private var lastTapDate: Date = .distantPast
     @State private var tapWorkItem: DispatchWorkItem?
-//    @State private var textSize: CGSize = .zero
     @State private var startDragPosition: CGPoint = .zero
     
     @ObservedObject var textBoxModel: TextBoxModel
@@ -84,12 +83,9 @@ struct TextBoxView: View {
                             }
                     }
                     
-                    Text(textBoxViewModel.activeTextBox.content)
-                        .id(textBoxModel.id)
-                        .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
+                    Text(textBoxModel.formatText)
                         .tracking(textBoxModel.letterSpacing)
-                        .lineSpacing(textBoxModel.lineHeight)
-                        .multilineTextAlignment(textBoxModel.textAlignment)
+                        .id(textBoxModel.id)
                         .background(
                             GeometryReader { geo in
                                 Color.clear
@@ -101,7 +97,7 @@ struct TextBoxView: View {
                                     }
                             }
                         )
-                        .opacity(0)
+                        .hidden()
                 }
             }
         }
@@ -129,6 +125,9 @@ struct TextBoxView: View {
                     .onChange(of: geo.size) {
                         updateSizeIfNeeded(geo: geo)
                     }
+                    .onChange(of: textBoxViewModel.activeTextBox.id) {
+                        updateSizeIfNeeded(geo: geo)
+                    }
             }
         )
         .offset(x: textBoxModel.x, y: textBoxModel.y)
@@ -141,15 +140,18 @@ struct TextBoxView: View {
                         tapWorkItem = nil
                         isEditing = true
                         textBoxViewModel.activeTextBox = textBoxModel
+                        textBoxViewModel.activeTextBoxPosition = CGPoint(x: textBoxModel.x, y: textBoxModel.y)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             isTextFieldFocused.wrappedValue = true
                         }
+                        showEditText = false
                         showAdjustBackground = false
                         
                         print("2 tap: \(textBoxModel.id)")
                     } else {
                         let workItem = DispatchWorkItem {
                             textBoxViewModel.activeTextBox = textBoxModel
+                            textBoxViewModel.activeTextBoxPosition = CGPoint(x: textBoxModel.x, y: textBoxModel.y)
                             isTextFieldFocused.wrappedValue = false
                             isEditing = false
                             showToolText = !textBoxModel.content.isEmpty
@@ -177,39 +179,38 @@ struct TextBoxView: View {
         )
         .highPriorityGesture(
             DragGesture(minimumDistance: 1)
-                .updating($dragOffset) { value, state, _ in
-                    if (textBoxViewModel.activeTextBox.id == textBoxModel.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
-                        state = .zero
+                .onChanged { value in
+                    let isDraggingAllowed =
+                        textBoxViewModel.activeTextBox.isEmpty || textBoxViewModel.activeTextBox.id == textBoxModel.id
+                    
+                    guard isDraggingAllowed else { return }
 
-                        if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxModel.id }) {
-                            if startDragPosition == .zero {
-                                startDragPosition = CGPoint(
-                                    x: textBoxViewModel.textBoxes[index].x,
-                                    y: textBoxViewModel.textBoxes[index].y
-                                )
-                            }
+                    if startDragPosition == .zero {
+                        startDragPosition = CGPoint(x: textBoxModel.x, y: textBoxModel.y)
+                    }
 
-                            let newX = startDragPosition.x + value.translation.width
-                            let newY = startDragPosition.y + value.translation.height
+                    let newX = startDragPosition.x + value.translation.width
+                    let newY = startDragPosition.y + value.translation.height
 
-                            textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]
-                            textBoxViewModel.activeTextBox.x = newX
-                            textBoxViewModel.activeTextBox.y = newY
-                        }
+                    textBoxModel.x = newX
+                    textBoxModel.y = newY
+
+                    if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxModel.id }) {
+                        textBoxViewModel.textBoxes[index].x = newX
+                        textBoxViewModel.textBoxes[index].y = newY
+                    }
+
+                    if textBoxViewModel.activeTextBox.id == textBoxModel.id {
+                        textBoxViewModel.activeTextBox.x = newX
+                        textBoxViewModel.activeTextBox.y = newY
+                        textBoxViewModel.activeTextBoxPosition = CGPoint(x: newX, y: newY)
                     }
                 }
-                .onEnded { value in
-                    if (textBoxViewModel.activeTextBox.id == textBoxModel.id || textBoxViewModel.activeTextBox.isEmpty) && !isEditing {
-                        if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxModel.id }) {
-                            textBoxViewModel.textBoxes[index].x = textBoxViewModel.activeTextBox.x
-                            textBoxViewModel.textBoxes[index].y = textBoxViewModel.activeTextBox.y
-
-                            textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]
-                        }
-                    }
+                .onEnded { _ in
                     startDragPosition = .zero
                 }
         )
+
     }
     
     private func updateSizeIfNeeded(geo: GeometryProxy) {

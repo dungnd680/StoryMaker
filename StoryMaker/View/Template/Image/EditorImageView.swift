@@ -60,6 +60,7 @@ struct EditorImageView: View {
                                         textBoxViewModel.textBoxes[index].x = newX
                                         textBoxViewModel.textBoxes[index].y = newY
                                         textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]
+                                        textBoxViewModel.activeTextBoxPosition = CGPoint(x: newX, y: newY)
                                     }
                                 }
                             }
@@ -93,8 +94,12 @@ struct EditorImageView: View {
                     )
                 }
                 
-                if !textBoxViewModel.activeTextBox.isEmpty {
-                    let box = textBoxViewModel.activeTextBox
+                if !textBoxViewModel.activeTextBox.isEmpty,
+                   let currentBox = textBoxViewModel.textBoxes.first(where: { $0.id == textBoxViewModel.activeTextBox.id }),
+                   let currentIndex = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == currentBox.id }) {
+
+                    let canMoveUp = currentIndex < textBoxViewModel.textBoxes.count - 1
+                    let canMoveDown = currentIndex > 0
 
                     TextBoxBorderView(
                         size: textBoxViewModel.activeBoxSize,
@@ -102,20 +107,23 @@ struct EditorImageView: View {
                         onDelete: {
                             showEditText = false
                             showToolText = false
-                            textBoxViewModel.delete(box)
+                            textBoxViewModel.delete(currentBox)
                         },
                         onDuplicate: {
                             isEditing = false
-                            textBoxViewModel.duplicate(box)
+                            showToolText = true
+                            textBoxViewModel.duplicate(currentBox)
                         },
                         moveUp: {
-                            textBoxViewModel.up(box)
+                            textBoxViewModel.up(currentBox)
                         },
                         moveDown: {
-                            textBoxViewModel.down(box)
-                        }
+                            textBoxViewModel.down(currentBox)
+                        },
+                        canMoveUp: canMoveUp,
+                        canMoveDown: canMoveDown
                     )
-                    .offset(x: box.x, y: box.y)
+                    .offset(x: textBoxViewModel.activeTextBoxPosition.x, y: textBoxViewModel.activeTextBoxPosition.y)
                 }
             }
             .frame(width: designSize.width, height: designSize.height)

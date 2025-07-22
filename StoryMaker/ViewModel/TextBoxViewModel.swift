@@ -11,12 +11,14 @@ class TextBoxViewModel: ObservableObject {
     @Published var textBoxes: [TextBoxModel] = []
     @Published var activeTextBox: TextBoxModel = .empty()
     @Published var activeBoxSize: CGSize = .zero
+    @Published var activeTextBoxPosition: CGPoint = .zero
     
     func addTextBox() {
         let newBox = TextBoxModel()
         newBox.id = UUID().uuidString
         textBoxes.append(newBox)
         activeTextBox = newBox
+        activeTextBoxPosition = CGPoint(x: newBox.x, y: newBox.y)
     }
     
     func delete(_ textBox: TextBoxModel) {
@@ -33,6 +35,7 @@ class TextBoxViewModel: ObservableObject {
         let duplicateBox = TextBoxModel(copying: textBox)
         textBoxes.append(duplicateBox)
         activeTextBox = duplicateBox
+        activeTextBoxPosition = CGPoint(x: duplicateBox.x, y: duplicateBox.y)
     }
     
     func up(_ textBox: TextBoxModel) {

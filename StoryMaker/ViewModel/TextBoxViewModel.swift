@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUICore
 
 class TextBoxViewModel: ObservableObject {
     @Published var textBoxes: [TextBoxModel] = []
@@ -50,5 +51,17 @@ class TextBoxViewModel: ObservableObject {
                   index > 0 else { return }
 
             textBoxes.swapAt(index, index - 1)
+    }
+    
+    func updateScale(for box: TextBoxModel, scale: CGFloat) {
+        if let index = textBoxes.firstIndex(where: { $0.id == box.id }) {
+            textBoxes[index].scale = scale
+        }
+    }
+
+    func updateRotation(for box: TextBoxModel, angle: Angle) {
+        if let index = textBoxes.firstIndex(where: { $0.id == box.id }) {
+            textBoxes[index].angle = angle
+        }
     }
 }

@@ -27,8 +27,8 @@ struct ShadowTextView: View {
             VStack(alignment: .leading, spacing: 8) {
                 SlidersView(value: $opacityShadowText, label: "Opacity", range: 0...100)
                 SlidersView(value: $blurShadowText, label: "Blur", range: 0...20)
-                SlidersView(value: $xShadowText, label: "X", range: -10...10)
-                SlidersView(value: $yShadowText, label: "Y", range: -10...10)
+                SlidersView(value: $xShadowText, label: "X", range: -20...20)
+                SlidersView(value: $yShadowText, label: "Y", range: -20...20)
             }
             .padding(.leading, 26)
             .padding(.trailing)

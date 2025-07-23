@@ -43,8 +43,9 @@ class TextBoxModel: ObservableObject, Identifiable {
     @Published var cornerBackgroundText: CGFloat = 0
     @Published var opacityBackgroundText: CGFloat = 100
     @Published var colorBackgroundText: String = "#00000000"
-    @Published var measuredSize: CGSize = .zero
     @Published var textSize: CGSize = .zero
+    @Published var scale: CGFloat = 1.0
+    @Published var angle: Angle = .zero
     
     var shapeStyle: AnyShapeStyle {
         switch colorText {
@@ -111,6 +112,8 @@ class TextBoxModel: ObservableObject, Identifiable {
         self.cornerBackgroundText = original.cornerBackgroundText
         self.opacityBackgroundText = original.opacityBackgroundText
         self.colorBackgroundText = original.colorBackgroundText
+        self.scale = original.scale
+        self.angle = original.angle
     }
 }
 

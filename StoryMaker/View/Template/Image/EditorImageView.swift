@@ -10,6 +10,8 @@ import SwiftUI
 struct EditorImageView: View {
     
     @State private var startDragPosition: CGPoint = .zero
+    @State private var currentScale: CGFloat = 1.0
+    @State private var currentAngle: Angle = .zero
 
     @ObservedObject var textBoxViewModel: TextBoxViewModel
     
@@ -31,7 +33,66 @@ struct EditorImageView: View {
             let designSize = CGSize(width: 1080, height: 1920)
             let scale = min(geometry.size.width / designSize.width,
                             geometry.size.height / designSize.height)
-
+            
+            let dragGesture = DragGesture(minimumDistance: 1)
+                .onChanged { value in
+                    if !textBoxViewModel.activeTextBox.isEmpty {
+                        if startDragPosition == .zero {
+                            startDragPosition = CGPoint(x: textBoxViewModel.activeTextBox.x,
+                                                        y: textBoxViewModel.activeTextBox.y)
+                        }
+                        if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxViewModel.activeTextBox.id }) {
+                            let newX = startDragPosition.x + value.translation.width
+                            let newY = startDragPosition.y + value.translation.height
+                            textBoxViewModel.textBoxes[index].x = newX
+                            textBoxViewModel.textBoxes[index].y = newY
+                            textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]
+                            textBoxViewModel.activeTextBoxPosition = CGPoint(x: newX, y: newY)
+                        }
+                    }
+                }
+                .onEnded { _ in
+                    if !textBoxViewModel.activeTextBox.isEmpty {
+                        if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxViewModel.activeTextBox.id }) {
+                            textBoxViewModel.textBoxes[index].x = textBoxViewModel.activeTextBox.x
+                            textBoxViewModel.textBoxes[index].y = textBoxViewModel.activeTextBox.y
+                        }
+                        startDragPosition = .zero
+                    }
+                }
+            
+            let magnificationGesture = MagnificationGesture(minimumScaleDelta: 0.01)
+                .onChanged { value in
+                    let newScale = currentScale * value
+                    let box = textBoxViewModel.activeTextBox
+                    if !box.isEmpty,
+                       let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == box.id }) {
+                        let updatedBox = box
+                        updatedBox.scale = newScale
+                        textBoxViewModel.textBoxes[index] = updatedBox
+                        textBoxViewModel.activeTextBox = updatedBox
+                    }
+                }
+                .onEnded { value in
+                    currentScale *= value
+                }
+            
+            let rotationGesture = RotationGesture(minimumAngleDelta: .degrees(1))
+                .onChanged { angle in
+                    let newAngle = currentAngle + angle
+                    let box = textBoxViewModel.activeTextBox
+                    if !box.isEmpty,
+                       let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == box.id }) {
+                        let updatedBox = box
+                        updatedBox.angle = newAngle
+                        textBoxViewModel.textBoxes[index] = updatedBox
+                        textBoxViewModel.activeTextBox = updatedBox
+                    }
+                }
+                .onEnded { angle in
+                    currentAngle += angle
+                }
+            
             ZStack {
                 Image(uiImage: applyFilter(selectedFilter, to: image))
                     .resizable()
@@ -45,34 +106,9 @@ struct EditorImageView: View {
                 Color.clear
                     .contentShape(Rectangle())
                     .gesture(
-                        DragGesture(minimumDistance: 1)
-                            .onChanged { value in
-                                if !textBoxViewModel.activeTextBox.isEmpty {
-                                    if startDragPosition == .zero {
-                                        startDragPosition = CGPoint(x: textBoxViewModel.activeTextBox.x,
-                                                                    y: textBoxViewModel.activeTextBox.y)
-                                    }
-
-                                    if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxViewModel.activeTextBox.id }) {
-                                        let newX = startDragPosition.x + value.translation.width
-                                        let newY = startDragPosition.y + value.translation.height
-
-                                        textBoxViewModel.textBoxes[index].x = newX
-                                        textBoxViewModel.textBoxes[index].y = newY
-                                        textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]
-                                        textBoxViewModel.activeTextBoxPosition = CGPoint(x: newX, y: newY)
-                                    }
-                                }
-                            }
-                            .onEnded { _ in
-                                if !textBoxViewModel.activeTextBox.isEmpty {
-                                    if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxViewModel.activeTextBox.id }) {
-                                        textBoxViewModel.textBoxes[index].x = textBoxViewModel.activeTextBox.x
-                                        textBoxViewModel.textBoxes[index].y = textBoxViewModel.activeTextBox.y
-                                    }
-                                    startDragPosition = .zero
-                                }
-                            }
+                        dragGesture
+                            .simultaneously(with: magnificationGesture)
+                            .simultaneously(with: rotationGesture)
                     )
                     .onTapGesture {
                         textBoxViewModel.activeTextBox = .empty()
@@ -92,6 +128,8 @@ struct EditorImageView: View {
                         showAdjustBackground: $showAdjustBackground,
                         isTextFieldFocused: isTextFieldFocused
                     )
+                    .scaleEffect(box.scale, anchor: .center)
+                    .rotationEffect(box.angle)
                 }
                 
                 if !textBoxViewModel.activeTextBox.isEmpty,
@@ -103,6 +141,7 @@ struct EditorImageView: View {
 
                     TextBoxBorderView(
                         size: textBoxViewModel.activeBoxSize,
+                        scale: currentBox.scale,
                         showBorder: true,
                         onDelete: {
                             showEditText = false
@@ -124,6 +163,7 @@ struct EditorImageView: View {
                         canMoveDown: canMoveDown
                     )
                     .offset(x: textBoxViewModel.activeTextBoxPosition.x, y: textBoxViewModel.activeTextBoxPosition.y)
+                    .rotationEffect(currentBox.angle)
                 }
             }
             .frame(width: designSize.width, height: designSize.height)

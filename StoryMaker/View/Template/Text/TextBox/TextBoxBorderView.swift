@@ -9,7 +9,13 @@ import SwiftUI
 
 struct TextBoxBorderView: View {
     
+    @State private var dragOffset: CGSize = .zero
+    
+    @State private var initialScale: CGFloat = 1.0
+    @State private var initialRotation: Double = 0.0
+    
     var size: CGSize
+    var scale: CGFloat
     var showBorder: Bool
     var onDelete: () -> Void
     var onDuplicate: () -> Void
@@ -24,12 +30,12 @@ struct TextBoxBorderView: View {
                 Rectangle()
                     .stroke(.white, lineWidth: 6)
                     .stroke(.black, lineWidth: 3)
-                    .frame(width: size.width, height: size.height)
+                    .frame(width: size.width * scale, height: size.height * scale)
 
                 Image("Delete Text Box")
                     .resizable()
                     .frame(width: 70, height: 70)
-                    .offset(x: -size.width / 2, y: -size.height / 2)
+                    .offset(x: -size.width * scale / 2, y: -size.height * scale / 2)
                     .onTapGesture {
                         onDelete()
                     }
@@ -37,7 +43,7 @@ struct TextBoxBorderView: View {
                 Image("Duplicate Text Box")
                     .resizable()
                     .frame(width: 70, height: 70)
-                    .offset(x: size.width / 2, y: -size.height / 2)
+                    .offset(x: size.width * scale / 2, y: -size.height * scale / 2)
                     .onTapGesture {
                         onDuplicate()
                     }
@@ -45,10 +51,7 @@ struct TextBoxBorderView: View {
                 Image("Rotate Text Box")
                     .resizable()
                     .frame(width: 70, height: 70)
-                    .offset(x: size.width / 2, y: size.height / 2)
-                    .onTapGesture {
-                        
-                    }
+                    .offset(x: size.width * scale / 2, y: size.height * scale / 2)
                 
                 HStack(spacing: 16) {
                     Button {
@@ -78,7 +81,7 @@ struct TextBoxBorderView: View {
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 68))
                 .scaleEffect(2)
-                .offset(x: 0, y: size.height / 2 + 80)
+                .offset(x: 0, y: size.height * scale / 2 + 80)
             }
         }
     }
@@ -87,6 +90,7 @@ struct TextBoxBorderView: View {
 //#Preview {
 //    TextBoxBorderView(
 //        size: CGSize(width: 200, height: 100),
+//        scale: 1.0,
 //        showBorder: true,
 //        onDelete: {},
 //        onDuplicate: {},

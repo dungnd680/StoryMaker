@@ -42,8 +42,16 @@ struct EditorImageView: View {
                                                         y: textBoxViewModel.activeTextBox.y)
                         }
                         if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxViewModel.activeTextBox.id }) {
-                            let newX = startDragPosition.x + value.translation.width
-                            let newY = startDragPosition.y + value.translation.height
+                            let angle = CGFloat(textBoxViewModel.activeTextBox.angle.radians)
+                            let dx = value.translation.width
+                            let dy = value.translation.height
+
+                            let rotatedX = dx * cos(angle) + dy * sin(angle)
+                            let rotatedY = -dx * sin(angle) + dy * cos(angle)
+
+                            let newX = startDragPosition.x + rotatedX
+                            let newY = startDragPosition.y + rotatedY
+                            
                             textBoxViewModel.textBoxes[index].x = newX
                             textBoxViewModel.textBoxes[index].y = newY
                             textBoxViewModel.activeTextBox = textBoxViewModel.textBoxes[index]

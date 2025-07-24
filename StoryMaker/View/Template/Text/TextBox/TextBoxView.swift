@@ -85,7 +85,6 @@ struct TextBoxView: View {
                     
                     Text(textBoxModel.formatText)
                         .tracking(textBoxModel.letterSpacing)
-                        .id(textBoxModel.id)
                         .background(
                             GeometryReader { geo in
                                 Color.clear
@@ -116,21 +115,22 @@ struct TextBoxView: View {
         )
         .background(Color(textBoxModel.colorBackgroundText).opacity(textBoxModel.opacityBackgroundText / 100))
         .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
+        .scaleEffect(textBoxModel.scale)
+        .offset(x: textBoxModel.x, y: textBoxModel.y)
         .overlay(
             GeometryReader { geo in
                 Color.clear
                     .onAppear {
-                        updateSizeIfNeeded(geo: geo)
+                        updateSize(geo: geo)
                     }
                     .onChange(of: geo.size) {
-                        updateSizeIfNeeded(geo: geo)
+                        updateSize(geo: geo)
                     }
                     .onChange(of: textBoxViewModel.activeTextBox.id) {
-                        updateSizeIfNeeded(geo: geo)
+                        updateSize(geo: geo)
                     }
             }
         )
-        .offset(x: textBoxModel.x, y: textBoxModel.y)
         .gesture(
             TapGesture()
                 .onEnded {
@@ -140,18 +140,19 @@ struct TextBoxView: View {
                         tapWorkItem = nil
                         isEditing = true
                         textBoxViewModel.activeTextBox = textBoxModel
-                        textBoxViewModel.activeTextBoxPosition = CGPoint(x: textBoxModel.x, y: textBoxModel.y)
+                        textBoxViewModel.activeTextBoxOffset = CGPoint(x: textBoxModel.x, y: textBoxModel.y)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             isTextFieldFocused.wrappedValue = true
                         }
                         showEditText = false
+                        showToolText = false
                         showAdjustBackground = false
                         
                         print("2 tap: \(textBoxModel.id)")
                     } else {
                         let workItem = DispatchWorkItem {
                             textBoxViewModel.activeTextBox = textBoxModel
-                            textBoxViewModel.activeTextBoxPosition = CGPoint(x: textBoxModel.x, y: textBoxModel.y)
+                            textBoxViewModel.activeTextBoxOffset = CGPoint(x: textBoxModel.x, y: textBoxModel.y)
                             isTextFieldFocused.wrappedValue = false
                             isEditing = false
                             showToolText = !textBoxModel.content.isEmpty
@@ -203,20 +204,24 @@ struct TextBoxView: View {
                     if textBoxViewModel.activeTextBox.id == textBoxModel.id {
                         textBoxViewModel.activeTextBox.x = newX
                         textBoxViewModel.activeTextBox.y = newY
-                        textBoxViewModel.activeTextBoxPosition = CGPoint(x: newX, y: newY)
+                        textBoxViewModel.activeTextBoxOffset = CGPoint(x: newX, y: newY)
                     }
                 }
                 .onEnded { _ in
                     startDragPosition = .zero
                 }
         )
-
     }
     
-    private func updateSizeIfNeeded(geo: GeometryProxy) {
-        let newSize = geo.size
+    private func updateSize(geo: GeometryProxy) {
+        let originalSize = geo.size
+        let scaledSize = CGSize(
+            width: originalSize.width * textBoxModel.scale,
+            height: originalSize.height * textBoxModel.scale
+        )
+
         if textBoxModel.id == textBoxViewModel.activeTextBox.id {
-            textBoxViewModel.activeBoxSize = newSize
+            textBoxViewModel.activeBoxSize = scaledSize
         }
     }
 }

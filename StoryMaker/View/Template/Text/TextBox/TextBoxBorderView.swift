@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct TextBoxBorderView: View {
+    
+    @State private var initialDistance: CGFloat = 0
+    @State private var lastScale: CGFloat = 1.0
 
     @Binding var scale: CGFloat
     
@@ -52,17 +55,23 @@ struct TextBoxBorderView: View {
                         DragGesture()
                             .onChanged { value in
                                 let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                                let handleStart = CGPoint(x: size.width, y: size.height)
-                                let dragHandle = CGPoint(
-                                    x: handleStart.x + value.translation.width,
-                                    y: handleStart.y + value.translation.height
+                                let currentHandle = CGPoint(
+                                    x: size.width + value.translation.width,
+                                    y: size.height + value.translation.height
                                 )
 
-                                let initialDistance = hypot(handleStart.x - center.x, handleStart.y - center.y)
-                                let currentDistance = hypot(dragHandle.x - center.x, dragHandle.y - center.y)
+                                let currentDistance = hypot(currentHandle.x - center.x, currentHandle.y - center.y)
 
-                                let newScale = currentDistance / initialDistance
-                                self.scale = max(0.2, min(newScale, 5.0))
+                                if initialDistance == 0 {
+                                    initialDistance = currentDistance
+                                }
+
+                                let deltaScale = currentDistance / initialDistance
+                                self.scale = max(0.5, min(lastScale * deltaScale, 5.0))
+                            }
+                            .onEnded { _ in
+                                lastScale = scale
+                                initialDistance = 0
                             }
                     )
 

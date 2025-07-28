@@ -20,7 +20,7 @@ struct FontItemView: View {
 
         Text(displayFontText)
             .padding(.horizontal, 6)
-            .foregroundStyle(Color.colorDarkGray)
+            .foregroundStyle(Color.customDarkGray)
             .font(.custom(font.iosFamily, size: 16))
             .lineLimit(1)
             .minimumScaleFactor(0.1)
@@ -29,7 +29,7 @@ struct FontItemView: View {
             .background(isSelected ? .white : .gray.opacity(0.1))
             .overlay(
                 RoundedRectangle(cornerRadius: 6)
-                    .stroke((isSelected && !font.iosFamily.isEmpty) ? .colorRed : .clear, lineWidth: 2)
+                    .stroke((isSelected && !font.iosFamily.isEmpty) ? .customRed : .clear, lineWidth: 2)
             )
             .cornerRadius(6)
             .overlay(

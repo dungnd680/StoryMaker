@@ -25,7 +25,7 @@ struct FontPickerView: View {
                         Section(header:
                             Text(category.rawValue)
                                 .font(.headline)
-                                .foregroundStyle(.colorDarkGray)
+                                .foregroundStyle(.customDarkGray)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 8)
                                 .background(Color.white)

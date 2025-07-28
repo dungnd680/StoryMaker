@@ -22,8 +22,8 @@ struct AlignTextView: View {
                 
                 Image(systemName: "text.alignleft")
                     .frame(width: 30, height: 30)
-                    .foregroundStyle(textBoxModel.alignText == .left ? .white : .colorDarkGray)
-                    .background(textBoxModel.alignText == .left ? .colorDarkGray : .clear)
+                    .foregroundStyle(textBoxModel.alignText == .left ? .white : .customDarkGray)
+                    .background(textBoxModel.alignText == .left ? .customDarkGray : .clear)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -34,8 +34,8 @@ struct AlignTextView: View {
                 
                 Image(systemName: "text.aligncenter")
                     .frame(width: 30, height: 30)
-                    .foregroundStyle(textBoxModel.alignText == .center ? .white : .colorDarkGray)
-                    .background(textBoxModel.alignText == .center ? .colorDarkGray : .clear)
+                    .foregroundStyle(textBoxModel.alignText == .center ? .white : .customDarkGray)
+                    .background(textBoxModel.alignText == .center ? .customDarkGray : .clear)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -46,8 +46,8 @@ struct AlignTextView: View {
                 
                 Image(systemName: "text.alignright")
                     .frame(width: 30, height: 30)
-                    .foregroundStyle(textBoxModel.alignText == .right ? .white : .colorDarkGray)
-                    .background(textBoxModel.alignText == .right ? .colorDarkGray : .clear)
+                    .foregroundStyle(textBoxModel.alignText == .right ? .white : .customDarkGray)
+                    .background(textBoxModel.alignText == .right ? .customDarkGray : .clear)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -67,8 +67,8 @@ struct AlignTextView: View {
                 Text("-")
                     .frame(width: 30, height: 30)
                     .font(.subheadline)
-                    .foregroundStyle(textBoxModel.caseText == .normal ? .white : .colorDarkGray)
-                    .background(textBoxModel.caseText == .normal ? Color.colorDarkGray : Color.clear)
+                    .foregroundStyle(textBoxModel.caseText == .normal ? .white : .customDarkGray)
+                    .background(textBoxModel.caseText == .normal ? .customDarkGray : .clear)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -80,8 +80,8 @@ struct AlignTextView: View {
                 Text("AG")
                     .frame(width: 30, height: 30)
                     .font(.subheadline)
-                    .foregroundStyle(textBoxModel.caseText == .uppercase ? .white : .colorDarkGray)
-                    .background(textBoxModel.caseText == .uppercase ? Color.colorDarkGray : Color.clear)
+                    .foregroundStyle(textBoxModel.caseText == .uppercase ? .white : .customDarkGray)
+                    .background(textBoxModel.caseText == .uppercase ? .customDarkGray : Color.clear)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -93,8 +93,8 @@ struct AlignTextView: View {
                 Text("Ag")
                     .frame(width: 30, height: 30)
                     .font(.subheadline)
-                    .foregroundStyle(textBoxModel.caseText == .capitalize ? .white : .colorDarkGray)
-                    .background(textBoxModel.caseText == .capitalize ? Color.colorDarkGray : Color.clear)
+                    .foregroundStyle(textBoxModel.caseText == .capitalize ? .white : .customDarkGray)
+                    .background(textBoxModel.caseText == .capitalize ? .customDarkGray : Color.clear)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -106,8 +106,8 @@ struct AlignTextView: View {
                 Text("ag")
                     .frame(width: 30, height: 30)
                     .font(.subheadline)
-                    .foregroundStyle(textBoxModel.caseText == .lowercase ? .white : .colorDarkGray)
-                    .background(textBoxModel.caseText == .lowercase ? Color.colorDarkGray : Color.clear)
+                    .foregroundStyle(textBoxModel.caseText == .lowercase ? .white : .customDarkGray)
+                    .background(textBoxModel.caseText == .lowercase ? .customDarkGray : Color.clear)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {

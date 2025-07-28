@@ -40,7 +40,7 @@ struct AdjustBackgroundView: View {
                 ZStack {
                     Text(selectedTab == .brightness ? "Brightness" : "Filters")
                         .font(.headline)
-                        .foregroundStyle(.colorDarkGray)
+                        .foregroundStyle(.customDarkGray)
 
                     HStack {
                         Spacer()
@@ -67,7 +67,7 @@ struct AdjustBackgroundView: View {
                         }
                     } label: {
                         Image("Filters")
-                            .foregroundStyle(selectedTab == .filters ? .backgroundColor2 : .colorDarkGray)
+                            .foregroundStyle(selectedTab == .filters ? .customRed : .customDarkGray)
                     }
 
                     Button {
@@ -76,7 +76,7 @@ struct AdjustBackgroundView: View {
                         }
                     } label: {
                         Image("Brightness")
-                            .foregroundStyle(selectedTab == .brightness ? .backgroundColor2 : .colorDarkGray)
+                            .foregroundStyle(selectedTab == .brightness ? .customRed : .customDarkGray)
                     }
                 }
                 .padding(.horizontal, 26)

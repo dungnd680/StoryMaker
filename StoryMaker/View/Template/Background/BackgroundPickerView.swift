@@ -118,7 +118,7 @@ struct BackgroundPickerView: View {
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
                             .tint(.white)
-                            .background(.backgroundColor1)
+                            .background(.customOrange)
                             .clipShape(Capsule())
                         }
                     }

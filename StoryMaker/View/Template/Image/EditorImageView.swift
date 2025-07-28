@@ -49,7 +49,7 @@ struct EditorImageView: View {
                     .gesture(
                         DragGesture(minimumDistance: 1)
                             .onChanged { value in
-                                if !textBoxViewModel.activeTextBox.isEmpty {
+                                if !textBoxViewModel.activeTextBox.id.isEmpty {
                                     if startDragPosition == .zero {
                                         startDragPosition = CGPoint(x: textBoxViewModel.activeTextBox.x,
                                                                     y: textBoxViewModel.activeTextBox.y)
@@ -87,7 +87,7 @@ struct EditorImageView: View {
                     )
                 }
                 
-                if !textBoxViewModel.activeTextBox.isEmpty,
+                if !textBoxViewModel.activeTextBox.id.isEmpty,
                    let currentBox = textBoxViewModel.textBoxes.first(where: { $0.id == textBoxViewModel.activeTextBox.id }),
                    let currentIndex = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == currentBox.id }) {
 
@@ -96,6 +96,7 @@ struct EditorImageView: View {
 
                     TextBoxBorderView(
                         scale: $textBoxViewModel.textBoxes[currentIndex].scale,
+                        angle: $textBoxViewModel.textBoxes[currentIndex].angle,
                         size: textBoxViewModel.activeBoxSize,
                         showBorder: true,
                         onDelete: {
@@ -134,5 +135,5 @@ struct EditorImageView: View {
 }
 
 //#Preview {
-//    EditorImageView(image: UIImage(), viewModel: TextBoxViewModel())
+//    EditorImageView()
 //}

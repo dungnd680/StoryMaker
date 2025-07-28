@@ -44,7 +44,6 @@ enum CategoryEnum: String, Codable {
 struct DataBackground: Codable {
     let category: CategoryEnum
     let thumb, background: String
-//    let feature, updated: Int
 }
 
 struct ConfigOnlyResponse: Decodable {

@@ -47,7 +47,7 @@ struct ToolTextView: View {
                             } label: {
                                 VStack {
                                     Image(tool.image)
-                                        .foregroundStyle(.colorDarkGray)
+                                        .foregroundStyle(.customDarkGray)
                                     
                                     Text(tool.title)
                                         .font(.caption)

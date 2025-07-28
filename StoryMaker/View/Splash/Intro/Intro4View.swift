@@ -20,32 +20,31 @@ struct Intro4View: View {
                 Spacer()
                 
                 Text("Sticker & Shape")
-                    .frame(height: 34)
-                    .font(.system(size: 28, weight: .semibold))
+                    .font(.system(size: 30, weight: .semibold))
+                    .frame(height: 30)
                 
                 Text("More than 1000 Tempalte with many topic")
-                    .frame(width: 226)
+                    .font(.system(size: 20, weight: .regular))
                     .multilineTextAlignment(.center)
-                    .font(.system(size: 18, weight: .regular))
-                    .padding(.bottom)
-                    .padding(.bottom)
+                    .frame(width: 230)
+                    .padding(.bottom, 32)
                 
                 Button {
                     onNext()
                 } label: {
                     Text("Next")
-                        .font(.system(size: 18))
+                        .font(.system(size: 20))
                         .foregroundStyle(.white)
-                        .frame(width: 258, height: 47)
-                        .background(.colorRed)
-                        .clipShape(RoundedRectangle(cornerRadius: 57))
-                        .padding(.vertical)
+                        .frame(width: 260, height: 50)
+                        .background(.customRed)
+                        .clipShape(RoundedRectangle(cornerRadius: 60))
                 }
+                .padding(.vertical)
                 
                 Text("Terms of Use  ·  Privacy Policy")
                     .font(.system(size: 12, weight: .light))
             }
-            .foregroundStyle(.colorDarkGray)
+            .foregroundStyle(.customDarkGray)
         }
     }
 }

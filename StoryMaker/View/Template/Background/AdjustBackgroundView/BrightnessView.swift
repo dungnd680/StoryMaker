@@ -19,7 +19,7 @@ struct BrightnessView: View {
                 .font(.caption)
             HStack {
                 Slider(value: $lightness, in: -100...100, step: 1)
-                    .tint(.backgroundColor2)
+                    .tint(.customRed)
                 Text(String(format: "%.0f", lightness))
                     .frame(width: 32)
             }
@@ -29,7 +29,7 @@ struct BrightnessView: View {
                 .font(.caption)
             HStack {
                 Slider(value: $saturation, in: -100...100, step: 1)
-                    .tint(.backgroundColor2)
+                    .tint(.customRed)
                 Text(String(format: "%.0f", saturation))
                     .frame(width: 32)
             }
@@ -39,7 +39,7 @@ struct BrightnessView: View {
                 .font(.caption)
             HStack {
                 Slider(value: $blur, in: 0...100, step: 1)
-                    .tint(.backgroundColor2)
+                    .tint(.customRed)
                 Text(String(format: "%.0f", blur))
                     .frame(width: 32)
             }

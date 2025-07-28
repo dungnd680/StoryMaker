@@ -11,18 +11,18 @@ struct CountdownView: View {
     @AppStorage("countdown") private var targetDate: TimeInterval = 0
 
     var body: some View {
-        ZStack(alignment: .top) {
+        ZStack {
             RoundedRectangle(cornerRadius: 9)
                 .stroke(style: StrokeStyle(lineWidth: 1, dash: [2]))
-                .foregroundStyle(.colorOrange)
-                .frame(width: 249, height: 88)
+                .foregroundStyle(.customOrange)
+                .frame(width: 250, height: 90)
                 .padding(.bottom, 6)
 
             Text("Hurry Up! Time is running out!")
                 .font(.system(size: 16, weight: .semibold))
                 .background(.white)
-                .foregroundStyle(.colorOrange)
-                .offset(y: -10)
+                .foregroundStyle(.customOrange)
+                .offset(y: -50)
 
             TimelineView(.periodic(from: .now, by: 1)) { context in
                 let now = context.date.timeIntervalSince1970
@@ -40,7 +40,6 @@ struct CountdownView: View {
                         .font(.system(size: 30, weight: .medium))
                     timeBox(value: seconds, label: "SEC")
                 }
-                .padding(.top)
             }
         }
         .onAppear {
@@ -54,13 +53,13 @@ struct CountdownView: View {
         VStack {
             Text(String(format: "%02d", value))
                 .font(.system(size: 33, weight: .semibold))
-                .foregroundStyle(.colorGray2)
+                .foregroundStyle(.customGray)
             Text(label)
                 .font(.system(size: 12))
-                .foregroundStyle(.colorGray2)
+                .foregroundStyle(.customGray)
         }
         .frame(width: 56, height: 56)
-        .background(.colorWhiteGray)
+        .background(.customWhiteGray)
         .cornerRadius(7)
     }
 }

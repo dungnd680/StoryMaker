@@ -43,7 +43,7 @@ struct BackgroundTextView: View {
                                     Circle().stroke(.yellow, lineWidth: 1)
                                     
                                     if colorBackgroundText == "#00000000" {
-                                        Circle().stroke(.colorRed, lineWidth: 2)
+                                        Circle().stroke(.customRed, lineWidth: 2)
                                         Image("Selected Color")
                                     }
                                 }
@@ -67,11 +67,11 @@ struct BackgroundTextView: View {
                                 .overlay {
                                     ZStack {
                                         if hex == "#FFFFFF" {
-                                            Circle().stroke(.colorDarkGray)
+                                            Circle().stroke(.customDarkGray)
                                         }
                                         
                                         if colorBackgroundText == hex {
-                                            Circle().stroke(.colorRed, lineWidth: 2)
+                                            Circle().stroke(.customRed, lineWidth: 2)
                                             Image("Selected Color")
                                         }
                                     }

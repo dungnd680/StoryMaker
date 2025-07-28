@@ -45,6 +45,7 @@ class TextBoxModel: ObservableObject, Identifiable {
     @Published var colorBackgroundText: String = "#00000000"
     @Published var textSize: CGSize = .zero
     @Published var scale: CGFloat = 1.0
+    @Published var angle: Angle = .zero
     
     var shapeStyle: AnyShapeStyle {
         switch colorText {
@@ -112,11 +113,6 @@ class TextBoxModel: ObservableObject, Identifiable {
         self.opacityBackgroundText = original.opacityBackgroundText
         self.colorBackgroundText = original.colorBackgroundText
         self.scale = original.scale
-    }
-}
-
-extension TextBoxModel {
-    var isEmpty: Bool {
-        return id.isEmpty
+        self.angle = original.angle
     }
 }

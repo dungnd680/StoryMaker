@@ -8,11 +8,6 @@
 import SwiftUI
 
 struct SplashView: View {
-    /*
-     ~ Khai báo biến onNext, kiểu là một hàm không có tham số và không trả về giá trị (Void)
-     ~ Dùng khi muốn truyền một hành động từ bên ngoài vào View
-     ~ Khi bấm nút, onNext() sẽ được gọi và logic cụ thể sẽ được định nghĩa từ bên ngoài
-     */
     var onNext: () -> Void
     var onAutoNavigation: () -> Void
     
@@ -21,7 +16,7 @@ struct SplashView: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                gradient: Gradient(colors: [.backgroundColor1, .backgroundColor2]),
+                gradient: Gradient(colors: [.customOrange, .customRed]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -33,9 +28,10 @@ struct SplashView: View {
                 
                 Text("Story Maker")
                     .font(.system(size: 28, weight: .bold))
+                    .padding(.bottom, 4)
                 
-                Text("Use StoryArt unfold your stories and")
-                    .font(.system(size: 15, weight: .medium))
+                Text("Use StoryArt to unfold your stories and")
+                    .font(.system(size: 16, weight: .medium))
             }
             .foregroundStyle(.white)
             
@@ -47,13 +43,13 @@ struct SplashView: View {
                         onNext()
                     } label: {
                         Text("Get Stared")
-                            .font(.system(size: 18, weight: .regular))
-                            .foregroundStyle(.black)
-                            .frame(width: 258, height: 47)
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundStyle(.customDarkGray)
+                            .frame(width: 260, height: 50)
                             .background(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 57))
-                            .padding(.bottom)
+                            .clipShape(RoundedRectangle(cornerRadius: 60))
                     }
+                    .padding(.bottom)
                 }
                 
                 Text("Terms of Use  ·  Privacy Policy")

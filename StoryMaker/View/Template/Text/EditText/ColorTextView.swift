@@ -36,12 +36,12 @@ struct ColorTextView: View {
                                 ZStack {
                                     if hex == "#FFFFFF" {
                                         Circle()
-                                            .stroke(.colorDarkGray)
+                                            .stroke(.customDarkGray)
                                     }
                                     
                                     if case .solid(let selectedHex) = colorText, selectedHex == hex {
                                         Circle()
-                                            .stroke(Color.colorRed, lineWidth: 2)
+                                            .stroke(Color.customRed, lineWidth: 2)
                                         Image("Selected Color")
                                     }
                                 }

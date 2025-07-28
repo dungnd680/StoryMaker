@@ -14,12 +14,12 @@ struct TemplateView: View {
     @FocusState private var isTextFieldFocused: Bool
     
     @State private var showSubscription = false
-    @State private var showConfirmationDialog = false
-    @State private var showPhotoPicker = false
+    @State private var showImageSelectionOptions = false
+    @State private var showPhotoLibrary = false
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImage: UIImage? = nil
-    @State private var showCropper = false
     @State private var originalImage: UIImage? = nil
+    @State private var showCropper = false
     @State private var showBackgroundPicker = false
     @State private var showAdjustBackground = false
     @State private var selectedFilter: FilterModel = filters[0]
@@ -41,16 +41,20 @@ struct TemplateView: View {
         ZStack {
             VStack {
                 HStack {
-                    Button {
-                        selectedImage = nil
-                        showAdjustBackground = false
-                        showToolText = false
-                    } label: {
-                        Image(systemName: "xmark")
-                            .foregroundStyle(.colorDarkGray)
+                    if selectedImage == nil {
+                        Image("Back")
+                            .opacity(0.5)
+                    } else {
+                        Button {
+                            selectedImage = nil
+                            showAdjustBackground = false
+                            showEditText = false
+                            showToolText = false
+                        } label: {
+                            Image(systemName: "xmark")
+                                .foregroundStyle(.customDarkGray)
+                        }
                     }
-                    .padding(.leading, 8)
-                    .padding(.bottom, 3)
                     
                     Spacer()
                     
@@ -61,11 +65,9 @@ struct TemplateView: View {
                             .opacity(selectedImage == nil ? 0.5 : 1.0)
                     }
                     .disabled(selectedImage == nil)
-                    .padding(.trailing, 8)
-                    .padding(.bottom, 3)
                 }
                 .padding(.horizontal)
-                .padding(.top)
+                .padding(.bottom, 2)
                 
                 ZStack {
                     if let image = selectedImage {
@@ -83,11 +85,11 @@ struct TemplateView: View {
                             isTextFieldFocused: $isTextFieldFocused
                         )
                     } else {
-                        Color.colorLightGray
+                        Color.customLightGray
                         
                         VStack {
                             Button {
-                                showConfirmationDialog = true
+                                showImageSelectionOptions = true
                             } label: {
                                 Image("Add Background")
                             }
@@ -96,16 +98,16 @@ struct TemplateView: View {
                                 .font(.system(size: 16))
                                 .foregroundStyle(.black)
                         }
-                        .confirmationDialog("Select Background", isPresented: $showConfirmationDialog) {
+                        .confirmationDialog("Select Background", isPresented: $showImageSelectionOptions) {
                             Button("Choose from Library") {
-                                showPhotoPicker.toggle()
+                                showPhotoLibrary.toggle()
                             }
                             
                             Button("Other") {
                                 showBackgroundPicker = true
                             }
                         }
-                        .photosPicker(isPresented: $showPhotoPicker, selection: $selectedItem)
+                        .photosPicker(isPresented: $showPhotoLibrary, selection: $selectedItem)
                         .onChange(of: selectedItem) {
                             Task {
                                 if let data = try? await selectedItem?.loadTransferable(type: Data.self),
@@ -121,14 +123,15 @@ struct TemplateView: View {
                 
                 HStack {
                     Spacer()
+                    
                     Button {
                         textBoxViewModel.addTextBox()
                     } label: {
                         VStack {
-                            Image("Format Shape")
+                            Image("Add Text")
                             Text("Add Text")
                                 .font(.system(size: 12))
-                                .foregroundStyle(.colorDarkGray)
+                                .foregroundStyle(.customDarkGray)
                         }
                         .opacity(selectedImage == nil ? 0.5 : 1.0)
                     }
@@ -141,10 +144,10 @@ struct TemplateView: View {
                         showAdjustBackground = true
                     } label: {
                         VStack {
-                            Image("Background Filter")
+                            Image("Background")
                             Text("Background")
                                 .font(.system(size: 12))
-                                .foregroundStyle(.colorDarkGray)
+                                .foregroundStyle(.customDarkGray)
                         }
                         .opacity(selectedImage == nil ? 0.5 : 1.0)
                     }
@@ -209,6 +212,9 @@ struct TemplateView: View {
                 }
             }
         }
+        .fullScreenCover(isPresented: $showSubscription) {
+            SubscriptionView()
+        }
         .sheet(isPresented: $showCropper) {
             if let image = originalImage {
                 ImageCropperView(image: image) { croppedImage in
@@ -220,9 +226,6 @@ struct TemplateView: View {
             BackgroundPickerView() { background in
                 selectedImage = background
             }
-        }
-        .fullScreenCover(isPresented: $showSubscription) {
-            SubscriptionView()
         }
     }
     

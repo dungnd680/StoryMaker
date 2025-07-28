@@ -24,7 +24,7 @@ struct SlidersView: View {
                 .font(.caption)
             HStack {
                 Slider(value: $animatedValue, in: range, step: step)
-                    .tint(.backgroundColor2)
+                    .tint(.customRed)
                 Text(String(format: "%.0f", value))
                     .frame(width: 29)
             }

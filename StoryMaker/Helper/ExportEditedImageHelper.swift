@@ -14,7 +14,6 @@ struct ExportEditedImageHelper {
     static func exportEditedImage(from view: some View, onComplete: @escaping (Bool, String) -> Void) {
         let staticView = view.environment(\.isExporting, true)
         let renderer = ImageRenderer(content: staticView)
-//        let renderer = ImageRenderer(content: view)
         let baseSize = CGSize(width: 1080, height: 1920)
 
         renderer.proposedSize = .init(baseSize)

@@ -13,7 +13,7 @@ struct SubscriptionView: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                gradient: Gradient(colors: [.backgroundColor2, .backgroundColor1]),
+                gradient: Gradient(colors: [.customOrange, .customRed]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -27,23 +27,24 @@ struct SubscriptionView: View {
                 Spacer()
                 
                 CountdownView()
+                    .padding(.bottom, 6)
                 
                 (
                     Text("Get unlimited access to all premium features. ")
-                        .foregroundStyle(.colorDarkGray)
+                        .foregroundStyle(.customDarkGray)
                     +
                     Text("Cancel anytime")
-                        .foregroundStyle(.colorOrange)
+                        .foregroundStyle(.customOrange)
                 )
+                .font(.system(size: 16))
                 .frame(width: 260)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 16))
-                .padding(.bottom)
+                .padding(.bottom, 8)
                 
                 Text("15.8$ per week")
                     .font(.system(size: 18))
                     .strikethrough()
-                    .foregroundStyle(.colorLightGray)
+                    .foregroundStyle(.customLightGray)
                 
                 (
                     Text("3.9$")
@@ -52,7 +53,7 @@ struct SubscriptionView: View {
                     Text("per week")
                         .font(.system(size: 20, weight: .bold))
                 )
-                .foregroundStyle(.colorGreen)
+                .foregroundStyle(.customGreen)
                 
                 Button {
                     
@@ -62,24 +63,23 @@ struct SubscriptionView: View {
                             .foregroundStyle(.white)
                         Image("Arrowshape Right")
                     }
-                    .frame(width: 256, height: 50)
-                    .background(.colorGreen)
+                    .frame(width: 260, height: 50)
+                    .background(.customGreen)
                     .clipShape(RoundedRectangle(cornerRadius: 60))
-                    .padding(.bottom)
                 }
                 
                 Button {
                     
                 } label: {
                     Text("Auto-renewable")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(.colorDarkGray)
-                        .padding(.bottom)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.customDarkGray)
                 }
+                .padding(.vertical)
                 
                 Text("Terms of Use  ·  Privacy Policy")
                     .font(.system(size: 12, weight: .light))
-                    .foregroundStyle(.colorLightGray)
+                    .foregroundStyle(.customGray2)
             }
             
             VStack {
@@ -90,8 +90,8 @@ struct SubscriptionView: View {
                         dismiss()
                     } label: {
                         Image("Xmark Circle")
-                            .padding(.trailing)
                     }
+                    .padding(.trailing)
                 }
                 
                 Spacer()

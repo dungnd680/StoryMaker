@@ -39,7 +39,7 @@ struct EditTextView: View {
                 ZStack {
                     Text(selectedTab.displayName)
                         .font(.headline)
-                        .foregroundStyle(.colorDarkGray)
+                        .foregroundStyle(.customDarkGray)
                     
                     HStack {
                         Image("Keyboard")
@@ -74,7 +74,7 @@ struct EditTextView: View {
                             }
                         } label: {
                             Image(imageName(for: tab))
-                                .foregroundStyle(selectedTab == tab ? .backgroundColor2 : .colorDarkGray)
+                                .foregroundStyle(selectedTab == tab ? .customRed : .customDarkGray)
                         }
                     }
                 }
@@ -91,7 +91,7 @@ struct EditTextView: View {
                         
                         HStack {
                             Slider(value: $textBoxViewModel.activeTextBox.opacityText, in: 0...100,step: 1)
-                                .tint(.backgroundColor2)
+                                .tint(.customRed)
                             
                             Text(String(format: "%.0f", textBoxViewModel.activeTextBox.opacityText))
                                 .font(.subheadline)

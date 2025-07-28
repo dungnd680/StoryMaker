@@ -52,11 +52,11 @@ struct ShadowTextView: View {
                                 .overlay {
                                     ZStack {
                                         if hex == "#FFFFFF" {
-                                            Circle().stroke(.colorDarkGray)
+                                            Circle().stroke(.customDarkGray)
                                         }
                                         
                                         if colorShadowText == hex {
-                                            Circle().stroke(.colorRed, lineWidth: 2)
+                                            Circle().stroke(.customRed, lineWidth: 2)
                                             Image("Selected Color")
                                         }
                                     }

@@ -16,6 +16,7 @@ struct TextBoxView: View {
     @State private var lastTapDate: Date = .distantPast
     @State private var tapWorkItem: DispatchWorkItem?
     @State private var startDragPosition: CGPoint = .zero
+    @State private var internalScaledSize: CGSize = .zero
     
     @ObservedObject var textBoxModel: TextBoxModel
     @ObservedObject var textBoxViewModel: TextBoxViewModel
@@ -40,9 +41,10 @@ struct TextBoxView: View {
                     }
                     
                     if textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing {
+                        let paddingTextField: CGFloat = 95
                         TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
                             .tracking(textBoxModel.letterSpacing)
-                            .frame(width: textBoxModel.textSize.width, height: textBoxModel.textSize.height)
+                            .frame(width: textBoxModel.textSize.width - paddingTextField, height: textBoxModel.textSize.height - paddingTextField)
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
                             .toolbar {
@@ -50,14 +52,14 @@ struct TextBoxView: View {
                                     ZStack {
                                         Text("Text Edit")
                                             .font(.headline)
-                                            .foregroundStyle(.colorDarkGray)
+                                            .foregroundStyle(.customDarkGray)
                                         
                                         HStack {
                                             HStack {
                                                 Image("Tool Edit Text")
                                                 Text("Edit")
                                                     .font(.subheadline)
-                                                    .foregroundStyle(.colorDarkGray)
+                                                    .foregroundStyle(.customDarkGray)
                                             }
                                             .onTapGesture {
                                                 if !textBoxViewModel.activeTextBox.content.isEmpty {
@@ -115,6 +117,7 @@ struct TextBoxView: View {
         )
         .background(Color(textBoxModel.colorBackgroundText).opacity(textBoxModel.opacityBackgroundText / 100))
         .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
+        .rotationEffect(textBoxModel.angle)
         .scaleEffect(textBoxModel.scale)
         .offset(x: textBoxModel.x, y: textBoxModel.y)
         .overlay(
@@ -128,6 +131,17 @@ struct TextBoxView: View {
                     }
                     .onChange(of: textBoxViewModel.activeTextBox.id) {
                         updateSize(geo: geo)
+                    }
+            }
+        )
+        .background(
+            GeometryReader { geo in
+                Color.clear
+                    .onAppear {
+                        internalScaledSize = geo.size
+                    }
+                    .onChange(of: geo.size) {
+                        internalScaledSize = geo.size
                     }
             }
         )
@@ -182,7 +196,7 @@ struct TextBoxView: View {
             DragGesture(minimumDistance: 1)
                 .onChanged { value in
                     let isDraggingAllowed =
-                        textBoxViewModel.activeTextBox.isEmpty || textBoxViewModel.activeTextBox.id == textBoxModel.id
+                    textBoxViewModel.activeTextBox.id.isEmpty || textBoxViewModel.activeTextBox.id == textBoxModel.id
                     
                     guard isDraggingAllowed else { return }
 
@@ -214,14 +228,9 @@ struct TextBoxView: View {
     }
     
     private func updateSize(geo: GeometryProxy) {
-        let originalSize = geo.size
-        let scaledSize = CGSize(
-            width: originalSize.width * textBoxModel.scale,
-            height: originalSize.height * textBoxModel.scale
-        )
-
+        textBoxModel.textSize = geo.size
         if textBoxModel.id == textBoxViewModel.activeTextBox.id {
-            textBoxViewModel.activeBoxSize = scaledSize
+            textBoxViewModel.activeBoxSize = internalScaledSize
         }
     }
 }

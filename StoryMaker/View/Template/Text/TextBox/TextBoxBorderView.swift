@@ -9,14 +9,14 @@ import SwiftUI
 
 struct TextBoxBorderView: View {
 
-    @State private var initialDistance: CGFloat = 0
     @State private var lastScale: CGFloat = 1.0
-    @State private var imageOffset: CGSize = .zero
-    @State private var lastAngle: Angle = .zero
+    @State private var lastRotation: Angle = .zero
+    @State private var initialScaleOffset: CGPoint = .zero
+    @State private var initialRotationOffset: CGPoint = .zero
     @State private var setupValueOnDrag = false
 
     @Binding var scale: CGFloat
-    @Binding var angle: Angle
+    @Binding var rotation: Angle
 
     var size: CGSize
     var showBorder: Bool
@@ -34,12 +34,13 @@ struct TextBoxBorderView: View {
                     .stroke(.white, lineWidth: 6)
                     .stroke(.black, lineWidth: 3)
                     .frame(width: size.width * scale, height: size.height * scale)
-                    .rotationEffect(angle)
+                    .rotationEffect(rotation)
 
                 Image("Delete Text Box")
                     .resizable()
                     .frame(width: 70, height: 70)
-                    .offset(offsetDelete)
+                    .offset(x: -size.width * scale / 2, y: -size.height * scale / 2)
+                    .rotationEffect(rotation)
                     .onTapGesture {
                         onDelete()
                     }
@@ -47,7 +48,8 @@ struct TextBoxBorderView: View {
                 Image("Duplicate Text Box")
                     .resizable()
                     .frame(width: 70, height: 70)
-                    .offset(offsetDuplicate)
+                    .offset(x: size.width * scale / 2, y: -size.height * scale / 2)
+                    .rotationEffect(rotation)
                     .onTapGesture {
                         onDuplicate()
                     }
@@ -55,79 +57,88 @@ struct TextBoxBorderView: View {
                 Image("Scale Text Box")
                     .resizable()
                     .frame(width: 70, height: 70)
-                    .offset(offsetScale)
+                    .offset(x: size.width * scale / 2, y: size.height * scale / 2)
+                    .rotationEffect(rotation)
                     .gesture(
-                        DragGesture()
+                        DragGesture(minimumDistance: 0)
                             .onChanged { value in
-                                let start = CGPoint(
-                                    x: offsetScale.width,
-                                    y: offsetScale.height
-                                )
+                                if !setupValueOnDrag {
+                                    let dx = size.width * scale / 2
+                                    let dy = size.height * scale / 2
 
-                                let current = CGPoint(
-                                    x: offsetScale.width + value.translation.width,
-                                    y: offsetScale.height + value.translation.height
-                                )
+                                    let radians = CGFloat(rotation.radians)
+                                    let rotatedStartX = dx * cos(radians) - dy * sin(radians)
+                                    let rotatedStartY = dx * sin(radians) + dy * cos(radians)
 
-                                let startDistance = sqrt(pow(start.x, 2) + pow(start.y, 2))
-                                let currentDistance = sqrt(pow(current.x, 2) + pow(current.y, 2))
-
-                                let deltaScale = currentDistance / startDistance
-
-                                let proposedScale = lastScale * deltaScale
-
-                                if proposedScale < lastScale && lastScale <= 0.5 {
-                                    return
+                                    initialScaleOffset = CGPoint(x: rotatedStartX, y: rotatedStartY)
+                                    setupValueOnDrag = true
                                 }
 
-                                scale = max(0.5, min(deltaScale, 5.0))
+                                let draggedOffset = CGPoint(
+                                    x: initialScaleOffset.x + value.translation.width,
+                                    y: initialScaleOffset.y + value.translation.height
+                                )
+
+                                let a = hypot(initialScaleOffset.x, initialScaleOffset.y)
+                                let b = hypot(draggedOffset.x, draggedOffset.y)
+
+                                let ratioScale = b / a
+                                let Scale = lastScale * ratioScale
+
+                                scale = max(0.5, min(Scale, 5.0))
                             }
                             .onEnded { _ in
-//                                lastScale = scale
+                                lastScale = scale
+                                setupValueOnDrag = false
                             }
                     )
                 
                 Image("Rotation Text Box")
                     .resizable()
                     .frame(width: 70, height: 70)
-                    .offset(offsetRotation)
+                    .offset(x: -size.width * scale / 2, y: size.height * scale / 2)
+                    .rotationEffect(rotation)
                     .gesture(
-                        DragGesture()
+                        DragGesture(minimumDistance: 0)
                             .onChanged { value in
                                 if !setupValueOnDrag {
-                                    let imageOffsetX = -size.width * scale / 2
-                                    let imageOffsetY = size.height * scale / 2
+                                    let dx = -size.width * scale / 2
+                                    let dy = size.height * scale / 2
                                     
-                                    let radians = CGFloat(angle.radians)
-                                    let rotatedStartX = imageOffsetX * cos(radians) - imageOffsetY * sin(radians)
-                                    let rotatedStartY = imageOffsetX * sin(radians) + imageOffsetY * cos(radians)
+                                    let radians = CGFloat(rotation.radians)
+                                    let rotatedStartX = dx * cos(radians) - dy * sin(radians)
+                                    let rotatedStartY = dx * sin(radians) + dy * cos(radians)
 
-                                    imageOffset = CGSize(width: rotatedStartX, height: rotatedStartY)
+                                    initialRotationOffset = CGPoint(x: rotatedStartX, y: rotatedStartY)
                                     
                                     setupValueOnDrag = true
                                 }
+                                
+                                let initialOffset = (
+                                    x: initialRotationOffset.x,
+                                    y: initialRotationOffset.y
+                                )
+                                let draggedOffset = (
+                                    x: initialRotationOffset.x + value.translation.width,
+                                    y: initialRotationOffset.y + value.translation.height
+                                )
 
-                                let initialOffsetX = imageOffset.width
-                                let initialOffsetY = imageOffset.height
-                                let dragedOffsetX = initialOffsetX + value.translation.width
-                                let dragedOffsetY = initialOffsetY + value.translation.height
-
-                                let a = sqrt(pow(value.translation.width, 2) + pow(value.translation.height, 2))
-                                let b = sqrt(pow(initialOffsetX, 2) + pow(initialOffsetY, 2))
-                                let c = sqrt(pow(dragedOffsetX, 2) + pow(dragedOffsetY, 2))
+                                let a = hypot(draggedOffset.x - initialOffset.x, draggedOffset.y - initialOffset.y)
+                                let b = hypot(initialOffset.x, initialOffset.y)
+                                let c = hypot(draggedOffset.x, draggedOffset.y)
 
                                 let cosa = (b * b + c * c - a * a) / (2 * b * c)
                                 let clampedCosa = max(-1.0, min(1.0, cosa))
                                 let aRadians = acos(clampedCosa)
                                 var aDegrees = aRadians * 180 / .pi
 
-                                let cross = initialOffsetX * dragedOffsetY - initialOffsetY * dragedOffsetX
+                                let cross = initialOffset.x * draggedOffset.y - initialOffset.y * draggedOffset.x
                                 if cross < 0 { aDegrees = -aDegrees }
 
-                                angle = lastAngle + .degrees(aDegrees)
+                                rotation = lastRotation + .degrees(aDegrees)
                             }
                             .onEnded { _ in
-                                lastAngle = angle
+                                lastRotation = rotation
                                 setupValueOnDrag = false
                             }
                     )
@@ -158,43 +169,16 @@ struct TextBoxBorderView: View {
                 .frame(width: 110, height:  40)
                 .foregroundStyle(.customDarkGray)
                 .background(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 68))
+                .clipShape(RoundedRectangle(cornerRadius: 70))
                 .scaleEffect(2)
                 .offset(x: 0, y: size.height * scale / 2 + 80)
-                .rotationEffect(angle)
+                .rotationEffect(rotation)
+            }
+            .onAppear {
+                lastScale = scale
+                lastRotation = rotation
             }
         }
-    }
-    
-    private var offsetDelete: CGSize {
-        let dx = -size.width * scale / 2
-        let dy = -size.height * scale / 2
-        return rotatedOffset(dx: dx, dy: dy)
-    }
-
-    private var offsetDuplicate: CGSize {
-        let dx = size.width * scale / 2
-        let dy = -size.height * scale / 2
-        return rotatedOffset(dx: dx, dy: dy)
-    }
-
-    private var offsetRotation: CGSize {
-        let dx = -size.width * scale / 2
-        let dy = size.height * scale / 2
-        return rotatedOffset(dx: dx, dy: dy)
-    }
-
-    private var offsetScale: CGSize {
-        let dx = size.width * scale / 2
-        let dy = size.height * scale / 2
-        return rotatedOffset(dx: dx, dy: dy)
-    }
-
-    private func rotatedOffset(dx: CGFloat, dy: CGFloat) -> CGSize {
-        let radians = CGFloat(angle.radians)
-        let rotatedX = dx * cos(radians) - dy * sin(radians)
-        let rotatedY = dx * sin(radians) + dy * cos(radians)
-        return CGSize(width: rotatedX, height: rotatedY)
     }
 }
 

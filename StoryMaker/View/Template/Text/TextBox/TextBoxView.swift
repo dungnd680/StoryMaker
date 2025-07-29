@@ -41,10 +41,9 @@ struct TextBoxView: View {
                     }
                     
                     if textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing {
-                        let paddingTextField: CGFloat = 95
                         TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
                             .tracking(textBoxModel.letterSpacing)
-                            .frame(width: textBoxModel.textSize.width - paddingTextField, height: textBoxModel.textSize.height - paddingTextField)
+                            .frame(width: textBoxModel.textSize.width, height: textBoxModel.textSize.height)
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
                             .toolbar {
@@ -92,9 +91,11 @@ struct TextBoxView: View {
                                 Color.clear
                                     .onAppear {
                                         textBoxModel.textSize = geo.size
+                                        print("hidden text background onAppear: \(geo.size)")
                                     }
                                     .onChange(of: geo.size) {
                                         textBoxModel.textSize = geo.size
+                                        print("hidden text background onChange geo.size: \(geo.size)")
                                     }
                             }
                         )
@@ -117,7 +118,7 @@ struct TextBoxView: View {
         )
         .background(Color(textBoxModel.colorBackgroundText).opacity(textBoxModel.opacityBackgroundText / 100))
         .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
-        .rotationEffect(textBoxModel.angle)
+        .rotationEffect(textBoxModel.rotation)
         .scaleEffect(textBoxModel.scale)
         .offset(x: textBoxModel.x, y: textBoxModel.y)
         .overlay(
@@ -125,12 +126,15 @@ struct TextBoxView: View {
                 Color.clear
                     .onAppear {
                         updateSize(geo: geo)
+                        print("overlay onAppear: \(geo.size)")
                     }
                     .onChange(of: geo.size) {
                         updateSize(geo: geo)
+                        print("overlay onChange geo.size: \(geo.size)")
                     }
                     .onChange(of: textBoxViewModel.activeTextBox.id) {
                         updateSize(geo: geo)
+                        print("overlay onChange activeTextBox.id: \(textBoxViewModel.activeTextBox.id)")
                     }
             }
         )
@@ -139,9 +143,11 @@ struct TextBoxView: View {
                 Color.clear
                     .onAppear {
                         internalScaledSize = geo.size
+                        print("background onAppear: \(geo.size)")
                     }
                     .onChange(of: geo.size) {
                         internalScaledSize = geo.size
+                        print("background onChange geo.size: \(geo.size)")
                     }
             }
         )
@@ -161,8 +167,6 @@ struct TextBoxView: View {
                         showEditText = false
                         showToolText = false
                         showAdjustBackground = false
-                        
-                        print("2 tap: \(textBoxModel.id)")
                     } else {
                         let workItem = DispatchWorkItem {
                             textBoxViewModel.activeTextBox = textBoxModel
@@ -181,8 +185,6 @@ struct TextBoxView: View {
                                     showEditText = true
                                 }
                             }
-
-                            print("1 tap: \(textBoxModel.id)")
                         }
 
                         tapWorkItem = workItem
@@ -193,7 +195,7 @@ struct TextBoxView: View {
                 }
         )
         .highPriorityGesture(
-            DragGesture(minimumDistance: 1)
+            DragGesture(minimumDistance: 0.1)
                 .onChanged { value in
                     let isDraggingAllowed =
                     textBoxViewModel.activeTextBox.id.isEmpty || textBoxViewModel.activeTextBox.id == textBoxModel.id

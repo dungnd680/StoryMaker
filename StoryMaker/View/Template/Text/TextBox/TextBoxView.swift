@@ -17,6 +17,7 @@ struct TextBoxView: View {
     @State private var tapWorkItem: DispatchWorkItem?
     @State private var startDragPosition: CGPoint = .zero
     @State private var internalScaledSize: CGSize = .zero
+    @State private var placeholderSize: CGSize = .zero
     
     @ObservedObject var textBoxModel: TextBoxModel
     @ObservedObject var textBoxViewModel: TextBoxViewModel
@@ -28,22 +29,105 @@ struct TextBoxView: View {
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     
+    var placeholder: some View {
+        Text("Double Tap To Edit")
+            .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
+            .foregroundStyle(textBoxModel.shapeStyle)
+            .multilineTextAlignment(textBoxModel.textAlignment)
+            .lineSpacing(textBoxModel.lineHeight)
+            .tracking(textBoxModel.letterSpacing)
+            .opacity(textBoxModel.opacityText / 100)
+            .padding(48)
+            .padding(textBoxModel.paddingBackgroundText)
+            .shadow(
+                color: Color(textBoxModel.colorShadowText)
+                    .opacity(textBoxModel.opacityShadowText / 100),
+                radius: textBoxModel.blurShadowText,
+                x: textBoxModel.xShadowText,
+                y: textBoxModel.yShadowText
+            )
+            .background(
+                Color(textBoxModel.colorBackgroundText)
+                    .opacity(textBoxModel.opacityBackgroundText / 100)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
+            .background(
+                GeometryReader { geo in
+                    Color.clear
+                        .onAppear {
+                            textBoxModel.textSize = geo.size
+                            placeholderSize = geo.size
+                        }
+                        .onChange(of: geo.size) {
+                            textBoxModel.textSize = geo.size
+                            placeholderSize = geo.size
+                        }
+                }
+            )
+    }
+    
+    var displayText: some View {
+        Text(textBoxModel.formatText)
+            .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
+            .foregroundStyle(textBoxModel.shapeStyle)
+            .multilineTextAlignment(textBoxModel.textAlignment)
+            .lineSpacing(textBoxModel.lineHeight)
+            .tracking(textBoxModel.letterSpacing)
+            .opacity(textBoxModel.opacityText / 100)
+            .padding(48)
+            .padding(textBoxModel.paddingBackgroundText)
+            .shadow(
+                color: Color(textBoxModel.colorShadowText)
+                    .opacity(textBoxModel.opacityShadowText / 100),
+                radius: textBoxModel.blurShadowText,
+                x: textBoxModel.xShadowText,
+                y: textBoxModel.yShadowText
+            )
+            .background(
+                Color(textBoxModel.colorBackgroundText)
+                    .opacity(textBoxModel.opacityBackgroundText / 100)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
+    }
+    
+    var editTextField: some View {
+        TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
+            .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
+            .foregroundStyle(textBoxModel.shapeStyle)
+            .multilineTextAlignment(textBoxModel.textAlignment)
+            .lineSpacing(textBoxModel.lineHeight)
+            .tracking(textBoxModel.letterSpacing)
+            .opacity(textBoxModel.opacityText / 100)
+            .padding(48)
+            .padding(textBoxModel.paddingBackgroundText)
+            .frame(width: textBoxModel.textSize.width, height: textBoxModel.textSize.height)
+            .shadow(
+                color: Color(textBoxModel.colorShadowText)
+                    .opacity(textBoxModel.opacityShadowText / 100),
+                radius: textBoxModel.blurShadowText,
+                x: textBoxModel.xShadowText,
+                y: textBoxModel.yShadowText
+            )
+            .background(
+                Color(textBoxModel.colorBackgroundText)
+                    .opacity(textBoxModel.opacityBackgroundText / 100)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
+    }
+    
     var body: some View {
         Group {
-            if isExporting || (!(textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing) && !textBoxModel.content.isEmpty) {
-                Text(textBoxModel.formatText)
-                    .tracking(textBoxModel.letterSpacing)
+            if isExporting
+                || (!(textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing) && !textBoxModel.content.isEmpty) {
+                displayText
             } else {
                 ZStack {
                     if textBoxViewModel.textBoxes.contains(where: { $0.id == textBoxModel.id }) && textBoxModel.content.isEmpty {
-                        Text("Double Tap To Edit")
-                            .tracking(textBoxModel.letterSpacing)
+                        placeholder
                     }
                     
                     if textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing {
-                        TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
-                            .tracking(textBoxModel.letterSpacing)
-                            .frame(width: textBoxModel.textSize.width, height: textBoxModel.textSize.height)
+                        editTextField
                             .submitLabel(.return)
                             .focused(isTextFieldFocused)
                             .toolbar {
@@ -84,18 +168,23 @@ struct TextBoxView: View {
                             }
                     }
                     
-                    Text(textBoxModel.formatText)
-                        .tracking(textBoxModel.letterSpacing)
+                    displayText
                         .background(
                             GeometryReader { geo in
                                 Color.clear
                                     .onAppear {
-                                        textBoxModel.textSize = geo.size
-                                        print("hidden text background onAppear: \(geo.size)")
+                                        if !textBoxModel.content.isEmpty {
+                                            textBoxModel.textSize = geo.size
+                                        } else {
+                                            textBoxModel.textSize = placeholderSize
+                                        }
                                     }
                                     .onChange(of: geo.size) {
-                                        textBoxModel.textSize = geo.size
-                                        print("hidden text background onChange geo.size: \(geo.size)")
+                                        if !textBoxModel.content.isEmpty {
+                                            textBoxModel.textSize = geo.size
+                                        } else {
+                                            textBoxModel.textSize = placeholderSize
+                                        }
                                     }
                             }
                         )
@@ -103,54 +192,9 @@ struct TextBoxView: View {
                 }
             }
         }
-        .padding(48)
-        .padding(textBoxModel.paddingBackgroundText)
-        .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
-        .lineSpacing(textBoxModel.lineHeight)
-        .foregroundStyle(textBoxModel.shapeStyle)
-        .opacity(textBoxModel.opacityText / 100)
-        .multilineTextAlignment(textBoxModel.textAlignment)
-        .shadow(
-            color: Color(textBoxModel.colorShadowText).opacity(textBoxModel.opacityShadowText / 100),
-            radius: textBoxModel.blurShadowText,
-            x: textBoxModel.xShadowText,
-            y: textBoxModel.yShadowText
-        )
-        .background(Color(textBoxModel.colorBackgroundText).opacity(textBoxModel.opacityBackgroundText / 100))
-        .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
         .rotationEffect(textBoxModel.rotation)
         .scaleEffect(textBoxModel.scale)
         .offset(x: textBoxModel.x, y: textBoxModel.y)
-        .overlay(
-            GeometryReader { geo in
-                Color.clear
-                    .onAppear {
-                        updateSize(geo: geo)
-                        print("overlay onAppear: \(geo.size)")
-                    }
-                    .onChange(of: geo.size) {
-                        updateSize(geo: geo)
-                        print("overlay onChange geo.size: \(geo.size)")
-                    }
-                    .onChange(of: textBoxViewModel.activeTextBox.id) {
-                        updateSize(geo: geo)
-                        print("overlay onChange activeTextBox.id: \(textBoxViewModel.activeTextBox.id)")
-                    }
-            }
-        )
-        .background(
-            GeometryReader { geo in
-                Color.clear
-                    .onAppear {
-                        internalScaledSize = geo.size
-                        print("background onAppear: \(geo.size)")
-                    }
-                    .onChange(of: geo.size) {
-                        internalScaledSize = geo.size
-                        print("background onChange geo.size: \(geo.size)")
-                    }
-            }
-        )
         .gesture(
             TapGesture()
                 .onEnded {
@@ -227,13 +271,6 @@ struct TextBoxView: View {
                     startDragPosition = .zero
                 }
         )
-    }
-    
-    private func updateSize(geo: GeometryProxy) {
-        textBoxModel.textSize = geo.size
-        if textBoxModel.id == textBoxViewModel.activeTextBox.id {
-            textBoxViewModel.activeBoxSize = internalScaledSize
-        }
     }
 }
 

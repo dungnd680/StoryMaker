@@ -11,7 +11,6 @@ import SwiftUICore
 class TextBoxViewModel: ObservableObject {
     @Published var textBoxes: [TextBoxModel] = []
     @Published var activeTextBox: TextBoxModel = .empty()
-    @Published var activeBoxSize: CGSize = .zero
     @Published var activeTextBoxOffset: CGPoint = .zero
     
     func addTextBox() {

@@ -11,14 +11,14 @@ import SwiftUICore
 class TextBoxViewModel: ObservableObject {
     @Published var textBoxes: [TextBoxModel] = []
     @Published var activeTextBox: TextBoxModel = .empty()
-    @Published var activeTextBoxOffset: CGPoint = .zero
+    @Published var borderTextBoxOffset: CGPoint = .zero
     
     func addTextBox() {
         let newBox = TextBoxModel()
         newBox.id = UUID().uuidString
         textBoxes.append(newBox)
         activeTextBox = newBox
-        activeTextBoxOffset = CGPoint(x: newBox.x, y: newBox.y)
+        borderTextBoxOffset = CGPoint(x: newBox.x, y: newBox.y)
     }
     
     func delete(_ textBox: TextBoxModel) {
@@ -35,7 +35,7 @@ class TextBoxViewModel: ObservableObject {
         let duplicateBox = TextBoxModel(copying: textBox)
         textBoxes.append(duplicateBox)
         activeTextBox = duplicateBox
-        activeTextBoxOffset = CGPoint(x: duplicateBox.x, y: duplicateBox.y)
+        borderTextBoxOffset = CGPoint(x: duplicateBox.x, y: duplicateBox.y)
     }
     
     func up(_ textBox: TextBoxModel) {

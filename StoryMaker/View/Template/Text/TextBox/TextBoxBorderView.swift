@@ -13,6 +13,8 @@ struct TextBoxBorderView: View {
     @State private var lastRotation: Angle = .zero
     @State private var initialScaleOffset: CGPoint = .zero
     @State private var initialRotationOffset: CGPoint = .zero
+    @State private var initialScaleTranslation: CGSize = .zero
+    @State private var initialRotationTranslation: CGSize = .zero
     @State private var setupValueOnDrag = false
 
     @Binding var scale: CGFloat
@@ -63,20 +65,23 @@ struct TextBoxBorderView: View {
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
                                 if !setupValueOnDrag {
+                                    lastScale = scale
+                                    
                                     let dx = size.width * scale / 2
                                     let dy = size.height * scale / 2
 
                                     let radians = CGFloat(rotation.radians)
-                                    let rotatedStartX = dx * cos(radians) - dy * sin(radians)
-                                    let rotatedStartY = dx * sin(radians) + dy * cos(radians)
+                                    let rotatedX = dx * cos(radians) - dy * sin(radians)
+                                    let rotatedY = dx * sin(radians) + dy * cos(radians)
 
-                                    initialScaleOffset = CGPoint(x: rotatedStartX, y: rotatedStartY)
+                                    initialScaleOffset = CGPoint(x: rotatedX, y: rotatedY)
+                                    initialScaleTranslation = value.translation
                                     setupValueOnDrag = true
                                 }
 
                                 let draggedOffset = CGPoint(
-                                    x: initialScaleOffset.x + value.translation.width,
-                                    y: initialScaleOffset.y + value.translation.height
+                                    x: initialScaleOffset.x + (value.translation.width - initialScaleTranslation.width),
+                                    y: initialScaleOffset.y + (value.translation.height - initialScaleTranslation.height)
                                 )
 
                                 let a = hypot(initialScaleOffset.x, initialScaleOffset.y)
@@ -102,44 +107,35 @@ struct TextBoxBorderView: View {
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
                                 if !setupValueOnDrag {
+                                    lastRotation = rotation
+
                                     let dx = -size.width * scale / 2
                                     let dy = size.height * scale / 2
-                                    
-                                    let radians = CGFloat(rotation.radians)
-                                    let rotatedStartX = dx * cos(radians) - dy * sin(radians)
-                                    let rotatedStartY = dx * sin(radians) + dy * cos(radians)
 
-                                    initialRotationOffset = CGPoint(x: rotatedStartX, y: rotatedStartY)
-                                    
+                                    let radians = CGFloat(rotation.radians)
+                                    let rotatedX = dx * cos(radians) - dy * sin(radians)
+                                    let rotatedY = dx * sin(radians) + dy * cos(radians)
+
+                                    initialRotationOffset = CGPoint(x: rotatedX, y: rotatedY)
+                                    initialRotationTranslation = value.translation
                                     setupValueOnDrag = true
                                 }
-                                
-                                let initialOffset = (
-                                    x: initialRotationOffset.x,
-                                    y: initialRotationOffset.y
-                                )
-                                let draggedOffset = (
-                                    x: initialRotationOffset.x + value.translation.width,
-                                    y: initialRotationOffset.y + value.translation.height
+
+                                let dragedOffset = CGPoint(
+                                    x: initialRotationOffset.x + (value.translation.width - initialRotationTranslation.width),
+                                    y: initialRotationOffset.y + (value.translation.height - initialRotationTranslation.height)
                                 )
 
-                                let a = hypot(draggedOffset.x - initialOffset.x, draggedOffset.y - initialOffset.y)
-                                let b = hypot(initialOffset.x, initialOffset.y)
-                                let c = hypot(draggedOffset.x, draggedOffset.y)
+                                let angle1 = atan2(initialRotationOffset.y, initialRotationOffset.x)
+                                let angle2 = atan2(dragedOffset.y, dragedOffset.x)
+                                let delta = angle2 - angle1
 
-                                let cosa = (b * b + c * c - a * a) / (2 * b * c)
-                                let clampedCosa = max(-1.0, min(1.0, cosa))
-                                let aRadians = acos(clampedCosa)
-                                var aDegrees = aRadians * 180 / .pi
-
-                                let cross = initialOffset.x * draggedOffset.y - initialOffset.y * draggedOffset.x
-                                if cross < 0 { aDegrees = -aDegrees }
-
-                                rotation = lastRotation + .degrees(aDegrees)
+                                rotation = lastRotation + .radians(delta)
                             }
                             .onEnded { _ in
                                 lastRotation = rotation
                                 setupValueOnDrag = false
+                                initialRotationTranslation = .zero
                             }
                     )
 
@@ -173,10 +169,6 @@ struct TextBoxBorderView: View {
                 .scaleEffect(2)
                 .offset(x: 0, y: size.height * scale / 2 + 80)
                 .rotationEffect(rotation)
-            }
-            .onAppear {
-                lastScale = scale
-                lastRotation = rotation
             }
         }
     }

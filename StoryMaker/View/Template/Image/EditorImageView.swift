@@ -9,9 +9,10 @@ import SwiftUI
 
 struct EditorImageView: View {
     
-    @State private var startDragPosition: CGPoint = .zero
-    @State private var currentScale: CGFloat = 1.0
-    @State private var currentAngle: Angle = .zero
+    @Environment(\.isExporting) private var isExporting
+    
+    @State private var initialOffset: CGPoint = .zero
+    @State private var initialDragTranslation: CGSize = .zero
 
     @ObservedObject var textBoxViewModel: TextBoxViewModel
     
@@ -47,24 +48,32 @@ struct EditorImageView: View {
                 Color.clear
                     .contentShape(Rectangle())
                     .gesture(
-                        DragGesture(minimumDistance: 1)
+                        DragGesture()
                             .onChanged { value in
                                 if !textBoxViewModel.activeTextBox.id.isEmpty {
-                                    if startDragPosition == .zero {
-                                        startDragPosition = CGPoint(x: textBoxViewModel.activeTextBox.x,
-                                                                    y: textBoxViewModel.activeTextBox.y)
+                                    if initialOffset == .zero && initialDragTranslation == .zero {
+                                        initialOffset = CGPoint(
+                                            x: textBoxViewModel.activeTextBox.x,
+                                            y: textBoxViewModel.activeTextBox.y
+                                        )
+                                        initialDragTranslation = value.translation
                                     }
+                                    
                                     if let index = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == textBoxViewModel.activeTextBox.id }) {
-                                        let newX = startDragPosition.x + value.translation.width
-                                        let newY = startDragPosition.y + value.translation.height
-                                        textBoxViewModel.textBoxes[index].x = newX
-                                        textBoxViewModel.textBoxes[index].y = newY
-                                        textBoxViewModel.activeTextBoxOffset = CGPoint(x: newX, y: newY)
+                                        let dragedOffset = (
+                                            x: initialOffset.x + (value.translation.width - initialDragTranslation.width),
+                                            y: initialOffset.y + (value.translation.height - initialDragTranslation.height)
+                                        )
+                                        
+                                        textBoxViewModel.textBoxes[index].x = dragedOffset.x
+                                        textBoxViewModel.textBoxes[index].y = dragedOffset.y
+                                        textBoxViewModel.borderTextBoxOffset = CGPoint(x: dragedOffset.x, y: dragedOffset.y)
                                     }
                                 }
                             }
                             .onEnded { _ in
-                                startDragPosition = .zero
+                                initialOffset = .zero
+                                initialDragTranslation = .zero
                             }
                     )
                     .onTapGesture {
@@ -87,40 +96,42 @@ struct EditorImageView: View {
                     )
                 }
                 
-                if !textBoxViewModel.activeTextBox.id.isEmpty,
-                   let currentBox = textBoxViewModel.textBoxes.first(where: { $0.id == textBoxViewModel.activeTextBox.id }),
-                   let currentIndex = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == currentBox.id }) {
+                if !isExporting {
+                    if !textBoxViewModel.activeTextBox.id.isEmpty,
+                       let currentBox = textBoxViewModel.textBoxes.first(where: { $0.id == textBoxViewModel.activeTextBox.id }),
+                       let currentIndex = textBoxViewModel.textBoxes.firstIndex(where: { $0.id == currentBox.id }) {
 
-                    let canMoveUp = currentIndex < textBoxViewModel.textBoxes.count - 1
-                    let canMoveDown = currentIndex > 0
+                        let canMoveUp = currentIndex < textBoxViewModel.textBoxes.count - 1
+                        let canMoveDown = currentIndex > 0
 
-                    TextBoxBorderView(
-                        scale: $textBoxViewModel.textBoxes[currentIndex].scale,
-                        rotation: $textBoxViewModel.textBoxes[currentIndex].rotation,
-                        size: currentBox.textSize,
-                        showBorder: true,
-                        onDelete: {
-                            showEditText = false
-                            showToolText = false
-                            textBoxViewModel.delete(currentBox)
-                        },
-                        onDuplicate: {
-                            isEditing = false
-                            if !textBoxViewModel.activeTextBox.content.isEmpty {
-                                showToolText = true
-                            }
-                            textBoxViewModel.duplicate(currentBox)
-                        },
-                        moveUp: {
-                            textBoxViewModel.up(currentBox)
-                        },
-                        moveDown: {
-                            textBoxViewModel.down(currentBox)
-                        },
-                        canMoveUp: canMoveUp,
-                        canMoveDown: canMoveDown
-                    )
-                    .offset(x: textBoxViewModel.activeTextBoxOffset.x, y: textBoxViewModel.activeTextBoxOffset.y)
+                        TextBoxBorderView(
+                            scale: $textBoxViewModel.textBoxes[currentIndex].scale,
+                            rotation: $textBoxViewModel.textBoxes[currentIndex].rotation,
+                            size: currentBox.textBoxSize,
+                            showBorder: true,
+                            onDelete: {
+                                showEditText = false
+                                showToolText = false
+                                textBoxViewModel.delete(currentBox)
+                            },
+                            onDuplicate: {
+                                isEditing = false
+                                if !textBoxViewModel.activeTextBox.content.isEmpty {
+                                    showToolText = true
+                                }
+                                textBoxViewModel.duplicate(currentBox)
+                            },
+                            moveUp: {
+                                textBoxViewModel.up(currentBox)
+                            },
+                            moveDown: {
+                                textBoxViewModel.down(currentBox)
+                            },
+                            canMoveUp: canMoveUp,
+                            canMoveDown: canMoveDown
+                        )
+                        .offset(x: textBoxViewModel.borderTextBoxOffset.x, y: textBoxViewModel.borderTextBoxOffset.y)
+                    }
                 }
             }
             .frame(width: designSize.width, height: designSize.height)

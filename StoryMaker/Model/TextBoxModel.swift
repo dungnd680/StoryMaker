@@ -25,7 +25,7 @@ class TextBoxModel: ObservableObject, Identifiable {
     
     @Published var content: String = ""
     @Published var x: CGFloat = 0
-    @Published var y: CGFloat = -200
+    @Published var y: CGFloat = 0
     @Published var sizeText: CGFloat = 100
     @Published var lineHeight: CGFloat = 0
     @Published var letterSpacing: CGFloat = 0
@@ -43,7 +43,7 @@ class TextBoxModel: ObservableObject, Identifiable {
     @Published var cornerBackgroundText: CGFloat = 0
     @Published var opacityBackgroundText: CGFloat = 100
     @Published var colorBackgroundText: String = "#00000000"
-    @Published var textSize: CGSize = .zero
+    @Published var textBoxSize: CGSize = CGSize(width: 932, height: 211)
     @Published var scale: CGFloat = 1.0
     @Published var rotation: Angle = .zero
     

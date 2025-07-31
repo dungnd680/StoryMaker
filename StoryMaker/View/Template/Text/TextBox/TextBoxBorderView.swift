@@ -62,7 +62,7 @@ struct TextBoxBorderView: View {
                     .offset(x: size.width * scale / 2, y: size.height * scale / 2)
                     .rotationEffect(rotation)
                     .gesture(
-                        DragGesture(minimumDistance: 0)
+                        DragGesture()
                             .onChanged { value in
                                 if !setupValueOnDrag {
                                     lastScale = scale
@@ -104,7 +104,7 @@ struct TextBoxBorderView: View {
                     .offset(x: -size.width * scale / 2, y: size.height * scale / 2)
                     .rotationEffect(rotation)
                     .gesture(
-                        DragGesture(minimumDistance: 0)
+                        DragGesture()
                             .onChanged { value in
                                 if !setupValueOnDrag {
                                     lastRotation = rotation

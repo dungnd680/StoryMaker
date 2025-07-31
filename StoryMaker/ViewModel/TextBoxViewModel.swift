@@ -12,6 +12,7 @@ class TextBoxViewModel: ObservableObject {
     @Published var textBoxes: [TextBoxModel] = []
     @Published var activeTextBox: TextBoxModel = .empty()
     @Published var borderTextBoxOffset: CGPoint = .zero
+    @Published var activeBoxSize: CGSize = .zero
     
     func addTextBox() {
         let newBox = TextBoxModel()

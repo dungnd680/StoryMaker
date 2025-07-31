@@ -107,7 +107,7 @@ struct EditorImageView: View {
                         TextBoxBorderView(
                             scale: $textBoxViewModel.textBoxes[currentIndex].scale,
                             rotation: $textBoxViewModel.textBoxes[currentIndex].rotation,
-                            size: currentBox.textBoxSize,
+                            size: textBoxViewModel.activeBoxSize,
                             showBorder: true,
                             onDelete: {
                                 showEditText = false

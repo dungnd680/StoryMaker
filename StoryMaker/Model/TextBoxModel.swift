@@ -43,7 +43,7 @@ class TextBoxModel: ObservableObject, Identifiable {
     @Published var cornerBackgroundText: CGFloat = 0
     @Published var opacityBackgroundText: CGFloat = 100
     @Published var colorBackgroundText: String = "#00000000"
-    @Published var textBoxSize: CGSize = CGSize(width: 932, height: 211)
+    @Published var textBoxSize: CGSize = .zero
     @Published var scale: CGFloat = 1.0
     @Published var rotation: Angle = .zero
     

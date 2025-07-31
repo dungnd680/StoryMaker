@@ -17,6 +17,7 @@ struct TextBoxView: View {
     @State private var tapWorkItem: DispatchWorkItem?
     @State private var currentOffset: CGPoint = .zero
     @State private var initialDragTranslation: CGSize = .zero
+    @State private var internalScaledSize: CGSize = .zero
     
     @ObservedObject var textBoxModel: TextBoxModel
     @ObservedObject var textBoxViewModel: TextBoxViewModel
@@ -29,49 +30,121 @@ struct TextBoxView: View {
     var isTextFieldFocused: FocusState<Bool>.Binding
     
     var body: some View {
-        ZStack {
-            if textBoxModel.content.isEmpty && !isExporting {
-                placeholder
-                    .background(
-                        GeometryReader { geo in
-                            Color.clear
-                                .onAppear {
-                                    textBoxModel.textBoxSize = geo.size
-                                    print("size placeholder on appear: \(geo.size)")
-                                }
-                                .onChange(of: geo.size) {
-                                    textBoxModel.textBoxSize = geo.size
-                                    print("size placeholder on change: \(geo.size)")
-                                }
-                        }
-                    )
-            }
-
-            if isEditing && textBoxModel.id == textBoxViewModel.activeTextBox.id {
-                editTextField
+        Group {
+            if isExporting || (!(textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing) && !textBoxModel.content.isEmpty) {
+                Text(textBoxModel.formatText)
+                    .tracking(textBoxModel.letterSpacing)
             } else {
-                displayText
-            }
-            
-            displayText
-                .background(
-                    GeometryReader { geo in
-                        Color.clear
-                            .onAppear {
-                                textBoxModel.textBoxSize = geo.size
-                                print("size display text on appear: \(geo.size)")
-                            }
-                            .onChange(of: geo.size) {
-                                textBoxModel.textBoxSize = geo.size
-                                print("size display text on change: \(geo.size)")
+                ZStack {
+                    if textBoxViewModel.textBoxes.contains(where: { $0.id == textBoxModel.id }) && textBoxModel.content.isEmpty {
+                        Text("Double Tap To Edit")
+                            .tracking(textBoxModel.letterSpacing)
+                    }
+                    
+                    if textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing {
+                        TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
+                            .tracking(textBoxModel.letterSpacing)
+                            .frame(width: textBoxModel.textBoxSize.width, height: textBoxModel.textBoxSize.height)
+                            .submitLabel(.return)
+                            .focused(isTextFieldFocused)
+                            .toolbar {
+                                ToolbarItem(placement: .keyboard) {
+                                    ZStack {
+                                        Text("Text Edit")
+                                            .font(.headline)
+                                            .foregroundStyle(.customDarkGray)
+                                        
+                                        HStack {
+                                            HStack {
+                                                Image("Tool Edit Text")
+                                                Text("Edit")
+                                                    .font(.subheadline)
+                                                    .foregroundStyle(.customDarkGray)
+                                            }
+                                            .onTapGesture {
+                                                if !textBoxViewModel.activeTextBox.content.isEmpty {
+                                                    isTextFieldFocused.wrappedValue = false
+                                                    showEditText = true
+                                                    isEditing = false
+                                                }
+                                            }
+                                            
+                                            Spacer()
+                                            
+                                            Image("Done")
+                                                .onTapGesture {
+                                                    isTextFieldFocused.wrappedValue = false
+                                                    isEditing = false
+                                                    if !textBoxViewModel.activeTextBox.content.isEmpty {
+                                                        showToolText = true
+                                                    }
+                                                }
+                                        }
+                                    }
+                                }
                             }
                     }
-                )
-                .hidden()
+                    
+                    Text(textBoxModel.formatText)
+                        .tracking(textBoxModel.letterSpacing)
+                        .background(
+                            GeometryReader { geo in
+                                Color.clear
+                                    .onAppear {
+                                        textBoxModel.textBoxSize = geo.size
+                                    }
+                                    .onChange(of: geo.size) {
+                                        textBoxModel.textBoxSize = geo.size
+                                    }
+                            }
+                        )
+                        .hidden()
+                }
+            }
         }
+        .padding(48)
+        .padding(textBoxModel.paddingBackgroundText)
+        .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
+        .lineSpacing(textBoxModel.lineHeight)
+        .foregroundStyle(textBoxModel.shapeStyle)
+        .opacity(textBoxModel.opacityText / 100)
+        .multilineTextAlignment(textBoxModel.textAlignment)
+        .shadow(
+            color: Color(textBoxModel.colorShadowText).opacity(textBoxModel.opacityShadowText / 100),
+            radius: textBoxModel.blurShadowText,
+            x: textBoxModel.xShadowText,
+            y: textBoxModel.yShadowText
+        )
+        .background(Color(textBoxModel.colorBackgroundText).opacity(textBoxModel.opacityBackgroundText / 100))
+        .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
         .rotationEffect(textBoxModel.rotation)
         .scaleEffect(textBoxModel.scale)
         .offset(x: textBoxModel.x, y: textBoxModel.y)
+        .overlay(
+            GeometryReader { geo in
+                Color.clear
+                    .onAppear {
+                        updateSize(geo: geo)
+                    }
+                    .onChange(of: geo.size) {
+                        updateSize(geo: geo)
+                    }
+                    .onChange(of: textBoxViewModel.activeTextBox.id) {
+                        updateSize(geo: geo)
+                    }
+            }
+        )
+        .background(
+            GeometryReader { geo in
+                Color.clear
+                    .onAppear {
+                        internalScaledSize = geo.size
+                    }
+                    .onChange(of: geo.size) {
+                        internalScaledSize = geo.size
+                    }
+            }
+        )
         .gesture(
             TapGesture()
                 .onEnded {
@@ -88,6 +161,8 @@ struct TextBoxView: View {
                         showEditText = false
                         showToolText = false
                         showAdjustBackground = false
+                        
+                        print("2 tap: \(textBoxModel.id)")
                     } else {
                         let workItem = DispatchWorkItem {
                             textBoxViewModel.activeTextBox = textBoxModel
@@ -106,6 +181,8 @@ struct TextBoxView: View {
                                     showEditText = true
                                 }
                             }
+
+                            print("1 tap: \(textBoxModel.id)")
                         }
 
                         tapWorkItem = workItem
@@ -144,115 +221,11 @@ struct TextBoxView: View {
         )
     }
     
-    var editTextField: some View {
-        TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
-            .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
-            .foregroundStyle(textBoxModel.shapeStyle)
-            .multilineTextAlignment(textBoxModel.textAlignment)
-            .lineSpacing(textBoxModel.lineHeight)
-            .tracking(textBoxModel.letterSpacing)
-            .opacity(textBoxModel.opacityText / 100)
-            .padding(48)
-            .padding(textBoxModel.paddingBackgroundText)
-            .frame(width: textBoxModel.textBoxSize.width, height: textBoxModel.textBoxSize.height)
-            .shadow(
-                color: Color(textBoxModel.colorShadowText)
-                    .opacity(textBoxModel.opacityShadowText / 100),
-                radius: textBoxModel.blurShadowText,
-                x: textBoxModel.xShadowText,
-                y: textBoxModel.yShadowText
-            )
-            .background(
-                Color(textBoxModel.colorBackgroundText)
-                    .opacity(textBoxModel.opacityBackgroundText / 100)
-            )
-            .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
-            .focused(isTextFieldFocused)
-            .submitLabel(.return)
-            .toolbar {
-                ToolbarItem(placement: .keyboard) {
-                    ZStack {
-                        Text("Text Edit")
-                            .font(.headline)
-                            .foregroundStyle(.customDarkGray)
-                        
-                        HStack {
-                            HStack {
-                                Image("Tool Edit Text")
-                                Text("Edit")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.customDarkGray)
-                            }
-                            .onTapGesture {
-                                if !textBoxViewModel.activeTextBox.content.isEmpty {
-                                    isTextFieldFocused.wrappedValue = false
-                                    showEditText = true
-                                    isEditing = false
-                                }
-                            }
-                            
-                            Spacer()
-                            
-                            Image("Done")
-                                .onTapGesture {
-                                    isTextFieldFocused.wrappedValue = false
-                                    isEditing = false
-                                    if !textBoxViewModel.activeTextBox.content.isEmpty {
-                                        showToolText = true
-                                    }
-                                }
-                        }
-                    }
-                }
-            }
-    }
-    
-    var placeholder: some View {
-        Text("Double Tap To Edit")
-            .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
-            .foregroundStyle(textBoxModel.shapeStyle)
-            .multilineTextAlignment(textBoxModel.textAlignment)
-            .lineSpacing(textBoxModel.lineHeight)
-            .tracking(textBoxModel.letterSpacing)
-            .opacity(textBoxModel.opacityText / 100)
-            .padding(48)
-            .padding(textBoxModel.paddingBackgroundText)
-            .shadow(
-                color: Color(textBoxModel.colorShadowText)
-                    .opacity(textBoxModel.opacityShadowText / 100),
-                radius: textBoxModel.blurShadowText,
-                x: textBoxModel.xShadowText,
-                y: textBoxModel.yShadowText
-            )
-            .background(
-                Color(textBoxModel.colorBackgroundText)
-                    .opacity(textBoxModel.opacityBackgroundText / 100)
-            )
-            .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
-    }
-    
-    var displayText: some View {
-        Text(textBoxModel.formatText)
-            .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
-            .foregroundStyle(textBoxModel.shapeStyle)
-            .multilineTextAlignment(textBoxModel.textAlignment)
-            .lineSpacing(textBoxModel.lineHeight)
-            .tracking(textBoxModel.letterSpacing)
-            .opacity(textBoxModel.opacityText / 100)
-            .padding(48)
-            .padding(textBoxModel.paddingBackgroundText)
-            .shadow(
-                color: Color(textBoxModel.colorShadowText)
-                    .opacity(textBoxModel.opacityShadowText / 100),
-                radius: textBoxModel.blurShadowText,
-                x: textBoxModel.xShadowText,
-                y: textBoxModel.yShadowText
-            )
-            .background(
-                Color(textBoxModel.colorBackgroundText)
-                    .opacity(textBoxModel.opacityBackgroundText / 100)
-            )
-            .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
+    private func updateSize(geo: GeometryProxy) {
+        textBoxModel.textBoxSize = geo.size
+        if textBoxModel.id == textBoxViewModel.activeTextBox.id {
+            textBoxViewModel.activeBoxSize = internalScaledSize
+        }
     }
 }
 

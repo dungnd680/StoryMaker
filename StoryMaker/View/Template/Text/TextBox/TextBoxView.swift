@@ -17,7 +17,7 @@ struct TextBoxView: View {
     @State private var tapWorkItem: DispatchWorkItem?
     @State private var currentOffset: CGPoint = .zero
     @State private var initialDragTranslation: CGSize = .zero
-    @State private var internalScaledSize: CGSize = .zero
+    @State private var internalSize: CGSize = .zero
     
     @ObservedObject var textBoxModel: TextBoxModel
     @ObservedObject var textBoxViewModel: TextBoxViewModel
@@ -32,12 +32,12 @@ struct TextBoxView: View {
     var body: some View {
         ZStack {
             Group {
-                if isExporting || (!(textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing) && !textBoxModel.content.isEmpty) {
-                    Text(textBoxModel.formatText)
+                if textBoxModel.content.isEmpty && !isExporting {
+                    Text("Double Tap To Edit")
                 }
                 
-                if textBoxViewModel.textBoxes.contains(where: { $0.id == textBoxModel.id }) && textBoxModel.content.isEmpty {
-                    Text("Double Tap To Edit")
+                if !textBoxModel.content.isEmpty || isExporting {
+                    Text(textBoxModel.formatText)
                 }
                 
                 Text(textBoxModel.formatText)
@@ -59,33 +59,49 @@ struct TextBoxView: View {
             )
             .background(Color(textBoxModel.colorBackgroundText).opacity(textBoxModel.opacityBackgroundText / 100))
             .clipShape(RoundedRectangle(cornerRadius: textBoxModel.cornerBackgroundText))
-            .overlay(
-                GeometryReader { geo in
-                    Color.clear
-                        .onAppear {
-                            updateSize(geo: geo)
-                        }
-                        .onChange(of: geo.size) {
-                            updateSize(geo: geo)
-                        }
-                        .onChange(of: textBoxViewModel.activeTextBox.id) {
-                            updateSize(geo: geo)
-                        }
-                }
-            )
             .background(
                 GeometryReader { geo in
                     Color.clear
                         .onAppear {
-                            internalScaledSize = geo.size
+                            internalSize = geo.size
+                            print("1 - internal: \(internalSize)")
+                            
+                            textBoxModel.textBoxSize = geo.size
+                            print("2 - textBoxsize: \(textBoxModel.textBoxSize)")
+                            
+                            if textBoxModel.id == textBoxViewModel.activeTextBox.id {
+                                textBoxViewModel.activeBoxSize = internalSize
+                                print("3 - activeBoxSize: \(textBoxViewModel.activeBoxSize)")
+                            }
+                            print("----------------------------------------------------------------")
                         }
                         .onChange(of: geo.size) {
-                            internalScaledSize = geo.size
+                            internalSize = geo.size
+                            print("4 - internal: \(internalSize)")
+                            
+                            textBoxModel.textBoxSize = geo.size
+                            print("5 - textBoxsize: \(textBoxModel.textBoxSize)")
+                            
+                            if textBoxModel.id == textBoxViewModel.activeTextBox.id {
+                                textBoxViewModel.activeBoxSize = internalSize
+                                print("6 - activeBoxSize: \(textBoxViewModel.activeBoxSize)")
+                            }
+                            print("----------------------------------------------------------------")
+                        }
+                        .onChange(of: textBoxViewModel.activeTextBox.id) {
+                            textBoxModel.textBoxSize = geo.size
+                            print("7 - textBoxsize: \(textBoxModel.textBoxSize)")
+                            
+                            if textBoxModel.id == textBoxViewModel.activeTextBox.id {
+                                textBoxViewModel.activeBoxSize = internalSize
+                                print("8 - activeBoxSize: \(textBoxViewModel.activeBoxSize)")
+                            }
+                            print("----------------------------------------------------------------")
                         }
                 }
             )
             
-            if textBoxModel.id == textBoxViewModel.activeTextBox.id && isEditing {
+            if isEditing && textBoxModel.id == textBoxViewModel.activeTextBox.id {
                 TextField("", text: $textBoxViewModel.activeTextBox.content, axis: .vertical)
                     .font(.custom(textBoxModel.fontFamily, size: textBoxModel.sizeText))
                     .lineSpacing(textBoxModel.lineHeight)
@@ -161,8 +177,6 @@ struct TextBoxView: View {
                         showEditText = false
                         showToolText = false
                         showAdjustBackground = false
-                        
-                        print("2 tap: \(textBoxModel.id)")
                     } else {
                         let workItem = DispatchWorkItem {
                             textBoxViewModel.activeTextBox = textBoxModel
@@ -181,8 +195,6 @@ struct TextBoxView: View {
                                     showEditText = true
                                 }
                             }
-
-                            print("1 tap: \(textBoxModel.id)")
                         }
 
                         tapWorkItem = workItem
@@ -219,13 +231,6 @@ struct TextBoxView: View {
                     initialDragTranslation = .zero
                 }
         )
-    }
-    
-    private func updateSize(geo: GeometryProxy) {
-        textBoxModel.textBoxSize = geo.size
-        if textBoxModel.id == textBoxViewModel.activeTextBox.id {
-            textBoxViewModel.activeBoxSize = internalScaledSize
-        }
     }
 }
 

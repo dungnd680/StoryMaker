@@ -30,7 +30,7 @@ struct TemplateView: View {
     @State private var selectedTab: EditTextTab = .size
     @State private var triggerScroll: Bool = false
     @State private var exportedImage: UIImage? = nil
-    @State private var navigateToExportDone: Bool = false
+    @State private var showExportDone: Bool = false
     
     @State private var lightness: Double = 0
     @State private var saturation: Double = 0
@@ -46,7 +46,6 @@ struct TemplateView: View {
                     HStack {
                         if selectedImage == nil {
                             Image("Back")
-                                .opacity(0.5)
                         } else {
                             Button {
                                 selectedImage = nil
@@ -54,8 +53,8 @@ struct TemplateView: View {
                                 showEditText = false
                                 showToolText = false
                             } label: {
-                                Image(systemName: "xmark")
-                                    .foregroundStyle(.customDarkGray)
+                                Image("Close")
+                                    .foregroundStyle(.black.opacity(0.9))
                             }
                         }
                         
@@ -231,10 +230,8 @@ struct TemplateView: View {
                     selectedImage = background
                 }
             }
-            .navigationDestination(isPresented: $navigateToExportDone) {
-                if let exportedImage {
-                    ExportImageDoneView(exportedImage: exportedImage)
-                }
+            .fullScreenCover(isPresented: $showExportDone) {
+                ExportImageDoneView(exportedImage: exportedImage ?? UIImage())
             }
         }
     }
@@ -257,12 +254,12 @@ struct TemplateView: View {
         
         ExportEditedImageHelper.exportEditedImage(from: editorImageView) { success, message, image  in
             if success, let image = image {
-                self.exportedImage = image
-                self.navigateToExportDone = true
+                exportedImage = image
+                showExportDone = true
                 showAdjustBackground = false
-                showEditText = false
                 showToolText = false
-                self.selectedImage = nil
+                showEditText = false
+                textBoxViewModel.activeTextBox = .empty()
             }
         }
     }

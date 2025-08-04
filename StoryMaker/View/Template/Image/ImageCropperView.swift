@@ -9,9 +9,11 @@ import SwiftUI
 import Mantis
 
 struct ImageCropperView: UIViewControllerRepresentable {
+    
+    @Environment(\.dismiss) var dismiss
+    
     var image: UIImage
     var onCrop: (UIImage) -> Void
-    @Environment(\.dismiss) var dismiss
 
     func makeUIViewController(context: Context) -> CropViewController {
         var config = Mantis.Config()

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct GradientColor: Equatable {
+struct GradientColor: Equatable, Codable {
     
     enum Angles: Int {
         case leftRight = 0

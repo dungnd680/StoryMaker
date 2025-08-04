@@ -12,9 +12,6 @@ import Kingfisher
 
 struct BackgroundPickerView: View {
     @Environment(\.dismiss) var dismiss
-    let onSelect: (UIImage) -> Void
-    
-    let baseURL = "https://api.fleet-tech.net"
 
     @StateObject private var viewModel = BackgroundPickerViewModel()
     @State private var selectedURLBackground: String?
@@ -24,6 +21,9 @@ struct BackgroundPickerView: View {
     @State private var showCropper = false
     @State private var background: UIImage? = nil
     @State private var showLoadBackgroundErrorAlert = false
+    
+    let onSelect: (UIImage) -> Void
+    let baseURL = "https://api.fleet-tech.net"
 
     var body: some View {
         NavigationStack {

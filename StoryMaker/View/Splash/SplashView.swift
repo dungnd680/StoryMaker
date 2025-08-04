@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct SplashView: View {
-    var onNext: () -> Void
-    var onAutoNavigation: () -> Void
     
     @AppStorage("hasSeenIntro") private var hasSeenIntro = false
+    
+    var onNext: () -> Void
+    var onAutoNavigation: () -> Void
     
     var body: some View {
         ZStack {

@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct BrightnessView: View {
+    
     @Binding var lightness: Double
     @Binding var saturation: Double
     @Binding var blur: Double

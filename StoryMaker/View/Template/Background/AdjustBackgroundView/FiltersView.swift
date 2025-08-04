@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct FiltersView: View {
+    
     @Binding var selectedFilter: FilterModel
     @Binding var filteredThumbnails: [UUID: UIImage]
 

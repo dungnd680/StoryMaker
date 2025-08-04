@@ -25,7 +25,7 @@ struct EditorImageView: View {
     @Binding var showEditText: Bool
     @Binding var showAdjustBackground: Bool
     
-    let image: UIImage
+    let image: UIImage?
     
     var isTextFieldFocused: FocusState<Bool>.Binding
     
@@ -36,14 +36,16 @@ struct EditorImageView: View {
                             geometry.size.height / designSize.height)
             
             ZStack {
-                Image(uiImage: applyFilter(selectedFilter, to: image))
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: designSize.width, height: designSize.height)
-                    .brightness(lightness / 100)
-                    .saturation(saturation / 100 + 1)
-                    .blur(radius: blur / 5.0)
-                    .clipped()
+                if let image = image {
+                    Image(uiImage: applyFilter(selectedFilter, to: image))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: designSize.width, height: designSize.height)
+                        .brightness(lightness / 100)
+                        .saturation(saturation / 100 + 1)
+                        .blur(radius: blur / 5.0)
+                        .clipped()
+                }
                 
                 Color.clear
                     .contentShape(Rectangle())

@@ -9,13 +9,13 @@ import SwiftUI
 
 struct FontPickerView: View {
     
+    @State private var previousFont: String = ""
+    
     @ObservedObject var viewModel: FontPickerViewModel
     @ObservedObject var textBoxViewModel: TextBoxViewModel
     
     @Binding var selectedFont: String
     @Binding var showSubscription: Bool
-    
-    @State private var previousFont: String = ""
 
     var body: some View {
         ScrollView {

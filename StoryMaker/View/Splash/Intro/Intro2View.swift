@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct Intro2View: View {
+    
     var onNext: () -> Void
     
     var body: some View {

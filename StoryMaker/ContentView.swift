@@ -13,7 +13,7 @@ enum AppScreen {
     case intro2
     case intro3
     case intro4
-    case template
+    case projects
 }
 
 struct ContentView: View {
@@ -21,20 +21,13 @@ struct ContentView: View {
     
     @State private var currentScreen: AppScreen = .splash
     
-//    init() {
-//        #if DEBUG
-//        UserDefaults.standard.removeObject(forKey: "hasSeenIntro")
-//        UserDefaults.standard.removeObject(forKey: "hideSubscription")
-//        #endif
-//    }
-    
     var body: some View {
         ZStack {
             switch currentScreen {
             case .splash:
                 SplashView(
                     onNext: { currentScreen = .intro1 },
-                    onAutoNavigation: { currentScreen = .template }
+                    onAutoNavigation: { currentScreen = .projects }
                 )
                 .transition(.opacity)
                 
@@ -68,15 +61,15 @@ struct ContentView: View {
             case .intro4:
                 Intro4View(onNext: {
                     hasSeenIntro = true
-                    currentScreen = .template
+                    currentScreen = .projects
                 })
                 .transition(.asymmetric(
                     insertion: .move(edge: .trailing),
                     removal: .move(edge: .leading)
                 ))
                 
-            case .template:
-                TemplateView()
+            case .projects:
+                ProjectView()
                     .transition(.opacity)
             }
         }

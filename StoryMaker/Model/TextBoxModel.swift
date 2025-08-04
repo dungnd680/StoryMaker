@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-enum TextFill: Equatable {
+enum TextFill: Equatable, Codable {
     case solid(String)
     case gradient(GradientColor)
 }
 
-enum TextAlign: String, CaseIterable {
+enum TextAlign: String, CaseIterable, Codable {
     case left, center, right
 }
 
-enum TextCase: String, CaseIterable {
+enum TextCase: String, CaseIterable, Codable {
     case normal, uppercase, capitalize, lowercase
 }
 
@@ -114,5 +114,63 @@ class TextBoxModel: ObservableObject, Identifiable {
         self.colorBackgroundText = original.colorBackgroundText
         self.scale = original.scale
         self.rotation = original.rotation
+    }
+}
+
+extension TextBoxModel {
+    func toCodable() -> TextBoxCodableModel {
+        .init(
+            id: id,
+            content: content,
+            x: x,
+            y: y,
+            sizeText: sizeText,
+            lineHeight: lineHeight,
+            letterSpacing: letterSpacing,
+            fontFamily: fontFamily,
+            colorText: colorText,
+            opacityText: opacityText,
+            alignText: alignText,
+            caseText: caseText,
+            opacityShadowText: opacityShadowText,
+            blurShadowText: blurShadowText,
+            xShadowText: xShadowText,
+            yShadowText: yShadowText,
+            colorShadowText: colorShadowText,
+            paddingBackgroundText: paddingBackgroundText,
+            cornerBackgroundText: cornerBackgroundText,
+            opacityBackgroundText: opacityBackgroundText,
+            colorBackgroundText: colorBackgroundText,
+            scale: scale,
+            rotation: rotation.degrees
+        )
+    }
+
+    static func fromCodable(_ model: TextBoxCodableModel) -> TextBoxModel {
+        let box = TextBoxModel()
+        box.id = model.id
+        box.content = model.content
+        box.x = model.x
+        box.y = model.y
+        box.sizeText = model.sizeText
+        box.lineHeight = model.lineHeight
+        box.letterSpacing = model.letterSpacing
+        box.fontFamily = model.fontFamily
+        box.colorText = model.colorText
+        box.opacityText = model.opacityText
+        box.alignText = model.alignText
+        box.caseText = model.caseText
+        box.opacityShadowText = model.opacityShadowText
+        box.blurShadowText = model.blurShadowText
+        box.xShadowText = model.xShadowText
+        box.yShadowText = model.yShadowText
+        box.colorShadowText = model.colorShadowText
+        box.paddingBackgroundText = model.paddingBackgroundText
+        box.cornerBackgroundText = model.cornerBackgroundText
+        box.opacityBackgroundText = model.opacityBackgroundText
+        box.colorBackgroundText = model.colorBackgroundText
+        box.scale = model.scale
+        box.rotation = .degrees(model.rotation)
+        return box
     }
 }

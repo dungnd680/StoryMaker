@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SubscriptionView: View {
+    
     @Environment(\.dismiss) var dismiss
     
     var body: some View {

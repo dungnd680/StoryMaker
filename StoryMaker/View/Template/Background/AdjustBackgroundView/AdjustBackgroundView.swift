@@ -29,7 +29,6 @@ struct AdjustBackgroundView: View {
         .brightness: 280,
         .filters: 240
     ]
-    
     var onClose: () -> Void
 
     var body: some View {

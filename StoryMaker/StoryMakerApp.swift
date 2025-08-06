@@ -9,6 +9,13 @@ import SwiftUI
 
 @main
 struct StoryMakerApp: App {
+    
+    init() {
+        if let documentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            print(documentsDir)
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
